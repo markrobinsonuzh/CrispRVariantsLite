@@ -27,14 +27,15 @@ modal_1 <- bsModal(
     column(width = 6,
       select_BAM
       )
-  ),
-  p(" "),
-  fluidRow(
-    column(width = 6,
-      select_FastQ
-      ),
-    column(width = 6,
-      select_Rdata
-      )
   )
+  #,
+  #p(" "),
+  #fluidRow(
+  #  column(width = 6,
+  #    select_FastQ
+  #    ),
+  #  column(width = 6,
+  #    select_Rdata
+  #    )
+  #)
 )

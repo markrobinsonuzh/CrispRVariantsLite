@@ -16,6 +16,8 @@ modal_AB1 <- bsModal(
     column(width = 12,
       h3("Step 1"),
       upload_AB1,
+      bsPopover("ab1_files", "AB1 FILES", "The ABI File Format is a binary file that is produced by ABI sequencer software", placement = "right", trigger = "focus",
+        options = NULL),
       h3("Step 2"),
       select_genome
       )

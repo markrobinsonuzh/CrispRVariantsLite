@@ -13,8 +13,7 @@ targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), wi
 
 
 
-target_loc <- sliderInput("target_loc", "Target location",
-  min = 0, max = 30, value = 22, step= 1)
+target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
 
 
 #--------------
