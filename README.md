@@ -5,10 +5,13 @@ This github repository contains the [CrispRVariantsLite](http://imlspenticton.uz
 Alternatively, after installation of the necessary packages (see below), this github package here can be called directly to run a local version of CrispRVariantsLite.  
 
 '''
+install.packages("shiny")
 shiny::runGitHub( "CrispRVariantsLite", "markrobinsonuzh") 
 '''
 
 ## Running this app
 
 ## Installing the necessary packages
+
+Once you have installed or updated to the latest version of R, simply launching Shiny-phyloseq will also install requisite R packages that are missing or old. Note that this also requires an internet connection and installation permission on your system.
 
