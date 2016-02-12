@@ -38,8 +38,7 @@ shinyServer(function(input, output, session) {
     ab1_dir = NULL,
     seqs = NULL, # data frame of the data
     bm_fnames = NULL, #bam file
-    srt_bm_names = NULL,  #bam directories
-    bam_temp = NULL
+    srt_bm_names = NULL  #bam directories
   )
   
   #Reactive values for producing the plots
@@ -48,8 +47,7 @@ shinyServer(function(input, output, session) {
     ref = NULL,
     mds = NULL,
     txdb = NULL,
-    bm_fnames = NULL,
-    guide = NULL
+    bm_fnames = NULL
   )
 
   
@@ -62,17 +60,14 @@ shinyServer(function(input, output, session) {
   
   # create the temp dir for the files
   setDir <- reactive({
-    temp.dir <- file.path(tempdir(), paste0(MHmakeRandomString(),gsub("[- :]", "", Sys.time())))
+    temp.dir <- file.path(tempdir(), MHmakeRandomString()) 
     ifelse(!dir.exists(temp.dir), dir.create(temp.dir, showWarnings = FALSE), FALSE)
     
     bam_dir <- file.path(temp.dir, "bam")
     ifelse(!dir.exists(bam_dir), dir.create(bam_dir,  showWarnings = FALSE), FALSE)
     v$bam_dir <- bam_dir
     
-    bam_temp <- file.path(temp.dir, "bam_temp")
-    ifelse(!dir.exists(bam_temp), dir.create(bam_temp,  showWarnings = FALSE), FALSE)
-    v$bam_temp <- bam_temp
-    
+    print(v$bam_dir)
     
     fq_dir <- file.path(temp.dir, "fastq")
     ifelse(!dir.exists(fq_dir), dir.create(fq_dir,  showWarnings = FALSE), FALSE)
@@ -228,11 +223,9 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$run_plot,{
-    
     d$cset <- createCripSet()
     d$txdb <- setTxdb()
     createCrispPlot()
-    
     toggleModal(session, "modal_2", toggle = "close")
   })
   
@@ -254,7 +247,7 @@ shinyServer(function(input, output, session) {
   )
   
  # This code will be run after the client has disconnected
-  session$onSessionEnded(function(){
+  session$onSessionEnded(function() {
     users_data$END <- Sys.time()
     # Write a file in your working directory
     write.table(x = users_data, file = file.path(getwd(), "users_data.txt"),

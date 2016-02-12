@@ -41,8 +41,8 @@ setRef <- reactive({
     Sys.sleep(0.5)
   }
   
-  d$guide <- setGuides()
-  gd <- d$guide
+  gd <- setGuides()
+  
   genome_index <- paste0("/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/", input$select_Refgenome)
   
   #genome_index <- paste0("data/genome/", input$select_Refgenome)
@@ -67,7 +67,7 @@ setRef <- reactive({
 })
 
 createCripSet <- reactive({
-  if(!is.null(t$DF) && !is.null(d$ref) && !is.null(d$guide)){
+  if(!is.null(t$DF)){
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -77,31 +77,26 @@ createCripSet <- reactive({
     
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
-      progress$inc(1/n)
-      Sys.sleep(0.1)
+      progress$inc(1/n, detail = "A")
+      Sys.sleep(0.5)
     }
     
     md <- t$DF
+    d$ref <- setRef()
+    guide <- setGuides()
     
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
-      progress$inc(1/n)
-      Sys.sleep(0.1)
+      progress$inc(1/n, detail = "B")
+      Sys.sleep(0.5)
     }
 
-    cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
+    cset <- readsToTarget(d$bm_fnames, target = guide, reference = d$ref[[1]], names = md$Short.name, target.loc = input$target_loc)
     
     return(cset)
   }
 })
 
-observe({
-  if(is.null(d$ref)){
-    updateButton(session, "run_plot", disabled = TRUE, style = "default" )
-  }else{
-    updateButton(session, "run_plot", disabled = FALSE, style = "success" ) 
-  }
-})
 
 createCrispPlot <- reactive({
   output$crispplots <- renderPlot({
@@ -143,7 +138,7 @@ createCrispPlot <- reactive({
         legend.symbol.size = input$legend.symbol.size, 
         legend.text.size = input$legend.text.size
         ), 
-        row.ht.ratio = c(1,4)
+        row.ht.ratio = c(1,6)
       )
   })
 })

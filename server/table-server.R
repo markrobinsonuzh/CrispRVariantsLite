@@ -19,7 +19,7 @@ observe({
   data_dir <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(v$bm_fnames))
+  if(!is.null(data_dir) && is.null(d$bm_fnames))
   {
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
@@ -47,7 +47,6 @@ observe({
     }
     createHTable()
   }
-  
   
 })
 
@@ -103,7 +102,6 @@ createHTable <- reactive({
     bsButton("edit_xls", "metadata", icon =  icon("table"), style = "info", block = TRUE) 
   })
   
-  toggleModal(session, "modal_2", toggle = "close")
   
 })
 
@@ -140,8 +138,8 @@ getMetadata <- reactive({
                     label = gsub(".bam$","",basename(v$bm_fnames)), 
                     group = rep(1,l),
                     number.of.sqs = rep(1,l),
-                    remaining.number.of.sqs = rep(NA,l),
-                    stringsAsFactors = FALSE)
+                    remaining.number.of.sqs = rep(NA,l)
+                    )
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
