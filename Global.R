@@ -17,7 +17,7 @@ library("IRanges"); packageVersion("IRanges")
 
 
 #Utilities
-source("core/setting.R", local = TRUE)
+source("./core/setting.R", local = TRUE)
 
 # For pasting times into things
 simpletime = function(){gsub("\\D", "_", Sys.time())}

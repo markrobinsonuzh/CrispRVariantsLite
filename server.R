@@ -112,7 +112,6 @@ t <- reactiveValues(
   source("server/preprocessing-server.R", local = T)
   source("server/convert-ab1-server.R", local = T)
   source("server/convert-fastq-server.R", local = T)
-  source("server/preprocessing-server.R", local = T)
   source("server/table-server.R", local = T)
   source("server/guides-server.R", local = T)
   source("server/figures-server.R", local = T)

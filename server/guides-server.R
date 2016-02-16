@@ -13,7 +13,7 @@ output$error1 <- renderUI({
 setGuides <- reactive({
   
   seq.start <- as.numeric(input$g.start)
-  seq.end <- seq.start + 22 
+  seq.end <- input$target_loc+6
   seq.width <- as.numeric(input$g.length)
   
   guide <- GRanges(
@@ -55,7 +55,7 @@ setRef <- reactive({
   
   gd <- setGuides()
   
-  genome_index <- paste0("/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/", input$select_Refgenome)
+  genome_index <- paste0(genome,"/",input$select_Refgenome)
   
   #genome_index <- paste0("data/genome/", input$select_Refgenome)
   cmd <- paste0("samtools faidx ", genome_index)
@@ -83,7 +83,13 @@ setRef <- reactive({
 
 creatPlotRef <- reactive({
   output$ref_plot <- renderPlot({
-    plotAlignments(setRef(), alns = NULL, target.loc = input$target_loc, ins.sites = data.frame())
+    start <- as.numeric(input$g.start)
+    plotAlignments(
+        setRef(),
+        alns = NULL,
+        guide.loc = IRanges(start, input$target_loc+6),  
+        target.loc = input$target_loc, 
+        ins.sites = data.frame())
     })
 })
 

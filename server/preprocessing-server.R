@@ -29,8 +29,7 @@ convertAb1toFasq <- reactive({
 # ---------------
 mapFastQ <- reactive({
   #BWA indices were generated using bwa version 0.7.10
-  ind <- paste0("/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/", 
-                input$select_genome)
+  ind <- paste0(genome,"/", input$select_genome)
     if(file.exists(ind) && !is.null(v$fq_fnames))
     {
         bwa_index <- ind

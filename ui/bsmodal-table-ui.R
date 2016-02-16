@@ -37,4 +37,3 @@ modal_table <- bsModal(
       ))
   )
 )
-cd
