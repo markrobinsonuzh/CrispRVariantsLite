@@ -87,4 +87,9 @@ creatPlotRef <- reactive({
     })
 })
 
+observeEvent(input$run_guide,{
+    creatPlotRef()
+    toggleModal(session, "modal_ref", toggle = "close")
+    toggleModal(session, "modal_2", toggle = "open")
+  })
 
