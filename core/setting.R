@@ -1,6 +1,7 @@
 #genomic database
-
 danRer <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
+
+
 
 gendb <- dir(danRer,pattern = ".fa$", recursive = TRUE, full.names = TRUE)
 gendb.gz <- dir(danRer,pattern = "fa.gz$", recursive = TRUE, full.names = TRUE)

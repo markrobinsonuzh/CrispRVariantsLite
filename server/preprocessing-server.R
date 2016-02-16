@@ -1,26 +1,3 @@
-temp.dir <- tempdir()
-
-# create the temp dir for the files
-setDir <- reactive({
-  
-  bam_dir <- file.path(temp.dir, "bam")
-  ifelse(!dir.exists(bam_dir), dir.create(bam_dir,  showWarnings = FALSE), FALSE)
-  v$bam_dir <- bam_dir
-  
-  bamtemp_dir <- file.path(temp.dir, "bamtemp")
-  ifelse(!dir.exists(bamtemp_dir), dir.create(bamtemp_dir,  showWarnings = FALSE), FALSE)
-  v$bamtemp_dir <- bamtemp_dir
-  
-  fq_dir <- file.path(temp.dir, "fastq")
-  ifelse(!dir.exists(fq_dir), dir.create(fq_dir,  showWarnings = FALSE), FALSE)
-  v$fq_dir <- fq_dir
-  
-  ab1_dir <- file.path(temp.dir, "ab1")
-  ifelse(!dir.exists(ab1_dir), dir.create(ab1_dir,  showWarnings = FALSE), FALSE)
-  v$ab1_dir <- ab1_dir
-  
-})
-
 # ---------------
 # convert AB1 to FASTQ
 # ---------------
@@ -54,7 +31,6 @@ mapFastQ <- reactive({
   #BWA indices were generated using bwa version 0.7.10
   ind <- paste0("/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/", 
                 input$select_genome)
-    
     if(file.exists(ind) && !is.null(v$fq_fnames))
     {
         bwa_index <- ind

@@ -35,8 +35,7 @@ modal_ref <- bsModal(
       ref_seqs,
       select_Refgenome,
       p(),
-      txDb,
-      uiOutput("error1")
+      txDb
     )
   ),
   fluidRow(
