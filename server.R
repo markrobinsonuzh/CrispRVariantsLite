@@ -15,7 +15,20 @@ options(shiny.reactlog=TRUE)
 # source("install.R", local = TRUE)
 
 shinyServer(function(input, output, session) {
-  
+
+# uncomment lines below if action button is used to commit changes
+# values = list()
+# setHot = function(x) values[["hot"]] <<- x
+
+# comment lines below if action button is used to commit changes
+values = reactiveValues()
+setHot = function(x) values[["hot"]] = x
+
+t <- reactiveValues(
+    DF = NULL,
+    inFile = NULL
+)
+
   
   # This code will be run once per user
   users_data <- data.frame(START = Sys.time())

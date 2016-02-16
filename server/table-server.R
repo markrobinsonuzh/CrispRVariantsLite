@@ -1,53 +1,6 @@
-fname = tempfile()
-
-# uncomment lines below if action button is used to commit changes
-# values = list()
-# setHot = function(x) values[["hot"]] <<- x
-
-# comment lines below if action button is used to commit changes
-values = reactiveValues()
-setHot = function(x) values[["hot"]] = x
-
-t <- reactiveValues(
-  DF = NULL,
-  inFile = NULL
-)
-
-
-observe({
-  # list BAM files
-  data_dir <- input$upload_bams
-  
-  # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(d$bm_fnames))
-  {
-    progress <- shiny::Progress$new()
-    # Make sure it closes when we exit this reactive, even if there's an error
-    on.exit(progress$close())
-    progress$set(message = "Unzipping the BAM files", value = 0)
-    
-    # Number of times we'll go through the loop
-    n <- 20
-    
-    for (i in 1:10){
-      #Increment the progress bar, and update the detail text.
-      progress$inc(1/n)
-      Sys.sleep(0.1)
-    }
-    
-    downloadbm <- file.path(v$bam_dir)
-    #ifelse(!dir.exists(downloadbm), dir.create(downloadbm,  showWarnings = FALSE), FALSE)
-    temp <- unzip(data_dir$datapath, exdir = downloadbm)
-    v$bm_fnames <- dir(downloadbm, ".bam$", full.names = TRUE, recursive = T)
-    for (i in 1:10){
-      #Increment the progress bar, and update the detail text.
-      progress$inc(1/n, detail("storing files on the server"))
-      Sys.sleep(0.1)
-    }
-    createHTable()
-  }
-  
-})
+################################################################################
+# UI
+################################################################################
 
 createHTable <- reactive({
   
@@ -102,6 +55,50 @@ createHTable <- reactive({
   
   
 })
+
+################################################################################
+# BEHAVIOUR
+################################################################################
+
+observe({
+  # list BAM files
+  data_dir <- input$upload_bams
+  
+  # if the file doesn't exist
+  if(!is.null(data_dir) && is.null(d$bm_fnames))
+  {
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+    progress$set(message = "Unzipping the BAM files", value = 0)
+    
+    # Number of times we'll go through the loop
+    n <- 20
+    
+    for (i in 1:10){
+      #Increment the progress bar, and update the detail text.
+      progress$inc(1/n)
+      Sys.sleep(0.1)
+    }
+    
+    downloadbm <- file.path(v$bam_dir)
+    #ifelse(!dir.exists(downloadbm), dir.create(downloadbm,  showWarnings = FALSE), FALSE)
+    temp <- unzip(data_dir$datapath, exdir = downloadbm)
+    v$bm_fnames <- dir(downloadbm, ".bam$", full.names = TRUE, recursive = T)
+    for (i in 1:10){
+      #Increment the progress bar, and update the detail text.
+      progress$inc(1/n, detail("storing files on the server"))
+      Sys.sleep(0.1)
+    }
+    createHTable()
+  }
+  
+})
+
+
+################################################################################
+# FUNCTIONS
+################################################################################
 
 # ----------------------
 #  make table of all sequences
