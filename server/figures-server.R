@@ -91,14 +91,22 @@ createCripSet <- reactive({
       Sys.sleep(0.5)
     }
 
-    cset <- readsToTarget(d$bm_fnames, target = guide, reference = d$ref[[1]], names = md$Short.name, target.loc = input$target_loc)
+    cset <- readsToTarget(v$bm_fnames, target = guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
     
     return(cset)
   }
 })
 
+observe({
+   if(is.null(d$ref)){
+      updateButton(session, "run_plot", style ="default", icon = icon("ban"), disable = TRUE )
+    }else{
+      updateButton(session,"run_plot", 'Plot', icon =  icon("area-chart"), style = "success", block = TRUE, disable = FALSE ) 
+    }
+})
 
 createCrispPlot <- reactive({
+  pcrisp = NULL
   output$crispplots <- renderPlot({
     
     progress <- shiny::Progress$new()
@@ -114,8 +122,9 @@ createCrispPlot <- reactive({
       progress$inc(1/n, detail = "plotting")
       Sys.sleep(0.5)
     }
-    
-    plotVariants(d$cset, txdb = d$txdb, 
+     
+     try({
+       plotVariants(d$cset, txdb = d$txdb, 
       col.ht.ratio = c(1,6),
       left.plot.margin = grid::unit(c(0.1,0,6,0.2), "lines"),
       
@@ -139,8 +148,12 @@ createCrispPlot <- reactive({
         legend.text.size = input$legend.text.size
         ), 
         row.ht.ratio = c(1,6)
-      )
+      )  
+     }, silent = TRUE)
+     
+
   })
+  return(pcrisp)
 })
 
 output$plots <- renderUI({

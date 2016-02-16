@@ -33,10 +33,7 @@ modal_table <- bsModal(
     column(width = 6,
       fluidRow(
         column(width = 6),
-        column(width = 6,
-          upload_metadata,
-          update_xls
-          )
+        column(width = 6 )
       ))
   )
 )

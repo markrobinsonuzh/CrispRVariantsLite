@@ -36,7 +36,6 @@ convertAb1toFasq <- reactive({
      
      # replace spaces ans slashes in filename with underscores
      v$fq_fnames  <- paste0(gsub("[\ |\\/]", "_", dirname(v$ab1_fnames)), ".fastq")
-     print(dirname(v$ab1_fnames))
      v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
      dummy <- mapply( function(u,v,w) {
@@ -48,7 +47,6 @@ convertAb1toFasq <- reactive({
    }
 })
 
-
 # ---------------
 # run mapping
 # ---------------
@@ -56,29 +54,31 @@ mapFastQ <- reactive({
   #BWA indices were generated using bwa version 0.7.10
   ind <- paste0("/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/", 
                 input$select_genome)
-
-    if(file.exists(ind))
+    
+    if(file.exists(ind) && !is.null(v$fq_fnames))
     {
         bwa_index <- ind
-        v$bm_fnames <- gsub(".fastq$",".bam",basename(v$fq_fnames))
-        v$srt_bm_names <- file.path(v$bam_dir, gsub(".bam","_s",v$bm_fnames))
+        bm_fnames <- gsub(".fastq$",".bam",basename(v$fq_fnames))
+        v$srt_bm_names <- file.path(v$bam_dir, gsub(".bam","_s",bm_fnames))
+        
+        bm_fnames <- file.path(v$bam_dir, bm_fnames)
         progress <- shiny::Progress$new()
         # Make sure it closes when we exit this reactive, even if there's an error
         on.exit(progress$close())
-        progress$set(message = "Preprocessing  part B ", value = 0)
+        progress$set(message = "Preparing BAM files", value = 0)
       
         n <- length(v$fq_fnames)
       
         #Map, sort and index the bam files, remove the unsorted bams
         for(i in 1:length(v$fq_fnames))
         {
-          progress$inc(1/n, detail = paste0("Mapping - part ", i))
-          cmd <- paste0("bwa mem ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", 
-                         v$bamtemp_dir,"/",v$bm_fnames[i])
-          message(cmd, "\n"); system(cmd)
-          indexBam(sortBam(paste0(v$bamtemp_dir,"/",v$bm_fnames[i]),v$srt_bm_names[i]))
-          unlink(paste0(v$bamtemp_dir,"/",v$bm_fnames[i]))
+          progress$inc(1/n, detail = paste0("Mapping reads ", i, "/", n))
+          cmd <- paste0("bwa mem ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
+          cat(cmd, "\n"); system(cmd)
+          indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
+          unlink(bm_fnames[i])
         }
+           
     }
     else
     {

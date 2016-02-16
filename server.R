@@ -11,8 +11,11 @@ options(shiny.maxRequestSize = 10000*1024^2)
 # Set Shiny Reaction Log to TRUE
 options(shiny.reactlog=TRUE)
 
+# Run the auto-installer/updater code:
+# source("install.R", local = TRUE)
 
-`%then%` <- shiny:::`%OR%`
+# Graphic-saving utilities
+source("core/ggsave.R", local = TRUE)
 
 
 shinyServer(function(input, output, session) {
@@ -25,7 +28,8 @@ shinyServer(function(input, output, session) {
   state <- reactiveValues(
     ini = FALSE,
     bam = F,
-    err = F
+    err = F,
+    info = 1
   )
   
   #Reactive values for preprocessing
@@ -38,7 +42,8 @@ shinyServer(function(input, output, session) {
     ab1_dir = NULL,
     seqs = NULL, # data frame of the data
     bm_fnames = NULL, #bam file
-    srt_bm_names = NULL  #bam directories
+    srt_bm_names = NULL,  #bam directories
+    bam_temp = NULL
   )
   
   #Reactive values for producing the plots
@@ -47,7 +52,8 @@ shinyServer(function(input, output, session) {
     ref = NULL,
     mds = NULL,
     txdb = NULL,
-    bm_fnames = NULL
+    bm_fnames = NULL,
+    guide = NULL
   )
 
   
@@ -55,19 +61,24 @@ shinyServer(function(input, output, session) {
   source("server/preprocessing-server.R", local = T)
   source("server/table-server.R", local = T)
   source("server/figures-server.R", local = T)
-  #source("server/figures-bis-server.R", local = T)
+  source("server/help-tooltip-server.R", local = T)
+  source("server/save-data-server.R", local = T)
+
   # open the modal options
   
   # create the temp dir for the files
   setDir <- reactive({
-    temp.dir <- file.path(tempdir(), MHmakeRandomString()) 
+    temp.dir <- file.path(tempdir(), paste0(MHmakeRandomString(),gsub("[- :]", "", Sys.time())))
     ifelse(!dir.exists(temp.dir), dir.create(temp.dir, showWarnings = FALSE), FALSE)
     
     bam_dir <- file.path(temp.dir, "bam")
     ifelse(!dir.exists(bam_dir), dir.create(bam_dir,  showWarnings = FALSE), FALSE)
     v$bam_dir <- bam_dir
     
-    print(v$bam_dir)
+    bam_temp <- file.path(temp.dir, "bam_temp")
+    ifelse(!dir.exists(bam_temp), dir.create(bam_temp,  showWarnings = FALSE), FALSE)
+    v$bam_temp <- bam_temp
+    
     
     fq_dir <- file.path(temp.dir, "fastq")
     ifelse(!dir.exists(fq_dir), dir.create(fq_dir,  showWarnings = FALSE), FALSE)
@@ -115,17 +126,27 @@ shinyServer(function(input, output, session) {
   )
   
   observeEvent(input$select_AB1,{
-      toggleModal(session, "modal_1", toggle = "close")
+      toggleModal(session, "modal_2", toggle = "close")
       toggleModal(session, "modal_AB1", toggle = "open")
       state$ini = TRUE
       state$bam = T
   })
   
-  observeEvent(input$select_BAM,{
+  observeEvent(input$select_FastQ,{
+    toggleModal(session, "modal_2", toggle = "close")
+    toggleModal(session, "modal_FASTQ", toggle = "open")
+  })
+  
+  
+  observeEvent(input$start_btn,{
     toggleModal(session, "modal_1", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
     state$ini = TRUE
     state$bam = F
+  })
+  
+  observeEvent(input$info_btn,{
+    toggleModal(session, "modal_2", toggle = "open")
   })
   
   observeEvent(input$update_xls,{
@@ -141,43 +162,123 @@ shinyServer(function(input, output, session) {
   
  observeEvent(input$run_prep,{
    if(!is.null(input$ab1_files)){
-      closeAlert(session, "prepAlertAB1")
-      # Create a Progress object
-      progress <- shiny::Progress$new()
-      # Make sure it closes when we exit this reactive, even if there's an error
-      on.exit(progress$close())
-      progress$set(message = "Preprocessing  AB1 ", value = 0)
-      
-      # Number of times we'll go through the loop
-      n <- 15
-      
-      for (i in 1:5){
-        #Increment the progress bar, and update the detail text.
-        progress$inc(1/n, detail = "Convert .ab1 to FastQ")
-        Sys.sleep(0.5)
-      }
-      
-      convertAb1toFasq()
-      
-      for (i in 1:5){
-        progress$inc(1/n, detail = "Map FastQs reads")
-        Sys.sleep(0.5)
-      }
-      
-      mapFastQ()
-      
-      for (i in 1:5){
-        progress$inc(1/n, detail = "Map FastQs reads")
-        Sys.sleep(0.5)
-      }
-      toggleModal(session, "modal_AB1", toggle = "close")
-      toggleModal(session, "modal_table", toggle = "open")
-      state$ini = TRUE
-    }else{
+     File <- input$ab1_files
+     rfiles <- (tools::file_ext(File$name) == c("zip"))
+     
+     if(!rfiles){
+       createAlert(session, "alertAB1", "prepAlertZIP", title = "WARNING",
+         content = "Wrong  Format / upload a zip file", style = "warning", append = FALSE)
+     }else{
+       closeAlert(session, "prepAlertAB1")
+       # Create a Progress object
+       progress <- shiny::Progress$new()
+       # Make sure it closes when we exit this reactive, even if there's an error
+       on.exit(progress$close())
+       progress$set(message = "Preprocessing  AB1 ", value = 0)
+       
+       # Number of times we'll go through the loop
+       n <- 15
+       
+       for (i in 1:5){
+         #Increment the progress bar, and update the detail text.
+         progress$inc(1/n, detail = "Convert .ab1 to FastQ")
+         Sys.sleep(0.5)
+       }
+       
+       convertAb1toFasq()
+       
+       for (i in 1:5){
+         progress$inc(1/n, detail = "Map FastQs reads")
+         Sys.sleep(0.5)
+       }
+       
+       mapFastQ()
+       
+       for (i in 1:5){
+         progress$inc(1/n, detail = "compiling data")
+         Sys.sleep(0.5)
+       }
+       
+       state$ini = TRUE
+       toggleModal(session, "modal_AB1", toggle = "close")
+       toggleModal(session, "modal_2", toggle = "open")
+       
+       createHTable()
+       
+     }
+          }else{
       createAlert(session, "alertAB1", "prepAlertAB1", title = "WARNING",
         content = "AB1 files (.zip) not loaded", style = "warning", append = FALSE)
     }
   })
+  
+  
+  
+  observeEvent(input$run_fastq,{
+    if(!is.null(input$fastq_files)){
+      File <- input$fastq_files
+      rfiles <- (tools::file_ext(File$name) == c("zip"))
+      
+      if(!rfiles){
+        createAlert(session, "alertFASTQ", "prepAlertZIP", title = "WARNING",
+          content = "Wrong  Format / upload a zip file", style = "warning", append = FALSE)
+      }else{
+        
+        # Create a Progress object
+        progress <- shiny::Progress$new()
+        # Make sure it closes when we exit this reactive, even if there's an error
+        on.exit(progress$close())
+        progress$set(message = "Preprocessing  AB1 ", value = 0)
+        
+        # Number of times we'll go through the loop
+        n <- 15
+        
+        for (i in 1:5){
+          #Increment the progress bar, and update the detail text.
+          progress$inc(1/n, detail = "unzip Fast FASTQs files")
+          Sys.sleep(0.5)
+        }
+        
+        uploadFastq()
+        
+        for (i in 1:3){
+          progress$inc(1/n, detail = "Map FastQs reads")
+          Sys.sleep(0.5)
+        }
+        
+        mapFastQ()
+        
+        for (i in 1:3){
+          progress$inc(1/n, detail = "Map FastQs reads")
+          Sys.sleep(0.5)
+        }
+        
+        state$ini = TRUE
+        
+        toggleModal(session, "modal_FASTQ", toggle = "close")
+        toggleModal(session, "modal_2", toggle = "open")
+        
+        for (i in 1:4){
+          progress$inc(1/n, detail = "Create Metadata")
+          Sys.sleep(0.5)
+        }
+        
+        createHTable()
+        
+      }
+      
+      closeAlert(session, "prepAlertFASTQ")
+     
+    }else{
+      createAlert(session, "alertFASTQ", "prepAlertFASTQ", title = "WARNING",
+        content = "FASTQ files (.zip) not loaded", style = "warning", append = FALSE)
+    }
+    
+    
+  })
+  
+  
+  
   
   observeEvent(input$select_data, {
     toggleModal(session, "modal_2", toggle = "close")
@@ -204,18 +305,24 @@ shinyServer(function(input, output, session) {
     toggleModal(session, "modal_help", toggle = "open")
   })
   
-  output$bams <- renderUI({
-    bam_dir <- list.files(v$bam_dir)
-    bam_dir_ln <- length(bam_dir)
-    if(bam_dir_ln > 0){
-      tags$div(
-        p("BAM files stored"),
-        downloadButton('downloadBAM', 'Download') 
-      )
-    }else{
-      fileInput('upload_bams', 'Upload Bams', multiple = F, width = "100%")
-    }
-  })
+  
+ 
+    
+    output$bams <- renderUI({
+        if(!is.null(v$bm_fnames))
+        {
+            tags$div(
+                p("BAM files stored"),
+                downloadButton('downloadBAM', 'Download')
+            )
+        }
+        else
+        {
+            fileInput('upload_bams', 'Upload Bams', multiple = F, width = "100%")
+        }
+    })
+ 
+  
   
   observeEvent(input$reset,{
     reset()
@@ -223,9 +330,11 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$run_plot,{
+    
     d$cset <- createCripSet()
     d$txdb <- setTxdb()
     createCrispPlot()
+    
     toggleModal(session, "modal_2", toggle = "close")
   })
   
@@ -238,22 +347,20 @@ shinyServer(function(input, output, session) {
     filename = function() {
       paste("BAM","zip", sep = ".")
     },
-
+    
     # the argument 'file'.
     content = function(file){
       # Write to a file specified by the 'file' argument
-      zip(file, v$bam_dir)
-    }
+        fs <- dir(v$bam_dir, pattern = ".bam$", full.names = TRUE, recursive = TRUE)
+        zip(zipfile = file, files = fs)
+    },
+     contentType = "application/zip"
   )
+
   
  # This code will be run after the client has disconnected
-  session$onSessionEnded(function() {
+  session$onSessionEnded(function(){
     users_data$END <- Sys.time()
-    # Write a file in your working directory
-    write.table(x = users_data, file = file.path(getwd(), "users_data.txt"),
-      append = TRUE, row.names = FALSE, col.names = FALSE, sep = "\t")
   })
   
 })
-
-

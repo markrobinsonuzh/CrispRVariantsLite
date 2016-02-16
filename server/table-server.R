@@ -39,7 +39,6 @@ observe({
     #ifelse(!dir.exists(downloadbm), dir.create(downloadbm,  showWarnings = FALSE), FALSE)
     temp <- unzip(data_dir$datapath, exdir = downloadbm)
     v$bm_fnames <- dir(downloadbm, ".bam$", full.names = TRUE, recursive = T)
-    
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail("storing files on the server"))
@@ -68,7 +67,6 @@ createHTable <- reactive({
   
   
   output$htable <- renderRHandsontable({
-    print("create table")
     if (!is.null(input$htable)) {
       t$DF <- hot_to_r(input$htable)
     }else{
@@ -82,7 +80,7 @@ createHTable <- reactive({
   
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
-    progress$inc(1/n, detail = "Preparing data for visualisation")
+    progress$inc(1/n, detail = "Compiling data")
     Sys.sleep(0.1)
   }
   
@@ -113,7 +111,7 @@ getMetadata <- reactive({
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
-  progress$set(message = "Creating  the table", value = 0)
+  progress$set(message = "Reading the metadata", value = 0)
   
   # Number of times we'll go through the loop
   n <- 15
@@ -122,7 +120,21 @@ getMetadata <- reactive({
     progress$inc(1/n)
     Sys.sleep(0.01)
   }
-  bm_fnames <- dir(v$bam_dir,".bam$", full=TRUE)  # re-define
+  bm_fnames <- dir(v$bam_dir,".bam$", full.names = TRUE, recursive=T)  # re-define
+  v$bm_fnames <- bm_fnames
+  #mapped sequence
+  mp_reads <- lapply(bm_fnames, function(file){
+      cmd = paste0( "samtools view -F 0x04 -c ", file)
+      system(cmd, intern = TRUE)
+  })
+  
+  
+  #UNmapped sequence
+  ump_reads <- lapply(bm_fnames, function(file){
+      cmd = paste0( "samtools view -f 0x04 -c ", file)
+      system(cmd, intern = TRUE)
+  })
+  
   
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
@@ -130,15 +142,14 @@ getMetadata <- reactive({
     Sys.sleep(0.01)
   }
   
-  l = length(v$bm_fnames)
-  x <- basename(v$bm_fnames)
+  l = length(bm_fnames)
+  x <- basename(bm_fnames)
   d_fnames <- unlist(lapply(x,function(x) paste0("/bam/", x )))
-  print(d_fnames)
   t.DF = data.frame(file.name = d_fnames, 
-                    label = gsub(".bam$","",basename(v$bm_fnames)), 
+                    label = gsub(".bam$","",basename(bm_fnames)), 
                     group = rep(1,l),
-                    number.of.sqs = rep(1,l),
-                    remaining.number.of.sqs = rep(NA,l)
+                    number.of.sqs = unlist(mp_reads),
+                    remaining.number.of.sqs = unlist(ump_reads)
                     )
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.

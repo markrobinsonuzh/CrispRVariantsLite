@@ -50,6 +50,7 @@ modal_2 <- bsModal(
       fluidRow(
         column(width = 12,
           upload_bams,
+          p(),
           select_AB1,
           select_FastQ,
           p(),

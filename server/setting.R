@@ -1,5 +1,4 @@
 #genomic database
-#gendb <- dir("../data/genome", recursive = TRUE, full.names = TRUE)
 
 danRer <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
 

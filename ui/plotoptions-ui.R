@@ -52,11 +52,9 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=4,
-      info_btn),
-    column(width=4,
+    column(width=6,
       data_setting),
-    column(width=4,
+    column(width=6,
       save_data )
   )
 )
