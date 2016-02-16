@@ -9,14 +9,16 @@ select_genome <- selectInput("select_genome", "Select the genome", choices = gen
 run_prep <- bsButton("run_prep", 'Run', icon =  icon("list-alt"), style = "primary", block = TRUE)
 
 modal_AB1 <- bsModal(
-  "modal_AB1", "Preprocessiong The Data : ",
+  "modal_AB1", "PREPROCESSING DATA | AB1 FILES : ",
   "setting_btn", size = "small",
   bsAlert("alertAB1"),
   fluidRow(
     column(width = 12,
-      h3("Step 1"),
+      h6("Step 1"),
+      p("We convert AB1 files  ( format of the Applied Biosystems Sanger sequencer)to FASTQ format for mapping"),
       upload_AB1,
-      h3("Step 2"),
+      h6("Step 2"),
+      p("Chose the genome for mapping your FastQ file"),
       select_genome
       )
   ),
