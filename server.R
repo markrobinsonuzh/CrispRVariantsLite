@@ -116,7 +116,7 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  # open the model
+  # open the AB1 modal
   observeEvent(input$select_AB1,{
       toggleModal(session, "modal_2", toggle = "close")
       toggleModal(session, "modal_AB1", toggle = "open")
@@ -124,12 +124,13 @@ shinyServer(function(input, output, session) {
       state$bam = T
   })
   
+  # open the FASTQ modal
   observeEvent(input$select_FastQ,{
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_FASTQ", toggle = "open")
   })
   
-  
+  # open start modal 
   observeEvent(input$start_btn,{
     toggleModal(session, "modal_1", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
@@ -137,41 +138,22 @@ shinyServer(function(input, output, session) {
     state$bam = F
   })
   
-  observeEvent(input$info_btn,{
-    toggleModal(session, "modal_2", toggle = "open")
-  })
-  
-  observeEvent(input$update_xls,{
-    toggleModal(session, "modal_table", toggle = "close")
-    toggleModal(session, "modal_2", toggle = "open")
-    state$ini = TRUE
-    state$bam = F
-  })
-  
-  
+  # open instructions modal
   observeEvent(input$select_data, {
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_1", toggle = "open")
   })
   
+  # open reference modal
   observeEvent(input$create_guides, {
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_ref", toggle = "open")
   })
   
+  # open metadata pannel
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_table", toggle = "open")
-  })
-  
-  observeEvent(input$run_guide,{
-    creatPlotRef()
-    toggleModal(session, "modal_ref", toggle = "close")
-    toggleModal(session, "modal_2", toggle = "open")
-  })
-  
-  observeEvent(input$info_btn, {
-    toggleModal(session, "modal_help", toggle = "open")
   })
     
 })
