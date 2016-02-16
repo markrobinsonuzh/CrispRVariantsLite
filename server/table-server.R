@@ -124,14 +124,14 @@ getMetadata <- reactive({
   v$bm_fnames <- bm_fnames
   #mapped sequence
   mp_reads <- lapply(bm_fnames, function(file){
-      cmd = paste0( "samtools view -F 0x04 -c ", file)
+      cmd = paste0( "samtools view -F 2052 -c ", file)
       system(cmd, intern = TRUE)
   })
   
   
   #UNmapped sequence
   ump_reads <- lapply(bm_fnames, function(file){
-      cmd = paste0( "samtools view -f 0x04 -c ", file)
+      cmd = paste0( "samtools view -f 2052 -c ", file)
       system(cmd, intern = TRUE)
   })
   
@@ -153,7 +153,7 @@ getMetadata <- reactive({
                     label = lbl, 
                     group = rep(1,l),
                     number.of.sqs = unlist(mp_reads),
-                    remaining.number.of.sqs = unlist(ump_reads)
+                    remaining.number.of.sqs = unlist(mp_reads)-unlist(ump_reads)
                     )
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
