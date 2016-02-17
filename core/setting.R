@@ -1,10 +1,11 @@
 # genomic database
 # danRer <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
-genome <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
-#genome <- "./data/genome/"
+# genome <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
+genome <- "./data/genome"
 
 gendb <- dir(genome, pattern = ".fa$", recursive = TRUE, full.names = TRUE)
-gendb.gz <- dir(genome, pattern=".fa.gz$", recursive = TRUE, full.names = TRUE)
+gendb.gz <- dir(genome, recursive = TRUE, full.names = TRUE)
+
 
 # name of sequence
 genlist <- basename(gendb)
