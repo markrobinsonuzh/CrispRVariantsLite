@@ -1,6 +1,26 @@
 ################################################################################
 # UI
 ################################################################################
+# uncomment lines below if action button is used to commit changes
+# values = list()
+# setHot = function(x) values[["hot"]] <<- x
+
+# comment lines below if action button is used to commit changes
+values = reactiveValues()
+setHot = function(x) values[["htable"]] = x
+
+
+output$htable <- renderRHandsontable({
+    if (!is.null(input$htable)) {
+      t$DF <- hot_to_r(input$htable)
+    }else{
+      t$DF <- getMetadata()
+    }
+    setHot(t$DF)
+    rhandsontable(t$DF) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+})
+
 
 createHTable <- reactive({
   
@@ -19,16 +39,6 @@ createHTable <- reactive({
   }
   
   
-  output$htable <- renderRHandsontable({
-    if (!is.null(input$htable)) {
-      t$DF <- hot_to_r(input$htable)
-    }else{
-      t$DF <- getMetadata()
-    }
-    setHot(t$DF)
-    rhandsontable(t$DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
-  })
   
   
   for (i in 1:5){
@@ -37,7 +47,7 @@ createHTable <- reactive({
     Sys.sleep(0.1)
   }
   
-  toggleModal(session, "modal_table", toggle = "open")
+  #toggleModal(session, "modal_table", toggle = "open")
   
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
@@ -50,7 +60,7 @@ createHTable <- reactive({
   })
   
   output$metadata <- renderUI({
-    bsButton("edit_xls", "metadata", icon =  icon("table"), style = "info", block = TRUE) 
+    bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
   })
   
   
@@ -60,12 +70,13 @@ createHTable <- reactive({
 # BEHAVIOUR
 ################################################################################
 
+#downland the bams files on the server
 observe({
   # list BAM files
   data_dir <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(d$bm_fnames))
+  if(!is.null(data_dir) && is.null(v$bm_fnames))
   {
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
@@ -82,7 +93,6 @@ observe({
     }
     
     downloadbm <- file.path(v$bam_dir)
-    #ifelse(!dir.exists(downloadbm), dir.create(downloadbm,  showWarnings = FALSE), FALSE)
     temp <- unzip(data_dir$datapath, exdir = downloadbm)
     v$bm_fnames <- dir(downloadbm, ".bam$", full.names = TRUE, recursive = T)
     for (i in 1:10){
@@ -90,7 +100,6 @@ observe({
       progress$inc(1/n, detail("storing files on the server"))
       Sys.sleep(0.1)
     }
-    createHTable()
   }
   
 })
@@ -151,8 +160,7 @@ getMetadata <- reactive({
                     label = lbl, 
                     group = rep(1,l),
                     number.of.sqs = unlist(mp_reads),
-                    remaining.number.of.sqs = unlist(mp_reads)-unlist(ump_reads)
-                    )
+                    stringsAsFactors = FALSE )
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)

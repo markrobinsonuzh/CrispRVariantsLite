@@ -7,26 +7,44 @@ output$error1 <- renderUI({
 })
 
 ################################################################################
+# BEHAVIOUR
+################################################################################
+
+# Disable creating the guides until Reference and Bams defined
+observe({
+   if(is.null(v$bm_fnames)){
+      updateButton(session, "create_guides", style ="default", icon = icon("ban"), disable = TRUE )
+    }else{
+      updateButton(session,"create_guides", style = "success",  icon = icon("area-chart"), block = TRUE, disable = FALSE ) 
+    }
+})
+
+
+
+################################################################################
 # FUNCTIONS
 ################################################################################
 
 setGuides <- reactive({
   
   seq.start <- as.numeric(input$g.start)
-  seq.end <- input$target_loc+6
+  seq.end <-   seq.start + as.numeric(input$target_loc) + 6
   seq.width <- as.numeric(input$g.length)
   
+  print(seq.start)
+  print(seq.end)
   guide <- GRanges(
     seqnames = input$g.chr, 
-    ranges = IRanges(
-      start = seq.start, 
-      end = seq.end
+    ranges = IRanges( 
+      end = seq.end,
+      width = 23
       ), 
     strand = input$g.strand
     )
+    
   
   guide <- guide + seq.width
-  tloc <- 17 + seq.width
+  tloc <- as.numeric(input$target_loc) + seq.width
   
   updateTextInput(session, "target_loc", value = paste0(tloc))
   
@@ -53,49 +71,55 @@ setRef <- reactive({
     Sys.sleep(0.5)
   }
   
-  gd <- setGuides()
+  d$guide  <- setGuides()
   
-  genome_index <- paste0(genome,"/",input$select_Refgenome)
-  
-  #genome_index <- paste0("data/genome/", input$select_Refgenome)
+  genome_index <- paste0("./data/genome/", input$select_Refgenome)
   cmd <- paste0("samtools faidx ", genome_index)
   cmd <- paste0(cmd, " %s:%s-%s")
-  ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]
+ 
+  
+  ref <- system(sprintf(cmd, seqnames(d$guide )[1], start(d$guide)[1], end(d$guide)[1]), intern = T )[[2]]
+  
+  print(ref)
   
   switch (input$g.strand,
-    "-" = ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-    "+" = ref <- Biostrings::DNAString(ref)
+    "-" =  d$ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+    "+" =  d$ref <- Biostrings::DNAString(ref)
   )
   
-  d$ref <- ref
+
   
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
     progress$inc(1/n)
     Sys.sleep(0.5)
   }
-  return(ref)
+  return( d$ref)
 })
 
 ################################################################################
 # PLOTS
 ################################################################################
 
-creatPlotRef <- reactive({
-  output$ref_plot <- renderPlot({
-    start <- as.numeric(input$g.start)
+creatPlotRef <- reactive({  
+  output$ref_plot <- renderPlot({ 
     plotAlignments(
         setRef(),
         alns = NULL,
-        guide.loc = IRanges(start, input$target_loc+6),  
-        target.loc = input$target_loc, 
-        ins.sites = data.frame())
+        target.loc = input$target_loc,
+        #guide.loc = IRanges( 
+        #    end = abs(start(d$guide)[1] - end(d$guide)[1]) ,
+        #    width = abs(start(d$guide)[1] - end(d$guide)[1])),  
+        ins.sites = data.frame()
+        )
     })
+    
 })
 
 observeEvent(input$run_guide,{
     creatPlotRef()
     toggleModal(session, "modal_ref", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
-  })
+    createHTable()
+ })
 

@@ -20,7 +20,7 @@ legend.text.size <- sliderInput("legend.text.size", "Legend Symbol Size :",
 # Provide a custom currency format for value display, 
 # with basic animation
 x.angle <- sliderInput("x.angle", "X angle :", 
-  min = 1, max = 180, value = 45, step = 1, animate=TRUE)
+  min = 1, max = 90, value = 45, step = 1, animate=TRUE)
 
 # Animation with custom interval (in ms) to control speed,
 # plus looping

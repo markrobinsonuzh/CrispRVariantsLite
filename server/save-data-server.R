@@ -52,14 +52,35 @@
     # browser what name to use when saving the file.
    filename = function() { paste(simpletime(), '.pdf', sep='') },
     content = function(file) {
-        ggsave(
-            file, 
-            plot = createCrispPlot(), 
-            device = "pdf",
-            width=8, 
-            height=11, 
-            dpi=100
-            )
+        pdf(file, height = 5)
+        
+        plotVariants(d$cset, txdb = d$txdb, 
+      col.ht.ratio = c(1,6),
+      left.plot.margin = grid::unit(c(0.1,0,6,0.2), "lines"),
+      
+      plotFreqHeatmap.args = list(
+        top.n = input$top.n,
+        min.freq = input$min.freq,
+        min.count = input$min.count,
+        x.size = input$x.size, 
+        plot.text.size = input$plot.text.size, 
+        legend.text.size = input$legend.text.size, 
+        x.angle = input$x.angle
+        ),
+      
+      plotAlignments.args = list(
+        top.n = input$top.n,
+        min.freq = input$min.freq,
+        min.count = input$min.count,
+        axis.text.size = input$axis.text.size, 
+        ins.size = input$ins.size, 
+        legend.symbol.size = input$legend.symbol.size, 
+        legend.text.size = input$legend.text.size
+        ), 
+        row.ht.ratio = c(1,6)
+      )
+        
+        dev.off()
     }
   )
   
