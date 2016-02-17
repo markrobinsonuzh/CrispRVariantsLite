@@ -18,6 +18,7 @@ convertAb1toFasq <- reactive({
      dummy <- mapply( function(u,v,w) {
        abifToFastq(u,v,w)
      }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
+     v$fq_fnames <- unique(v$fq_fnames)
      
    } else {
      #throw error : no file uploaded
