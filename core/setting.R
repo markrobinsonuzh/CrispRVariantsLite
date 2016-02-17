@@ -3,7 +3,7 @@
 # genome <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
 genome <- "./data/genome"
 
-gendb <- dir(genome, ".fa$", recursive = TRUE, full.names = TRUE)
+gendb <- dir(genome, recursive = TRUE, full.names = TRUE)
 
 # name of sequence
 genlist <- basename(gendb)
