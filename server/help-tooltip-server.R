@@ -1,7 +1,7 @@
 info_AB1 = "Convert AB1 format to FastQ and run the mapping"
 info_FastQ = "Map the FastQ against a selected genome "
 info_guides = "Set the target and reference sequence"
-info_xls = "Set the "
+info_xls = "Set the metadata"
 observe({
   if(input$info){
     #--------
