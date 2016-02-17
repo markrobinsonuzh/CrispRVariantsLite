@@ -42,18 +42,21 @@ createCripSet <- reactive({
     }
     
     md <- t$DF
-    d$ref <- setRef()
-    guide <- setGuides()
+    #d$ref <- setRef()
+    #d$guide <- setGuides()
     
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "B")
       Sys.sleep(0.5)
     }
-
-    cset <- readsToTarget(v$bm_fnames, target = guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
+    print(d$guide)
     
-    return(cset)
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
+    
+    print(d$cset)
+
+    return(d$cset)
   }
 })
 
@@ -81,7 +84,7 @@ createCrispPlot <- reactive({
     }
      
      try({
-       plotVariants(d$cset, txdb = d$txdb, 
+      plotVariants(d$cset, txdb = d$txdb, 
       col.ht.ratio = c(1,6),
       left.plot.margin = grid::unit(c(0.1,0,6,0.2), "lines"),
       
@@ -107,8 +110,6 @@ createCrispPlot <- reactive({
         row.ht.ratio = c(1,6)
       )  
      }, silent = TRUE)
-     
-
   })
   return(pcrisp)
 })
