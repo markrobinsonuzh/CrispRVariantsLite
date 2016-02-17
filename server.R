@@ -16,14 +16,6 @@ options(shiny.reactlog=TRUE)
 
 shinyServer(function(input, output, session) {
 
-# uncomment lines below if action button is used to commit changes
-# values = list()
-# setHot = function(x) values[["hot"]] <<- x
-
-# comment lines below if action button is used to commit changes
-values = reactiveValues()
-setHot = function(x) values[["hot"]] = x
-
 t <- reactiveValues(
     DF = NULL,
     inFile = NULL
@@ -164,7 +156,6 @@ t <- reactiveValues(
   
   # open metadata pannel
   observeEvent(input$edit_xls, {
-    toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_table", toggle = "open")
   })
     
