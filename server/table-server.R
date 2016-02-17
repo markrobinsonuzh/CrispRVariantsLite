@@ -35,7 +35,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.1)
+    Sys.sleep(0.05)
   }
   
   
@@ -44,7 +44,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n, detail = "Compiling data")
-    Sys.sleep(0.1)
+    Sys.sleep(0.05)
   }
   
   #toggleModal(session, "modal_table", toggle = "open")
@@ -52,7 +52,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.1)
+    Sys.sleep(0.05)
   }
   
   output$table <- renderUI({
@@ -90,7 +90,7 @@ observe({
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n)
-      Sys.sleep(0.1)
+      Sys.sleep(0.05)
     }
     
     downloadbm <- file.path(v$bam_dir)
@@ -99,7 +99,7 @@ observe({
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail("storing files on the server"))
-      Sys.sleep(0.1)
+      Sys.sleep(0.05)
     }
   }
   
@@ -126,7 +126,7 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.05)
   }
   bm_fnames <- dir(v$bam_dir,".bam$", full.names = TRUE, recursive=T)  # re-define
   v$bm_fnames <- bm_fnames
@@ -147,7 +147,7 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.05)
   }
   
   l = length(bm_fnames)
@@ -165,7 +165,7 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.05)
   }
   return(t.DF)
 })

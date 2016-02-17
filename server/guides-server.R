@@ -66,7 +66,7 @@ setRef <- reactive({
   for (i in 1:8){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.5)
+    Sys.sleep(0.05)
   }
   
   gd <- setGuides()
@@ -89,7 +89,7 @@ setRef <- reactive({
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.5)
+    Sys.sleep(0.05)
   }
   return( d$ref)
 })

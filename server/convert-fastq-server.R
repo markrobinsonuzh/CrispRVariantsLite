@@ -20,21 +20,21 @@ observeEvent(input$run_fastq,{
         for (i in 1:5){
           #Increment the progress bar, and update the detail text.
           progress$inc(1/n, detail = "unzip Fast FASTQs files")
-          Sys.sleep(0.5)
+          Sys.sleep(0.05)
         }
         
         uploadFastq()
         
         for (i in 1:3){
           progress$inc(1/n, detail = "Map FastQs reads")
-          Sys.sleep(0.5)
+          Sys.sleep(0.05)
         }
         
         mapFastQ()
         
         for (i in 1:3){
           progress$inc(1/n, detail = "Map FastQs reads")
-          Sys.sleep(0.5)
+          Sys.sleep(0.05)
         }
         
         state$ini = TRUE
@@ -44,7 +44,7 @@ observeEvent(input$run_fastq,{
         
         for (i in 1:4){
           progress$inc(1/n, detail = "Create Metadata")
-          Sys.sleep(0.5)
+          Sys.sleep(0.05)
         }
         
         #createHTable()
