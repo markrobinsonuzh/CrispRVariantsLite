@@ -49,7 +49,7 @@ mapFastQ <- reactive({
         for(i in 1:length(v$fq_fnames))
         {
           progress$inc(1/n, detail = paste0("Mapping reads ", i, "/", n))
-          cmd <- paste0("bwa mem -t 2", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
+          cmd <- paste0("bwa mem -t 2 ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
           cat(cmd, "\n"); system(cmd)
           indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
           unlink(bm_fnames[i])
