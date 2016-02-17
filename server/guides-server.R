@@ -13,7 +13,7 @@ output$error1 <- renderUI({
 # Disable creating the guides until Reference and Bams defined
 observe({
    if(is.null(v$bm_fnames)){
-      updateButton(session, "create_guides", style ="default", icon = icon("ban"), disable = TRUE )
+      updateButton(session,"create_guides", style ="default", icon = icon("ban"), disable = TRUE )
     }else{
       updateButton(session,"create_guides", style = "success",  icon = icon("area-chart"), block = TRUE, disable = FALSE ) 
     }
@@ -26,29 +26,29 @@ observe({
 ################################################################################
 
 setGuides <- reactive({
-  
-  seq.start <- as.numeric(input$g.start)
-  seq.end <-   seq.start + as.numeric(input$target_loc) + 6
+  seq.target.loc <- as.numeric(input$g.start) + as.numeric(input$target_loc)
+  seq.start <-  seq.target.loc - 17
+  seq.end <-   seq.target.loc + 6
   seq.width <- as.numeric(input$g.length)
   
   print(seq.start)
   print(seq.end)
   guide <- GRanges(
     seqnames = input$g.chr, 
-    ranges = IRanges( 
-      end = seq.end,
-      width = 23
+    ranges = IRanges(
+      start =  seq.start,
+      end = seq.end
       ), 
     strand = input$g.strand
     )
     
+
+  d$guide <- guide + seq.width
+ # tloc <- as.numeric(input$target_loc) + seq.width
   
-  guide <- guide + seq.width
-  tloc <- as.numeric(input$target_loc) + seq.width
+ # updateTextInput(session, "target_loc", value = paste0(tloc))
   
-  updateTextInput(session, "target_loc", value = paste0(tloc))
-  
-  return(guide)
+  return(d$guide)
 })
 
 setTxdb <- reactive({
@@ -71,14 +71,14 @@ setRef <- reactive({
     Sys.sleep(0.5)
   }
   
-  d$guide  <- setGuides()
+  gd <- setGuides()
   
   genome_index <- paste0("./data/genome/", input$select_Refgenome)
   cmd <- paste0("samtools faidx ", genome_index)
   cmd <- paste0(cmd, " %s:%s-%s")
  
   
-  ref <- system(sprintf(cmd, seqnames(d$guide )[1], start(d$guide)[1], end(d$guide)[1]), intern = T )[[2]]
+  ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]
   
   print(ref)
   
@@ -103,13 +103,15 @@ setRef <- reactive({
 
 creatPlotRef <- reactive({  
   output$ref_plot <- renderPlot({ 
+      t.loc <- as.numeric(input$target_loc)
     plotAlignments(
         setRef(),
         alns = NULL,
         target.loc = input$target_loc,
         #guide.loc = IRanges( 
-        #    end = abs(start(d$guide)[1] - end(d$guide)[1]) ,
-        #    width = abs(start(d$guide)[1] - end(d$guide)[1])),  
+         #   end = t.loc - 16,
+          #  width = t.loc + 6,
+           # ),  
         ins.sites = data.frame()
         )
     })
@@ -120,6 +122,9 @@ observeEvent(input$run_guide,{
     creatPlotRef()
     toggleModal(session, "modal_ref", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
+    d$cset <- createCripSet()
+    print(d$cset)
+    d$txdb <- setTxdb()
     createHTable()
  })
 

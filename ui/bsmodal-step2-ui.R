@@ -15,7 +15,7 @@ targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), wi
 
 target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
 
-info <- checkboxInput("info", "Show help box", value=TRUE, width=NULL)
+info <- checkboxInput("info", "Show help box", value=FALSE, width=NULL)
 #--------------
 # button
 #--------------
@@ -50,10 +50,6 @@ modal_2 <- bsModal(
       fluidRow(
         column(width = 12,
           upload_bams,
-          p(),
-          select_AB1,
-          select_FastQ,
-          p(),
           create_guides,
           p(),
           uiOutput("metadata")

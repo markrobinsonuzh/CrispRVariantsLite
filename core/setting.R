@@ -4,7 +4,7 @@
 genome <- "./data/genome"
 
 gendb <- dir(genome, pattern = ".fa$", recursive = TRUE, full.names = TRUE)
-gendb.gz <- dir(genome, pattern = ".fa.gz$", recursive = TRUE, full.names = TRUE)
+gendb.gz <- dir(genome, recursive = TRUE, full.names = TRUE)
 
 
 # name of sequence

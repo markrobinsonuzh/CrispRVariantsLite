@@ -117,6 +117,7 @@ createCrispPlot <- reactive({
 #create the plot
  observeEvent(input$run_plot,{    
     d$cset <- createCripSet()
+    print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
     toggleModal(session, "modal_2", toggle = "close")
