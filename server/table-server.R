@@ -63,6 +63,7 @@ createHTable <- reactive({
     bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
   })
   
+  toggleModal(session, "modal_table", toggle = "open")
   
 })
 
@@ -170,22 +171,4 @@ getMetadata <- reactive({
 })
 
 
-# downloadHandler() takes two arguments, both functions.
-# The content function is passed a filename as an argument, and
-#   it should write out data to that filename.
-output$downloadTable <- downloadHandler(
-  # This function returns a string which tells the client
-  # browser what name to use when saving the file.
-  filename = function() {
-    paste("metadata", input$filetype, sep = ".")
-  },
-  
-  # This function should write data to a file given to it by
-  # the argument 'file'.
-  content = function(file) {
-    sep <- switch(input$filetype, "csv" = ",", "tsv" = "\t")
-    # Write to a file specified by the 'file' argument
-    write.table(t$DF, file, sep = sep,
-      row.names = FALSE)
-  }
-)
+

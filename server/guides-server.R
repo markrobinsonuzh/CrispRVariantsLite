@@ -27,12 +27,11 @@ observe({
 
 setGuides <- reactive({
   seq.target.loc <- as.numeric(input$g.start) + as.numeric(input$target_loc)
-  seq.start <-  seq.target.loc - 17
+  seq.start <-  seq.target.loc - 16
   seq.end <-   seq.target.loc + 6
   seq.width <- as.numeric(input$g.length)
   
-  print(seq.start)
-  print(seq.end)
+  
   guide <- GRanges(
     seqnames = input$g.chr, 
     ranges = IRanges(
@@ -42,7 +41,6 @@ setGuides <- reactive({
     strand = input$g.strand
     )
     
-
   d$guide <- guide + seq.width
  # tloc <- as.numeric(input$target_loc) + seq.width
   
@@ -80,14 +78,13 @@ setRef <- reactive({
   
   ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]
   
-  print(ref)
   
   switch (input$g.strand,
     "-" =  d$ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
     "+" =  d$ref <- Biostrings::DNAString(ref)
   )
   
-
+  updateTextInput(session, "ref_seqs", value = d$ref)
   
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
@@ -108,10 +105,11 @@ creatPlotRef <- reactive({
         setRef(),
         alns = NULL,
         target.loc = input$target_loc,
-        #guide.loc = IRanges( 
-         #   end = t.loc - 16,
-          #  width = t.loc + 6,
-           # ),  
+        #guide.loc = IRanges(
+        #    start = 
+        #    end = t.loc +6,
+        #    width = t.loc + 6,
+         #   ),  
         ins.sites = data.frame()
         )
     })
@@ -122,9 +120,6 @@ observeEvent(input$run_guide,{
     creatPlotRef()
     toggleModal(session, "modal_ref", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
-    d$cset <- createCripSet()
-    print(d$cset)
-    d$txdb <- setTxdb()
     createHTable()
  })
 

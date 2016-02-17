@@ -26,7 +26,11 @@
         p("Download BAM files"),
         downloadButton('downloadBAM', 'Download'),
         p("Download FASQ files "),
-        downloadButton('downloadFASTQ', 'Download')
+        downloadButton('downloadFASTQ', 'Download'),
+        p("Download Metadata files"),
+        radioButtons("filetype", "File type:",
+            choices = c("csv", "tsv"), inline = T),
+        downloadButton('downloadTable', 'Download')
       )
     }else{
       p("No Data to download - to create plot click on setting")
@@ -71,6 +75,26 @@
     },
      contentType = "application/zip"
   ) 
+  
+  # downloadHandler() takes two arguments, both functions.
+# The content function is passed a filename as an argument, and
+#   it should write out data to that filename.
+output$downloadTable <- downloadHandler(
+  # This function returns a string which tells the client
+  # browser what name to use when saving the file.
+  filename = function() {
+    paste("metadata", input$filetype, sep = ".")
+  },
+  
+  # This function should write data to a file given to it by
+  # the argument 'file'.
+  content = function(file) {
+    sep <- switch(input$filetype, "csv" = ",", "tsv" = "\t")
+    # Write to a file specified by the 'file' argument
+    write.table(t$DF, file, sep = sep,
+      row.names = FALSE)
+  }
+)
   
   # downloadHandler() takes two arguments, both functions.
   # The content function is passed a filename as an argument, and
