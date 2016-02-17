@@ -12,7 +12,7 @@ options(shiny.maxRequestSize = 10000*1024^2)
 options(shiny.reactlog=TRUE)
 
 # Run the auto-installer/updater code:
-# source("install.R", local = TRUE)
+#source("install.R", local = TRUE)
 
 shinyServer(function(input, output, session) {
 

@@ -53,6 +53,8 @@ mapFastQ <- reactive({
           indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
           unlink(bm_fnames[i])
         }
+        
+          v$bm_fnames <- dir(file.path(v$bam_dir), ".bam$", full.names = TRUE, recursive = T)
            
     }
     else
