@@ -47,7 +47,7 @@ observeEvent(input$run_fastq,{
           Sys.sleep(0.5)
         }
         
-        createHTable()
+        #createHTable()
         
       }
       
