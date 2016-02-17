@@ -1,7 +1,6 @@
 ## ui.R ##
-library(shinydashboard)
 
-header <- dashboardHeader(title = "CrispRVariants")
+header <- dashboardHeader(title = "CrispRVariantsLite")
 
 sidebar <- dashboardSidebar(disable = T)
 
@@ -25,9 +24,9 @@ body <- dashboardBody(
       htmlOutput("plots")),
     plotOptions,
     modal_1,
+    modal_2,
     modal_AB1,
     modal_FASTQ,
-    modal_2,
     modal_table,
     modal_ref,
     modal_help,
