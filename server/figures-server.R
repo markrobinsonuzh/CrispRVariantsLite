@@ -38,7 +38,7 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "A")
-      Sys.sleep(0.5)
+      Sys.sleep(0.05)
     }
     
     md <- t$DF
@@ -48,7 +48,7 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "B")
-      Sys.sleep(0.5)
+      Sys.sleep(0.05)
     }
     print(d$guide)
     
@@ -80,7 +80,7 @@ createCrispPlot <- reactive({
     for (i in 1:20){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "plotting")
-      Sys.sleep(0.5)
+      Sys.sleep(0.05)
     }
      
      try({
