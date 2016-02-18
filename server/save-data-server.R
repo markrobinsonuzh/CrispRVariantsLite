@@ -21,16 +21,18 @@
     output$ui_save <- renderUI({
     if(!is.null(d$cset)){
       tags$div(
-        p("Download the plot"),
-        downloadButton('downloadPlot', 'Download'),
-        p("Download BAM files"),
-        downloadButton('downloadBAM', 'Download'),
-        p("Download FASQ files "),
-        downloadButton('downloadFASTQ', 'Download'),
-        p("Download Metadata files"),
-        radioButtons("filetype", "File type:",
-            choices = c("csv", "tsv"), inline = T),
+        splitLayout(p("Download plot"),
+        downloadButton('downloadPlot', 'Download')),
+        p(),
+        splitLayout(p("Download BAM "),
+        downloadButton('downloadBAM', 'Download')),
+        p(),
+        splitLayout(p("Download FASQ  "),
+        downloadButton('downloadFASTQ', 'Download')),
+        p(),
+        splitLayout(p("Download Metadata "),
         downloadButton('downloadTable', 'Download')
+        )
       )
     }else{
       p("No Data to download - to create plot click on setting")
@@ -83,16 +85,14 @@ output$downloadTable <- downloadHandler(
   # This function returns a string which tells the client
   # browser what name to use when saving the file.
   filename = function() {
-    paste("metadata", input$filetype, sep = ".")
+    paste0("metadata", simpletime(), ".csv")
   },
   
   # This function should write data to a file given to it by
   # the argument 'file'.
   content = function(file) {
-    sep <- switch(input$filetype, "csv" = ",", "tsv" = "\t")
     # Write to a file specified by the 'file' argument
-    write.table(t$DF, file, sep = sep,
-      row.names = FALSE)
+    write.table(t$DF, file, sep = ",", row.names = FALSE)
   }
 )
   
@@ -104,7 +104,7 @@ output$downloadTable <- downloadHandler(
     # browser what name to use when saving the file.
    filename = function() { paste(simpletime(), '.pdf', sep='') },
     content = function(file) {
-        pdf(file, height = 5)
+        pdf(file, height = 5, useDingbats = FALSE)
         
         plotVariants(d$cset, txdb = d$txdb, 
       col.ht.ratio = c(1,6),

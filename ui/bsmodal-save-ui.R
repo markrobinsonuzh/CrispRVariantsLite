@@ -7,7 +7,6 @@ modal_save <- bsModal(
   bsAlert("alertAB1"),
   fluidRow(
     column(width = 12,
-      h5("Download CripRVariants Plot"),
       ui_save
       )
   )
