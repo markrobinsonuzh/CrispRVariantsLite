@@ -13,7 +13,7 @@ targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), wi
 
 
 
-target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
+
 
 info <- checkboxInput("info", "Show help box", value=FALSE, width=NULL)
 #--------------
@@ -60,8 +60,7 @@ modal_2 <- bsModal(
       fluidRow(column(width = 12, helpText("Table of counts options"))),
           top.n,
           min.freq,
-          min.count,
-          target_loc
+          min.count
       ),
     column(width = 6,
       ref_plot)

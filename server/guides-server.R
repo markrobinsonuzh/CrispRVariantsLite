@@ -6,6 +6,10 @@ output$error1 <- renderUI({
   p(paste0("Reference : " , d$ref, " strand : ", input$g.strand))
 })
 
+output$guide <- renderUI({
+  p(paste0("Reference : " , d$ref, " strand : ", input$g.strand))
+})
+
 ################################################################################
 # BEHAVIOUR
 ################################################################################
@@ -116,10 +120,16 @@ creatPlotRef <- reactive({
     
 })
 
+    
 observeEvent(input$run_guide,{
     creatPlotRef()
     toggleModal(session, "modal_ref", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
-    createHTable()
+    
+    eventReactive(creatPlotRef(),{
+        createHTable()
+    })
+
+    
  })
 

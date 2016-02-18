@@ -15,11 +15,16 @@ g.length <- textInput("g.length", "WIDTH", value = "0")
 g.chr <- textInput("g.chr", "CHR", value = "chr12", placeholder = "chr12")
 g.strand <- radioButtons("g.strand", "Strands", choices = c("+","-"), selected = "+", inline = T, width = NULL)
 
+target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
+guide = uiOutput("guide")
+
 modal_ref <- bsModal(
   "modal_ref", "Create the reference guide : ",
-  "setting_btn", size = "small",
+  "setting_btn", size = "large",
   bsAlert("alertRef"),
   fluidRow(
+      column(width = 4,
+       fluidRow(
     column(width = 12,
       helpText("Type de coordinate of the sequence of interest"),
       fluidRow(
@@ -29,6 +34,10 @@ modal_ref <- bsModal(
         column(width = 6,
           g.chr,
           g.strand
+          )),
+   fluidRow(
+       column(width=12,
+          target_loc
           )),
       h1("or", align = "center"),
       helpText("Type the sequence of interest"),
@@ -42,6 +51,11 @@ modal_ref <- bsModal(
     column(width = 6),
     column(width = 6,
       run_guide)
+  )),
+      column(width = 8,
+        guide
+      )
   )
+ 
   
 )
