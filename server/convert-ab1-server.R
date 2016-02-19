@@ -50,7 +50,7 @@
        toggleModal(session, "modal_AB1", toggle = "close")
        toggleModal(session, "modal_2", toggle = "open")
        
-       #createHTable()
+       createHTable()
        
      }
           }else{

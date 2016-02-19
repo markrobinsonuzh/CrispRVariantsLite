@@ -7,8 +7,15 @@ output$error1 <- renderUI({
 })
 
 output$guide <- renderUI({
-  p(paste0("Reference : " , d$ref, " strand : ", input$g.strand))
+  plotOutput("guide_plot")
 })
+
+output$next_step <- renderUI({
+    #bsButton("ok ", 'ok', style = "info", block = TRUE)
+    actionButton("next_step", "Next step" , width="100%", style="primary")
+})
+
+
 
 ################################################################################
 # BEHAVIOUR
@@ -30,28 +37,28 @@ observe({
 ################################################################################
 
 setGuides <- reactive({
-  seq.target.loc <- as.numeric(input$g.start) + as.numeric(input$target_loc)
-  seq.start <-  seq.target.loc - 16
-  seq.end <-   seq.target.loc + 6
-  seq.width <- as.numeric(input$g.length)
-  
-  
-  guide <- GRanges(
-    seqnames = input$g.chr, 
-    ranges = IRanges(
-      start =  seq.start,
-      end = seq.end
-      ), 
-    strand = input$g.strand
-    )
-    
-  d$guide <- guide + seq.width
- # tloc <- as.numeric(input$target_loc) + seq.width
-  
- # updateTextInput(session, "target_loc", value = paste0(tloc))
-  
-  return(d$guide)
+    print("setGuides")
+
+ seq.start <- as.numeric(input$g.start)
+ seq.target.loc <- as.numeric(input$target_loc)
+ seq.end <-  seq.start + seq.target.loc + 5
+
+ guide <- GRanges(
+   seqnames = input$g.chr,
+   ranges = IRanges(
+     start =  seq.start,
+     end = seq.end
+     ),
+   strand = input$g.strand
+   )
+
+ d$seq.width <- as.numeric(input$g.length)
+ d$guide <- guide + d$seq.width
+ d$t.loc <- seq.target.loc + d$seq.width
+
+ return(d$guide)
 })
+
 
 setTxdb <- reactive({
   f <- paste0("data/txdb/", input$txDb)
@@ -60,6 +67,7 @@ setTxdb <- reactive({
 })
 
 setRef <- reactive({
+    print("setRef")
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
@@ -84,52 +92,71 @@ setRef <- reactive({
   
   
   switch (input$g.strand,
-    "-" =  d$ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-    "+" =  d$ref <- Biostrings::DNAString(ref)
+    "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+    "+" =  ref <- Biostrings::DNAString(ref)
   )
+    
+  print(ref)
+
   
-  updateTextInput(session, "ref_seqs", value = d$ref)
+  updateTextInput(session, "ref_seqs", value = ref)
   
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
     progress$inc(1/n)
     Sys.sleep(0.05)
   }
-  return( d$ref)
+  return(ref)
 })
 
 ################################################################################
 # PLOTS
 ################################################################################
 
-creatPlotRef <- reactive({  
-  output$ref_plot <- renderPlot({ 
-      t.loc <- as.numeric(input$target_loc)
-    plotAlignments(
-        setRef(),
-        alns = NULL,
-        target.loc = input$target_loc,
-        #guide.loc = IRanges(
-        #    start = 
-        #    end = t.loc +6,
-        #    width = t.loc + 6,
-         #   ),  
-        ins.sites = data.frame()
-        )
-    })
-    
+creatPlotRef <- reactive({
+ output$ref_plot <- renderPlot({
+    plot_reference()
+ }, height=200)
+ 
+ output$guide_plot <- renderPlot({
+   plot_reference()
+  }, height = 200)
+ 
 })
+
+
 
     
 observeEvent(input$run_guide,{
-    creatPlotRef()
-    toggleModal(session, "modal_ref", toggle = "close")
-    toggleModal(session, "modal_2", toggle = "open")
-    
-    eventReactive(creatPlotRef(),{
-        createHTable()
+    isolate({
+       creatPlotRef()  
     })
-
-    
  })
+ 
+ observeEvent(input$next_step,{
+        toggleModal(session, "modal_ref", toggle = "close")
+        toggleModal(session, "modal_2", toggle = "open")
+ })
+ 
 
+
+plot_reference <- reactive({
+
+        
+   ref <- setRef() 
+   d$ref <- ref
+
+   box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
+
+   plotAlignments(
+       ref,
+       alns = NULL,
+       target.loc = d$t.loc,
+       guide.loc = IRanges(
+         start = d$seq.width + 1,
+         end = box_end),
+       ins.sites = data.frame(),
+       axis.text.size = 14
+       )
+       
+})

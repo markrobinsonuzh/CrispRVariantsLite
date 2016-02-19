@@ -12,3 +12,13 @@ genlist.gz <- basename(gendb)
 # transcript database library
 txDB.dir <- dir("./data/txdb/", recursive = TRUE, full.names = TRUE)
 txDBl <- basename(txDB.dir)
+
+################################################################################
+# DEFAULT SETTING GUIDE
+################################################################################
+
+d.start <- "23648474"
+d.length <- "5"
+d.chr <- "chr17"
+d.strand <-  "-"
+

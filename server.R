@@ -48,14 +48,16 @@ t <- reactiveValues(
   )
   
   #Reactive values for producing the plots
-  d <- reactiveValues(
-    cset = NULL,
-    ref = NULL,
-    mds = NULL,
-    txdb = NULL,
-    bm_fnames = NULL,
-    guide = NULL
-  )
+   d <- reactiveValues(
+   cset = NULL,
+   ref = NULL,
+   mds = NULL,
+   txdb = NULL,
+   bm_fnames = NULL,
+   guide = NULL,
+   seq.width = NULL,
+   t.loc = NULL
+ )
 
    # create the temp dir for the files
   setDir <- reactive({

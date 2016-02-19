@@ -101,6 +101,8 @@ observe({
       progress$inc(1/n, detail("storing files on the server"))
       Sys.sleep(0.05)
     }
+    
+    createHTable()
   }
   
 })

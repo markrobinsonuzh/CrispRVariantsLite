@@ -106,31 +106,41 @@ output$downloadTable <- downloadHandler(
     content = function(file) {
         pdf(file, height = 5, useDingbats = FALSE)
         
-        plotVariants(d$cset, txdb = d$txdb, 
-      col.ht.ratio = c(1,6),
-      left.plot.margin = grid::unit(c(0.1,0,6,0.2), "lines"),
+        plotVariants(createCripSet(), txdb = d$txdb, 
+     # col.wdth.ratio = c(4,2),
+     # row.ht.ratio = c(1,6),
+      gene.text.size = 8,
+      left.plot.margin = ggplot2::unit(c(1,0,3,2), "lines"),
       
+      
+      
+      plotAlignments.args = list(
+        legend.cols =5,
+        top.n = input$top.n,
+        min.freq = input$min.freq,
+        min.count = input$min.count,
+        target.loc = d$t.loc,
+        guide.loc = IRanges(
+         start = d$seq.width + 1,
+         end = end(d$guide) - start(d$guide) - d$seq.width + 1),
+        axis.text.size = input$axis.text.size, 
+        ins.size = input$ins.size,
+        plot.text.size = input$plot.text.size, 
+        legend.symbol.size = input$legend.symbol.size, 
+        legend.text.size = input$legend.text.size
+        ), 
+        
       plotFreqHeatmap.args = list(
         top.n = input$top.n,
         min.freq = input$min.freq,
         min.count = input$min.count,
+        type =  input$plot.type,
         x.size = input$x.size, 
         plot.text.size = input$plot.text.size, 
-        legend.text.size = input$legend.text.size, 
+        legend.text.size = input$legend.text.size,
         x.angle = input$x.angle
-        ),
-      
-      plotAlignments.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        axis.text.size = input$axis.text.size, 
-        ins.size = input$ins.size, 
-        legend.symbol.size = input$legend.symbol.size, 
-        legend.text.size = input$legend.text.size
-        ), 
-        row.ht.ratio = c(1,6)
-      )
+        )
+      )  
         
         dev.off()
     }

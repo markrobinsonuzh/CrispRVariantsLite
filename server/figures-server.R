@@ -85,13 +85,14 @@ createCrispPlot <- reactive({
      
      try({
       plotVariants(d$cset, txdb = d$txdb, 
-      col.with.ratio = c(4,2),
-      row.ht.ratio = c(1,8),
+#      col.wdth.ratio = c(5,2),
+#      row.ht.ratio = c(1,6),
       gene.text.size = 8,
       left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
       
+      
+      
       plotAlignments.args = list(
-        legend.cols =2,
         top.n = input$top.n,
         min.freq = input$min.freq,
         min.count = input$min.count,
@@ -102,7 +103,7 @@ createCrispPlot <- reactive({
         axis.text.size = input$axis.text.size, 
         ins.size = input$ins.size,
         plot.text.size = input$plot.text.size, 
-        legend.symbol.size = input$legend.symbol.size, 
+        legend.symbol.size = input$legend.symbol.size,
         legend.text.size = input$legend.text.size
         ), 
         
@@ -114,12 +115,11 @@ createCrispPlot <- reactive({
         x.size = input$x.size, 
         plot.text.size = input$plot.text.size, 
         legend.text.size = input$legend.text.size,
-        legend.key.height = grid::unit(2, "lines"), 
         x.angle = input$x.angle
         )
-      )  
+      ) + theme(legend.position="none")  
      }, silent = TRUE)
-  }, height = 600)
+  }, height = 500)
   return(pcrisp)
 })
 
