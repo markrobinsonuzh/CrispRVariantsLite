@@ -8,11 +8,13 @@ convertAb1toFasq <- reactive({
      temp <- unzip(data_dir$datapath, exdir = v$ab1_dir)
      
      v$ab1_fnames <- dir(v$ab1_dir, "ab1$", recursive = TRUE, full.names = TRUE)
+     
      # get the sequence names
      v$sq_nms <- gsub(".ab1","",basename(v$ab1_fnames))
      
-     # replace spaces ans slashes in filename with underscores
-     v$fq_fnames  <- paste0(gsub("[\ |\\/]", "_", dirname(v$ab1_fnames)), ".fastq")
+     # replace spaces and slashes in filename with underscores
+     v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")
+     v$fq_fnames  <- paste0(gsub("[\\/]", "__", dirname(v$ab1_fnames)), ".fastq")
      v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
      dummy <- mapply( function(u,v,w) {
