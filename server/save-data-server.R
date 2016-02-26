@@ -106,6 +106,8 @@ output$downloadTable <- downloadHandler(
     content = function(file) {
         pdf(file, height = 5, useDingbats = FALSE)
         
+        #group <- as.factor(t$DF$group)
+        
         plotVariants(createCripSet(), txdb = d$txdb, 
      # col.wdth.ratio = c(4,2),
      # row.ht.ratio = c(1,6),
@@ -138,8 +140,8 @@ output$downloadTable <- downloadHandler(
         x.size = input$x.size, 
         plot.text.size = input$plot.text.size, 
         legend.text.size = input$legend.text.size,
-        x.angle = input$x.angle,
-        group = group
+        x.angle = input$x.angle #,
+        #group = group
         )
       )  
         
