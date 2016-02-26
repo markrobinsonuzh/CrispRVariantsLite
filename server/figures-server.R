@@ -38,7 +38,7 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "A")
-      Sys.sleep(0.05)
+      Sys.sleep(0.005)
     }
     
     md <- t$DF
@@ -48,7 +48,7 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "B")
-      Sys.sleep(0.05)
+      Sys.sleep(0.005)
     }
     print(d$guide)
     
@@ -80,10 +80,12 @@ createCrispPlot <- reactive({
     for (i in 1:20){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "plotting")
-      Sys.sleep(0.05)
+      Sys.sleep(0.005)
     }
      
      try({
+      group <- as.factor(t$DF$group)
+
       plotVariants(d$cset, txdb = d$txdb, 
 #      col.wdth.ratio = c(5,2),
 #      row.ht.ratio = c(1,6),
@@ -115,7 +117,8 @@ createCrispPlot <- reactive({
         x.size = input$x.size, 
         plot.text.size = input$plot.text.size, 
         legend.text.size = input$legend.text.size,
-        x.angle = input$x.angle
+        x.angle = input$x.angle,
+        group = group
         )
       ) + theme(legend.position="none")  
      }, silent = TRUE)
