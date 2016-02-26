@@ -156,9 +156,7 @@ getMetadata <- reactive({
   x <- basename(bm_fnames)
   d_fnames <- unlist(lapply(x,function(x) paste0("/bam/", x )))
   lbl <- gsub("_s.bam$","",basename(bm_fnames))
-  stub <- gsub("[\ |\\/]", "_",v$bam_dir)
-  stub <- gsub("_bam","",stub)
-  lbl <- gsub(stub,"",lbl)
+  lbl <- sapply(strsplit(lbl,"__"), tail, 1)
   t.DF = data.frame(file.name = d_fnames, 
                     label = lbl, 
                     group = rep(1,l),
