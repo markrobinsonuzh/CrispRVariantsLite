@@ -21,14 +21,14 @@ target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, va
 guide = uiOutput("guide")
 
 modal_ref <- bsModal(
-  "modal_ref", "Create the reference guide : ",
+  "modal_ref", "Specify the guide: ",
   "setting_btn", size = "large",
   bsAlert("alertRef"),
   fluidRow(
       column(width = 4,
        fluidRow(
     column(width = 12,
-      helpText("Type de coordinate of the sequence of interest"),
+      helpText("Enter the chromosome, coordinates and strand of the guide sequence and WIDTH (number of bases on each side of PAM+guide)"),
       fluidRow(
         column(width = 6,
           g.start,

@@ -1,16 +1,15 @@
-## About CrispRVariants Lite
-CrispRVariantslite was developed in the group of Mark Robinson at 
-the Institute for Molecular Life Sciences of the University of Zurich.
+## About CrispRVariantsLite
+CrispRVariantsLite was developed in the group of [Mark Robinson](http://www.imls.uzh.ch/research/robinson.html) at 
+the [Institute for Molecular Life Sciences](http://www.imls.uzh.ch/index.html) of the [University of Zurich](http://www.uzh.ch/en.html).
 
 ### Developers :
 -   Buildman Biyong 
--   Helene Lindsay email
--   Mark Robinson email
-
+-   Helen Lindsay
+-   Mark Robinson
 
 ### Code
-All code for CrispRVariantslight is available on GitHub.
+All code for CrispRVariantsLite (web app) is available on GitHub [here](https://github.com/markrobinsonuzh/CrispRVariantsLite).
+The full CrispRVariants package is available from Bioconductor [here](http://bioconductor.org/packages/CrispRVariants).
 
 ### Contact
-We are currently finialising the package for inclusion Bioconductor. 
 Please contact helen (dot) lindsay (at) uzh (dot) ch for more information 

@@ -21,17 +21,17 @@
     output$ui_save <- renderUI({
     if(!is.null(d$cset)){
       tags$div(
-        splitLayout(p("Download plot"),
-        downloadButton('downloadPlot', 'Download')),
+        splitLayout(p("Allele Variant Plot"),
+        downloadButton('downloadPlot', 'Download PDF')),
         p(),
-        splitLayout(p("Download BAM "),
-        downloadButton('downloadBAM', 'Download')),
+        splitLayout(p("Mapped BAM files"),
+        downloadButton('downloadBAM', 'Download ZIP')),
         p(),
-        splitLayout(p("Download FASQ  "),
-        downloadButton('downloadFASTQ', 'Download')),
+        splitLayout(p("FASTQ files"),
+        downloadButton('downloadFASTQ', 'Download ZIP')),
         p(),
-        splitLayout(p("Download Metadata "),
-        downloadButton('downloadTable', 'Download')
+        splitLayout(p("Metadata table"),
+        downloadButton('downloadTable', 'Download CSV')
         )
       )
     }else{
@@ -138,7 +138,8 @@ output$downloadTable <- downloadHandler(
         x.size = input$x.size, 
         plot.text.size = input$plot.text.size, 
         legend.text.size = input$legend.text.size,
-        x.angle = input$x.angle
+        x.angle = input$x.angle,
+        group = group
         )
       )  
         

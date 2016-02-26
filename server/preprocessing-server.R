@@ -43,7 +43,7 @@ mapFastQ <- reactive({
         progress <- shiny::Progress$new()
         # Make sure it closes when we exit this reactive, even if there's an error
         on.exit(progress$close())
-        progress$set(message = "Preparing BAM files", value = 0)
+        progress$set(message = "Creating BAM files", value = 0)
       
         n <- length(v$fq_fnames)
       
