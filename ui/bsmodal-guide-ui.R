@@ -15,7 +15,7 @@ next_step <- uiOutput("next_step")
 g.start <- textInput("g.start", "START", value = d.start, placeholder = "20")
 g.length <- textInput("g.length", "WIDTH", value = d.length)
 g.chr <- textInput("g.chr", "CHR", value = d.chr, placeholder = "chr12")
-g.strand <- radioButtons("g.strand", "Strands", choices = c("+","-"), selected = d.strand, inline = T, width = NULL)
+g.strand <- radioButtons("g.strand", "Strand", choices = c("+","-"), selected = d.strand, inline = T, width = NULL)
 
 target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
 guide = uiOutput("guide")

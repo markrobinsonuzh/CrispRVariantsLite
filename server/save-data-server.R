@@ -8,9 +8,9 @@
         else
         {
             tags$div(
-                fileInput('upload_bams', 'Upload Bams', multiple = F, width = "100%"),
-                bsButton("select_FastQ", 'upload FastQ', style = "primary", block = TRUE),
-                bsButton("select_AB1", 'upload AB1', style = "primary", block = TRUE),
+                fileInput('upload_bams', 'Upload ZIP of BAMs', multiple = F, width = "100%"),
+                bsButton("select_FastQ", 'Upload ZIP of FASTQs', style = "primary", block = TRUE),
+                bsButton("select_AB1", 'Upload ZIP of AB1s', style = "primary", block = TRUE),
                 p()
 
             )
