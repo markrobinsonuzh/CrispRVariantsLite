@@ -1,0 +1,15 @@
+# in unix
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa GRCz10.fa
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz GRCz10.fa.gz
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.amb GRCz10.fa.amb
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.ann GRCz10.fa.ann
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.bwt GRCz10.fa.bwt
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.fai GRCz10.fa.fai
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.gzi GRCz10.fa.gzi
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.pac GRCz10.fa.pac
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.sa GRCz10.fa.sa
+
+# in R
+library(GenomicFeatures)
+txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Danio_rerio/Danio_rerio.GRCz10.81.gtf.gz", format = "gtf")
+saveDb(txdb, file= "zebrafish_GRCz10_Ensembl81_txdb.sqlite")
