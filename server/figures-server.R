@@ -52,7 +52,9 @@ createCripSet <- reactive({
     }
     print(d$guide)
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
+     reference = d$ref, names = md$label,
+      target.loc = input$target_loc, verbose = FALSE)
     
     print(d$cset)
 

@@ -54,7 +54,9 @@ t <- reactiveValues(
     mds = NULL,
     txdb = NULL,
     bm_fnames = NULL,
-    guide = NULL
+    guide = NULL,
+    seq.width = NULL,
+    t.loc = NULL
   )
 
    # create the temp dir for the files

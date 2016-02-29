@@ -26,13 +26,12 @@ observe({
 ################################################################################
 
 setGuides <- reactive({
-  seq.target.loc <- as.numeric(input$g.start) + as.numeric(input$target_loc)
-  seq.start <-  seq.target.loc - 17
-  seq.end <-   seq.target.loc + 6
-  seq.width <- as.numeric(input$g.length)
+  print("setting guide")
   
-  print(seq.start)
-  print(seq.end)
+  seq.start <- as.numeric(input$g.start)
+  seq.target.loc <- as.numeric(input$target_loc)
+  seq.end <-  seq.start + seq.target.loc + 5
+  
   guide <- GRanges(
     seqnames = input$g.chr, 
     ranges = IRanges(
@@ -42,14 +41,14 @@ setGuides <- reactive({
     strand = input$g.strand
     )
     
-
-  d$guide <- guide + seq.width
- # tloc <- as.numeric(input$target_loc) + seq.width
-  
- # updateTextInput(session, "target_loc", value = paste0(tloc))
+  d$seq.width <- as.numeric(input$g.length)
+  d$guide <- guide + d$seq.width
+  d$t.loc <- seq.target.loc + d$seq.width
   
   return(d$guide)
 })
+
+
 
 setTxdb <- reactive({
   f <- paste0("data/txdb/", input$txDb)
@@ -68,7 +67,7 @@ setRef <- reactive({
   for (i in 1:8){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.5)
+    Sys.sleep(0.05)
   }
   
   gd <- setGuides()
@@ -79,8 +78,8 @@ setRef <- reactive({
  
   
   ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]
-  
-  print(ref)
+  print(sprintf("reference is %s",ref))
+  print(sprintf("length of ref is %s", nchar(ref)))
   
   switch (input$g.strand,
     "-" =  d$ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
@@ -103,18 +102,21 @@ setRef <- reactive({
 
 creatPlotRef <- reactive({  
   output$ref_plot <- renderPlot({ 
-      t.loc <- as.numeric(input$target_loc)
+       
+    ref <- setRef() 
+    box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
+  
     plotAlignments(
-        setRef(),
+        ref,
         alns = NULL,
-        target.loc = input$target_loc,
-        #guide.loc = IRanges( 
-         #   end = t.loc - 16,
-          #  width = t.loc + 6,
-           # ),  
-        ins.sites = data.frame()
+        target.loc = d$t.loc,
+        guide.loc = IRanges( 
+          start = max(d$seq.width + 1), 
+          end = box_end),
+        ins.sites = data.frame(),
+        axis.text.size = 14
         )
-    })
+    }, height = 200)
     
 })
 
