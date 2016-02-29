@@ -1,6 +1,7 @@
 data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon("list-alt"), style = "primary", block = TRUE)
 info_btn <- bsButton("info_btn", 'Help', type='action', icon =  icon("fa fa-pencil"), style = "primary", block = TRUE)
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
+reset_btn <- bsButton("reset_btn", "Reset", type='action', style='primary', block = TRUE)
 
 #----------------
 # Slider
@@ -51,9 +52,11 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=6,
+    column(width=4,
       data_setting),
-    column(width=6,
-      save_data )
+    column(width=4,
+      save_data ),
+    column(width=4,
+	reset_btn)
   )
 )
