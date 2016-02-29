@@ -29,28 +29,28 @@
        for (i in 1:5){
          #Increment the progress bar, and update the detail text.
          progress$inc(1/n, detail = "Convert .ab1 to FastQ")
-         Sys.sleep(0.5)
+         Sys.sleep(0.05)
        }
        
        convertAb1toFasq()
        
        for (i in 1:5){
          progress$inc(1/n, detail = "Map FastQs reads")
-         Sys.sleep(0.5)
+         Sys.sleep(0.05)
        }
        
        mapFastQ()
        
        for (i in 1:5){
          progress$inc(1/n, detail = "compiling data")
-         Sys.sleep(0.5)
+         Sys.sleep(0.05)
        }
        
        state$ini = TRUE
        toggleModal(session, "modal_AB1", toggle = "close")
        toggleModal(session, "modal_2", toggle = "open")
        
-       #createHTable()
+       createHTable()
        
      }
           }else{

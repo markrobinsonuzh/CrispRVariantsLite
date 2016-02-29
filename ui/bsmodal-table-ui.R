@@ -17,23 +17,5 @@ modal_table <- bsModal(
       helpText("Changes to the table will be automatically saved to the source file."),
       htmlOutput("table")
     )
-  ),
-  p(),
-  p(),
-  hr(),
-  fluidRow(
-    column(width = 6,
-      fluidRow(
-        column(width = 6,
-          radioButtons("filetype", "File type:",
-            choices = c("csv", "tsv"), inline = T),
-          downloadButton('downloadTable', 'Download')),
-        column(width = 6)
-        )),
-    column(width = 6,
-      fluidRow(
-        column(width = 6),
-        column(width = 6 )
-      ))
   )
 )

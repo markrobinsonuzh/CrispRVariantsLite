@@ -8,16 +8,19 @@ convertAb1toFasq <- reactive({
      temp <- unzip(data_dir$datapath, exdir = v$ab1_dir)
      
      v$ab1_fnames <- dir(v$ab1_dir, "ab1$", recursive = TRUE, full.names = TRUE)
+     
      # get the sequence names
      v$sq_nms <- gsub(".ab1","",basename(v$ab1_fnames))
      
-     # replace spaces ans slashes in filename with underscores
-     v$fq_fnames  <- paste0(gsub("[\ |\\/]", "_", dirname(v$ab1_fnames)), ".fastq")
+     # replace spaces and slashes in filename with underscores
+     v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")
+     v$fq_fnames  <- paste0(gsub("[\\/]", "__", dirname(v$ab1_fnames)), ".fastq")
      v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
      dummy <- mapply( function(u,v,w) {
        abifToFastq(u,v,w)
      }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
+     v$fq_fnames <- unique(v$fq_fnames)
      
    } else {
      #throw error : no file uploaded
@@ -40,15 +43,15 @@ mapFastQ <- reactive({
         progress <- shiny::Progress$new()
         # Make sure it closes when we exit this reactive, even if there's an error
         on.exit(progress$close())
-        progress$set(message = "Preparing BAM files", value = 0)
+        progress$set(message = "Creating BAM files", value = 0)
       
         n <- length(v$fq_fnames)
       
         #Map, sort and index the bam files, remove the unsorted bams
         for(i in 1:length(v$fq_fnames))
         {
-          progress$inc(1/n, detail = paste0("Mapping reads ", i, "/", n))
-          cmd <- paste0("bwa mem ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
+          progress$inc(1/n, detail = paste0("Mapping FASTQs ", i, "/", n))
+          cmd <- paste0("bwa mem -t 2 ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
           cat(cmd, "\n"); system(cmd)
           indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
           unlink(bm_fnames[i])

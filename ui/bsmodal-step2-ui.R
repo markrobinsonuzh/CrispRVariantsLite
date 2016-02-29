@@ -13,7 +13,7 @@ targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), wi
 
 
 
-target_loc <- sliderInput("target_loc", "Target location", min = 0, max = 30, value = 17, step= 1)
+
 
 info <- checkboxInput("info", "Show help box", value=FALSE, width=NULL)
 #--------------
@@ -41,7 +41,7 @@ modal_2 <- bsModal(
   "data_setting", size = "large",
   fluidRow(column(width = 12,
     bsAlert("alert2"),
-    helpText("CRISPR-Cas9 mutagenesis experiment. Starting from a set of bam files, CrispRVariants narrows the alignments to the target region and renumbers variants with respect to a zero point, typically the Cas9 cut site three bases upstream of the protospacer adjacent motif (PAM). The target region and zero point can be flexibly specified, and the variants may be shown with respect to either DNA strand.")
+    helpText("CrispRVariants narrows the alignments to the target region and renumbers variants with respect to a zero point, typically the Cas9 cut site three bases upstream of the protospacer adjacent motif (PAM). The target region and zero point can be flexibly specified, and the variants may be shown with respect to either DNA strand.")
     )),
   hr(),
   fluidRow(
@@ -56,12 +56,11 @@ modal_2 <- bsModal(
         ))
     ),
     column(width = 3,
-      h3("Plot setting : "),
+      h3("Filters: "),
       fluidRow(column(width = 12, helpText("Table of counts options"))),
           top.n,
           min.freq,
-          min.count,
-          target_loc
+          min.count
       ),
     column(width = 6,
       ref_plot)

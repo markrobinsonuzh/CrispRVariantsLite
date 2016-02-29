@@ -35,7 +35,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.1)
+    Sys.sleep(0.005)
   }
   
   
@@ -44,7 +44,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n, detail = "Compiling data")
-    Sys.sleep(0.1)
+    Sys.sleep(0.005)
   }
   
   #toggleModal(session, "modal_table", toggle = "open")
@@ -52,7 +52,7 @@ createHTable <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.1)
+    Sys.sleep(0.005)
   }
   
   output$table <- renderUI({
@@ -63,6 +63,7 @@ createHTable <- reactive({
     bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
   })
   
+  toggleModal(session, "modal_table", toggle = "open")
   
 })
 
@@ -89,7 +90,7 @@ observe({
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n)
-      Sys.sleep(0.1)
+      Sys.sleep(0.005)
     }
     
     downloadbm <- file.path(v$bam_dir)
@@ -98,8 +99,10 @@ observe({
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail("storing files on the server"))
-      Sys.sleep(0.1)
+      Sys.sleep(0.005)
     }
+    
+    createHTable()
   }
   
 })
@@ -125,7 +128,7 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.005)
   }
   bm_fnames <- dir(v$bam_dir,".bam$", full.names = TRUE, recursive=T)  # re-define
   v$bm_fnames <- bm_fnames
@@ -146,16 +149,14 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.005)
   }
   
   l = length(bm_fnames)
   x <- basename(bm_fnames)
   d_fnames <- unlist(lapply(x,function(x) paste0("/bam/", x )))
   lbl <- gsub("_s.bam$","",basename(bm_fnames))
-  stub <- gsub("[\ |\\/]", "_",v$bam_dir)
-  stub <- gsub("_bam","",stub)
-  lbl <- gsub(stub,"",lbl)
+  lbl <- sapply(strsplit(lbl,"__"), tail, 1)
   t.DF = data.frame(file.name = d_fnames, 
                     label = lbl, 
                     group = rep(1,l),
@@ -164,28 +165,10 @@ getMetadata <- reactive({
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.01)
+    Sys.sleep(0.005)
   }
   return(t.DF)
 })
 
 
-# downloadHandler() takes two arguments, both functions.
-# The content function is passed a filename as an argument, and
-#   it should write out data to that filename.
-output$downloadTable <- downloadHandler(
-  # This function returns a string which tells the client
-  # browser what name to use when saving the file.
-  filename = function() {
-    paste("metadata", input$filetype, sep = ".")
-  },
-  
-  # This function should write data to a file given to it by
-  # the argument 'file'.
-  content = function(file) {
-    sep <- switch(input$filetype, "csv" = ",", "tsv" = "\t")
-    # Write to a file specified by the 'file' argument
-    write.table(t$DF, file, sep = sep,
-      row.names = FALSE)
-  }
-)
+

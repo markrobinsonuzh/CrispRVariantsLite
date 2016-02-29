@@ -6,6 +6,17 @@ output$error1 <- renderUI({
   p(paste0("Reference : " , d$ref, " strand : ", input$g.strand))
 })
 
+output$guide <- renderUI({
+  plotOutput("guide_plot")
+})
+
+output$next_step <- renderUI({
+    #bsButton("ok ", 'ok', style = "info", block = TRUE)
+    actionButton("next_step", "Next step" , width="100%", style="primary")
+})
+
+
+
 ################################################################################
 # BEHAVIOUR
 ################################################################################
@@ -48,8 +59,6 @@ setGuides <- reactive({
   return(d$guide)
 })
 
-
-
 setTxdb <- reactive({
   f <- paste0("data/txdb/", input$txDb)
   txdb <- AnnotationDbi::loadDb(f)
@@ -57,6 +66,7 @@ setTxdb <- reactive({
 })
 
 setRef <- reactive({
+    print("setRef")
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
@@ -78,55 +88,67 @@ setRef <- reactive({
  
   
   ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]
-  print(sprintf("reference is %s",ref))
-  print(sprintf("length of ref is %s", nchar(ref)))
-  
   switch (input$g.strand,
-    "-" =  d$ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-    "+" =  d$ref <- Biostrings::DNAString(ref)
+    "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+    "+" =  ref <- Biostrings::DNAString(ref)
   )
-  
+    
+  print(ref)
 
+  
+  updateTextInput(session, "ref_seqs", value = ref)
   
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
     progress$inc(1/n)
-    Sys.sleep(0.5)
+    Sys.sleep(0.05)
   }
-  return( d$ref)
+  return(ref)
 })
 
 ################################################################################
 # PLOTS
 ################################################################################
 
-creatPlotRef <- reactive({  
-  output$ref_plot <- renderPlot({ 
-       
-    ref <- setRef() 
-    box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
-  
-    plotAlignments(
-        ref,
-        alns = NULL,
-        target.loc = d$t.loc,
-        guide.loc = IRanges( 
-          start = max(d$seq.width + 1), 
-          end = box_end),
-        ins.sites = data.frame(),
-        axis.text.size = 14
-        )
-    }, height = 200)
-    
+creatPlotRef <- reactive({
+ output$ref_plot <- renderPlot({
+    plot_reference()
+ }, height=200)
+ 
+ output$guide_plot <- renderPlot({
+   plot_reference()
+  }, height = 200)
 })
 
-observeEvent(input$run_guide,{
-    creatPlotRef()
-    toggleModal(session, "modal_ref", toggle = "close")
-    toggleModal(session, "modal_2", toggle = "open")
-    d$cset <- createCripSet()
-    print(d$cset)
-    d$txdb <- setTxdb()
-    createHTable()
- })
 
+observeEvent(input$run_guide,{
+    isolate({
+       creatPlotRef()  
+    })
+ })
+ 
+ observeEvent(input$next_step,{
+        toggleModal(session, "modal_ref", toggle = "close")
+        toggleModal(session, "modal_2", toggle = "open")
+ })
+ 
+plot_reference <- reactive({
+
+        
+   ref <- setRef() 
+   d$ref <- ref
+
+   box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
+
+   plotAlignments(
+       ref,
+       alns = NULL,
+       target.loc = d$t.loc,
+       guide.loc = IRanges(
+         start = d$seq.width + 1,
+         end = box_end),
+       ins.sites = data.frame(),
+       axis.text.size = 14
+       )
+       
+})

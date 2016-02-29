@@ -14,7 +14,7 @@ output$plots <- renderUI({
 
 # Disable running of the plots until Reference and Bams defined
 observe({
-   if(is.null(d$ref)){
+   if(is.null(d$guide)){
       updateButton(session, "run_plot", style ="default", icon = icon("ban"), disable = TRUE )
     }else{
       updateButton(session,"run_plot", 'Plot', icon =  icon("area-chart"), style = "success", block = TRUE, disable = FALSE ) 
@@ -38,7 +38,7 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "A")
-      Sys.sleep(0.5)
+      Sys.sleep(0.005)
     }
     
     md <- t$DF
@@ -48,16 +48,13 @@ createCripSet <- reactive({
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "B")
-      Sys.sleep(0.5)
+      Sys.sleep(0.005)
     }
     print(d$guide)
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
-     reference = d$ref, names = md$label,
-      target.loc = input$target_loc, verbose = FALSE)
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = setRef(), names = md$label, target.loc = input$target_loc)
     
     print(d$cset)
-
     return(d$cset)
   }
 })
@@ -82,37 +79,49 @@ createCrispPlot <- reactive({
     for (i in 1:20){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = "plotting")
-      Sys.sleep(0.5)
+      Sys.sleep(0.005)
     }
      
      try({
+      group <- as.factor(t$DF$group)
+
       plotVariants(d$cset, txdb = d$txdb, 
-      col.ht.ratio = c(1,6),
-      left.plot.margin = grid::unit(c(0.1,0,6,0.2), "lines"),
+#      col.wdth.ratio = c(5,2),
+#      row.ht.ratio = c(1,6),
+      gene.text.size = 8,
+      left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
       
-      plotFreqHeatmap.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        x.size = input$x.size, 
-        plot.text.size = input$plot.text.size, 
-        legend.text.size = input$legend.text.size, 
-        x.angle = input$x.angle
-        ),
+      
       
       plotAlignments.args = list(
         top.n = input$top.n,
         min.freq = input$min.freq,
         min.count = input$min.count,
+        target.loc = d$t.loc,
+        guide.loc = IRanges(
+         start = d$seq.width + 1,
+         end = end(d$guide) - start(d$guide) - d$seq.width + 1),
         axis.text.size = input$axis.text.size, 
-        ins.size = input$ins.size, 
-        legend.symbol.size = input$legend.symbol.size, 
+        ins.size = input$ins.size,
+        plot.text.size = input$plot.text.size, 
+        legend.symbol.size = input$legend.symbol.size,
         legend.text.size = input$legend.text.size
         ), 
-        row.ht.ratio = c(1,6)
-      )  
+        
+      plotFreqHeatmap.args = list(
+        top.n = input$top.n,
+        min.freq = input$min.freq,
+        min.count = input$min.count,
+        type =  input$plot.type,
+        x.size = input$x.size, 
+        plot.text.size = input$plot.text.size, 
+        legend.text.size = input$legend.text.size,
+        x.angle = input$x.angle,
+        group = group
+        )
+      ) + theme(legend.position="none")  
      }, silent = TRUE)
-  })
+  }, height = 500)
   return(pcrisp)
 })
 
