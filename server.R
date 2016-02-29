@@ -20,11 +20,10 @@ t <- reactiveValues(
     DF = NULL,
     inFile = NULL
 )
-
   
   # This code will be run once per user
   users_data <- data.frame(START = Sys.time())
-  
+ 
   #Reactive values to monitor the state of the app
   state <- reactiveValues(
     ini = FALSE,
