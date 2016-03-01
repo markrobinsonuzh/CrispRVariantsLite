@@ -30,7 +30,7 @@ modal_ref <- bsModal(
        fluidRow(
     column(width = 12,
       select_Refgenome,
-      helpText("Enter guide sequence (with enough sequence to uniquely identify the genomic region)"),
+      helpText("Enter guide sequence"),
       ref_seqs,
       h1("or", align = "center"),
       helpText("Enter the chromosome, coordinates and strand of the guide sequence and WIDTH (number of bases on each side of PAM+guide)"),
