@@ -30,6 +30,7 @@ modal_ref <- bsModal(
        fluidRow(
     column(width = 12,
       select_Refgenome,
+      txDb,
       helpText("Enter guide sequence"),
       ref_seqs,
       h1("or", align = "center"),
