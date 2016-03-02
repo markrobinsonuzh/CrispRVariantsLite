@@ -3,21 +3,20 @@ info_btn <- bsButton("info_btn", 'Help', type='action', icon =  icon("fa fa-penc
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
 
 #----------------
-# Slider
+# Select boxes
 #----------------
 
 # Row height ratio
-row.ht.ratio <- sliderInput("Row height ratio",
- "Text size of sequence letters / numbers in heatmap: ",
-  min = 0, max = 10, value = 2, step= 2)
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
 
 # Column width ratio
-col.wdth.ratio <- sliderInput("Column width ratio", 
-  "Text size of sequence letters / numbers in heatmap: ",
-   min = 0, max = 10, value = 2, step= 2)
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
 
-
-
+#----------------
+# Slider
+#----------------
 
 # Simple integer interval
 x.size <- sliderInput("x.size", "Line weight:", min=0, max=20, value=10, step = 1)
@@ -48,8 +47,6 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
     row.ht.ratio,
     col.wdth.ratio,
     hr(),
-    ins.size,
-
     style = "info"),
   
   bsCollapsePanel("Plot Alignments Options",

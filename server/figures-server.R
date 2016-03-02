@@ -82,13 +82,15 @@ createCrispPlot <- reactive({
       progress$inc(1/n, detail = "plotting")
       Sys.sleep(0.005)
     }
+    
+    r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
+    c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
      
-     try({
+    try({
       group <- as.factor(t$DF$group)
 
       plotVariants(d$cset, txdb = d$txdb, 
-#      col.wdth.ratio = c(5,2),
-#      row.ht.ratio = c(1,6),
+      col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
       gene.text.size = 8,
       left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
       
