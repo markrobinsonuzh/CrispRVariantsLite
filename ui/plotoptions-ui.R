@@ -1,6 +1,8 @@
 data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon("list-alt"), style = "primary", block = TRUE)
 info_btn <- bsButton("info_btn", 'Help', type='action', icon =  icon("fa fa-pencil"), style = "primary", block = TRUE)
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
 
 #----------------
 # Select boxes
@@ -42,7 +44,6 @@ plot.type <- radioButtons("plot.type", "plot type", choices = c("proportions","c
 bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options",
   
   bsCollapsePanel("Layout Options",
-    p("Plots update automatically when parameters are changed"),
     hr(),
     row.ht.ratio,
     col.wdth.ratio,
@@ -50,7 +51,7 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
     style = "info"),
   
   bsCollapsePanel("Plot Alignments Options",
-    p("Plots update automatically when parameters are changed"),
+    p("Click 'Plot' to replot the data with the new options"),
     hr(),
     #helpText("Text sizes"),
     axis.text.size,
@@ -72,9 +73,11 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=6,
+    column(width=4,
       data_setting),
-    column(width=6,
-      save_data )
+    column(width=4,
+      save_data ),
+    column(width=4, 
+      replot)
   )
 )

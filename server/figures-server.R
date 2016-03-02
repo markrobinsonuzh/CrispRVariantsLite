@@ -69,67 +69,70 @@ createCrispPlot <- reactive({
   
   output$crispplots <- renderPlot({
     
-    progress <- shiny::Progress$new()
-    # Make sure it closes when we exit this reactive, even if there's an error
-    on.exit(progress$close())
-    progress$set(message = "Creating  the plot ", value = 0)
+    input$replot
     
-    # Number of times we'll go through the loop
-    n <- 20
+    isolate({
     
-    for (i in 1:20){
-      #Increment the progress bar, and update the detail text.
-      progress$inc(1/n, detail = "plotting")
-      Sys.sleep(0.005)
-    }
+      progress <- shiny::Progress$new()
+      # Make sure it closes when we exit this reactive, even if there's an error
+      on.exit(progress$close())
+      progress$set(message = "Creating  the plot ", value = 0)
     
-    r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
-    c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
+      # Number of times we'll go through the loop
+      n <- 20
+    
+      for (i in 1:20){
+        #Increment the progress bar, and update the detail text.
+        progress$inc(1/n, detail = "plotting")
+        Sys.sleep(0.005)
+      }
+    
+      r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
+      c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
      
-    try({
-      group <- as.factor(t$DF$group)
+      try({
+        group <- as.factor(t$DF$group)
 
-      plotVariants(d$cset, txdb = d$txdb, 
-      col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
-      gene.text.size = 8,
-      left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
+        plotVariants(d$cset, txdb = d$txdb, 
+          col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
+          gene.text.size = 8,
+          left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
       
-      plotAlignments.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        target.loc = d$t.loc,
-        guide.loc = IRanges(
-         start = d$seq.width + 1,
-         end = end(d$guide) - start(d$guide) - d$seq.width + 1),
-        axis.text.size = input$axis.text.size, 
-        ins.size = input$ins.size,
-        plot.text.size = input$plot.text.size, 
-        legend.symbol.size = input$legend.symbol.size,
-        legend.text.size = input$legend.text.size
-        ), 
+          plotAlignments.args = list(
+            top.n = input$top.n,
+            min.freq = input$min.freq,
+            min.count = input$min.count,
+            target.loc = d$t.loc,
+            guide.loc = IRanges(
+            start = d$seq.width + 1,
+            end = end(d$guide) - start(d$guide) - d$seq.width + 1),
+            axis.text.size = input$axis.text.size, 
+            ins.size = input$ins.size,
+            plot.text.size = input$plot.text.size, 
+            legend.symbol.size = input$legend.symbol.size,
+            legend.text.size = input$legend.text.size
+          ), 
         
-      plotFreqHeatmap.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        type =  input$plot.type,
-        x.size = input$x.size, 
-        plot.text.size = input$plot.text.size, 
-        legend.text.size = input$legend.text.size,
-        x.angle = input$x.angle,
-        group = group
-        )
-      ) + theme(legend.position="none")  
-     }, silent = TRUE)
+          plotFreqHeatmap.args = list(
+            top.n = input$top.n,
+            min.freq = input$min.freq,
+            min.count = input$min.count,
+            type =  input$plot.type,
+            x.size = input$x.size, 
+            plot.text.size = input$plot.text.size, 
+            legend.text.size = input$legend.text.size,
+            x.angle = input$x.angle,
+            group = group
+          )
+        ) + theme(legend.position="none")  
+      }, silent = TRUE) 
+    })
   }, height = 600)
-  
-   #print(class(d$panelplot))
-  #grid::grid.draw(d$panelplot)
   return(pcrisp)
 })
 
-#create the plot
+
+# create the plot
  observeEvent(input$run_plot,{    
     d$cset <- createCripSet()
     print(d$cset)
@@ -139,4 +142,3 @@ createCrispPlot <- reactive({
     print(session$clientData)
     toggleModal(session, "modal_2", toggle = "close")
   })
-
