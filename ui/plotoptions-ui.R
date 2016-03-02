@@ -6,6 +6,19 @@ save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa 
 # Slider
 #----------------
 
+# Row height ratio
+row.ht.ratio <- sliderInput("Row height ratio",
+ "Text size of sequence letters / numbers in heatmap: ",
+  min = 0, max = 10, value = 2, step= 2)
+
+# Column width ratio
+col.wdth.ratio <- sliderInput("Column width ratio", 
+  "Text size of sequence letters / numbers in heatmap: ",
+   min = 0, max = 10, value = 2, step= 2)
+
+
+
+
 # Simple integer interval
 x.size <- sliderInput("x.size", "Line weight:", min=0, max=20, value=10, step = 1)
 
@@ -28,6 +41,17 @@ legend.text.size <- sliderInput("legend.text.size", "Size of insertion legend:",
 plot.type <- radioButtons("plot.type", "plot type", choices = c("proportions","counts"), selected = "counts", inline = TRUE) 
 
 bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options",
+  
+  bsCollapsePanel("Layout Options",
+    p("Plots update automatically when parameters are changed"),
+    hr(),
+    row.ht.ratio,
+    col.wdth.ratio,
+    hr(),
+    ins.size,
+
+    style = "info"),
+  
   bsCollapsePanel("Plot Alignments Options",
     p("Plots update automatically when parameters are changed"),
     hr(),

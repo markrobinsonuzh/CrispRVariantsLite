@@ -66,6 +66,7 @@ createCripSet <- reactive({
 
 createCrispPlot <- reactive({
   pcrisp = NULL
+  
   output$crispplots <- renderPlot({
     
     progress <- shiny::Progress$new()
@@ -90,8 +91,6 @@ createCrispPlot <- reactive({
 #      row.ht.ratio = c(1,6),
       gene.text.size = 8,
       left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
-      
-      
       
       plotAlignments.args = list(
         top.n = input$top.n,
@@ -121,7 +120,10 @@ createCrispPlot <- reactive({
         )
       ) + theme(legend.position="none")  
      }, silent = TRUE)
-  }, height = 500)
+  }, height = 600)
+  
+   #print(class(d$panelplot))
+  #grid::grid.draw(d$panelplot)
   return(pcrisp)
 })
 
@@ -131,6 +133,8 @@ createCrispPlot <- reactive({
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
+    print("run plot")
+    print(session$clientData)
     toggleModal(session, "modal_2", toggle = "close")
   })
 
