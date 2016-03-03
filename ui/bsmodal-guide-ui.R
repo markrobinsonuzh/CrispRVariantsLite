@@ -33,8 +33,7 @@ modal_ref <- .bsModal(
     fluidRow(
        column(width=6,
         select_Refgenome ),
-        column(width=6,
-          txDb )
+        column(width=6 )
           ),
       fluidRow(
          column(width=12,

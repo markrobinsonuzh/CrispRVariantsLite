@@ -78,15 +78,6 @@ plot.type <- radioButtons("plot.type", "Plot type", choices = c("proportions","c
 
 bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options",
 
-  bsCollapsePanel("Layout Options",
-    hr(),
-    row.ht.ratio,
-    col.wdth.ratio,
-    hr(),
-    style = "info"),
-  
-  bsCollapsePanel("Plot Alignments Options",
-    p("Click 'Plot' to replot the data with the new options"),
   bsCollapsePanel("Layout options",
     helpText(paste("These options control the relative sizes of the plots.",
                    "Click 'Plot' to replot the data with the new options.")),
@@ -107,6 +98,7 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
   bsCollapsePanel("Allele plot options",
     helpText(paste("These options control the appearance of the allele plot.",  
                    "Click 'Plot' to replot.")),
+
     hr(),
     helpText("Text sizes"),
     axis.text.size,
@@ -135,16 +127,11 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=4,
-      data_setting),
-    column(width=6,
-      save_data )
+    column(width=6,data_setting),
+    column(width=6, save_data )
   ),
   hr(),
   fluidRow(
-      column(width=6, replot),
-    column(width=6, reset),
-    column(width=4, save_data ),
-    column(width=4, replot)
-  )
-)
+    column(width=6,replot),
+    column(width=6,reset)
+))
