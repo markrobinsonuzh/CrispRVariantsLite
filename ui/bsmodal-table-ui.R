@@ -7,7 +7,7 @@
 #upload_metadata <- fileInput('upload_metadata', 'Upload metadata', multiple = F, width = "100%")
 #select_genome <- selectInput("select_genome", "Select the genome", choices = genlist, width = "100%")
 
-save_table <- bsButton("save_table", 'save', icon =  icon("list-alt"), style = "primary", block = TRUE)
+save_table <- bsButton("update_table", 'update', icon =  icon("list-alt"), style = "primary", block = TRUE)
 guide_from_table <- bsButton("guide_from_table", 'create guide', icon =  icon("area-chart"), style = "success", block = TRUE)
 modal_table <- .bsModal(
   "modal_table", "Edit Table : ",

@@ -11,6 +11,7 @@ setHot = function(x) values[["htable"]] = x
 
 
 output$htable <- renderRHandsontable({
+    input$update_table
     if (!is.null(input$htable)) {
       t$DF <- hot_to_r(input$htable)
     }else{
@@ -23,6 +24,7 @@ output$htable <- renderRHandsontable({
 
 
 output$table <- renderUI({
+    if(is.null(v$bm_fnames)) return()
     rHandsontableOutput("htable")
   })
 
@@ -61,11 +63,6 @@ createHTable <- reactive({
     Sys.sleep(0.005)
   }
   
-  
-  
-  
-
-  
   toggleModal(session, "modal_table", toggle = "open")
   
 })
@@ -94,11 +91,12 @@ observeEvent( input$upload_bams, {
    print(state$bam)
 
       # list BAM files
-  data_dir <- input$upload_bams
+  v$inFile <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir))
+  if(!is.null(v$inFile))
   {
+      data_dir <- v$inFile
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())

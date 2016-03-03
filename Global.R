@@ -43,10 +43,8 @@ MHmakeRandomString <- function(n=1, lenght=12)
 
 # remove all the files in a directory
 empty_dir <- function(dirname){
-  ## Get vector of all file names
-  ff <- dir(create_dir(dirname), recursive=TRUE, full.names=TRUE)
   ## Remove all files
-  unlink(ff, recursive=TRUE, force=FALSE)
+  unlink(dirname, recursive=TRUE, force=FALSE)
 }
 
 #create empty directory if not created
@@ -54,17 +52,7 @@ create_dir <- function(dirname){
   #Check existence of directory and create if doesn't exist
   #http://stackoverflow.com/questions/4216753/check-existence-of-directory-and-create-if-doesnt-exist
   ifelse(!dir.exists(file.path(dirname)), dir.create(file.path(dirname)), FALSE)
-  outDir <- file.path(mainDir, subDir)
-  return(outDir)
+  #outDir <- file.path(tempdir(), dirname)
+  return(dirname)
 }
 
-# Hijacking In Style
-#https://trinkerrstuff.wordpress.com/2014/08/19/hijacking-r-functions-changing-default-arguments-3/
-hijack <- function (FUN, ...) {
-    .FUN <- FUN
-    args <- list(...)
-    invisible(lapply(seq_along(args), function(i) {
-        formals(.FUN)[[names(args)[i]]] <<- args[[i]]
-    }))
-    .FUN
-}

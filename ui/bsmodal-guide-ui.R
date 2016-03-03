@@ -2,7 +2,7 @@
 # Define  options modal get AB1 files, sequence names, FASTQ files, 
 ################################################################################
 
-ref_seqs <- textInput("ref_seqs", "Guide Sequence", width = NULL, value="GGAGATCGCCACAAGATGTGAGG", placeholder = "ATGCTGCTGGTTATTAGATTAGT")
+ref_seqs <- textInput("ref_seqs", "Guide Sequence", width = "100%", value=g.seq, placeholder = "ATGCTGCTGGTTATTAGATTAGT")
 
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome", choices = genlist.gz, width = "100%")
 
@@ -31,15 +31,16 @@ modal_ref <- .bsModal(
     column(width = 12,
     fluidRow(
        column(width=6,
-        select_Refgenome
-          ),
+        select_Refgenome ),
         column(width=6,
-          txDb
-          )
-          )
-      ,
-      helpText("Enter guide sequence"),
-      ref_seqs,
+          txDb )
+          ),
+      fluidRow(
+         column(width=12,
+         helpText("Enter guide sequence"),
+         ref_seqs
+      )),
+      
       h1("or", align = "center"),
       helpText("Enter the chromosome, coordinates and strand of the guide sequence and WIDTH (number of bases on each side of PAM+guide)"),
       fluidRow(

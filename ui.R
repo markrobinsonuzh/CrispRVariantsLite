@@ -19,7 +19,7 @@ source("ui/bsmodal-save-ui.R", local = T)
 
 body <- dashboardBody(
   fluidRow(
-    box(width = 8, height = "600px",
+    box(width = 8, height = "800px",
       solidHeader = T,
       htmlOutput("plots")),
     plotOptions,

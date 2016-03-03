@@ -44,7 +44,8 @@ t <- reactiveValues(
     seqs = NULL, # data frame of the data
     bm_fnames = NULL, #bam file
     srt_bm_names = NULL,  #bam directories
-    fasta_temp = NULL
+    fasta_temp = NULL,
+    inFile = NULL
   )
   
   #Reactive values for producing the plots
@@ -84,30 +85,7 @@ t <- reactiveValues(
     
   })
 
-  reset <- reactive({
-    #v$sq_nms = NULL
-    #v$ab1_fnames = NULL
-    #v$fq_fnames = NULL
-    #v$fq_dir = NULL
-    #v$bam_dir = NULL
-    #v$ab1_dir = NULL
-    #v$seqs = NULL
-    print(v$bm_fnames)
-    print(" reset v$bm_fnames ")
-    v$bm_fnames = NULL
-    print(v$bm_fnames)
-    #v$srt_bm_names = NULL
-    d$cset = NULL
-    d$ref = NULL
-    d$guide = NULL
-    state$bam = F
-    #d$mds = NULL
-    #d$txdb = NULL
-    d$bm_fnames = NULL
-    #t$DF = NULL
-    #t$inFile = NULL
-  })
-  
+
 
   source("server/preprocessing-server.R", local = T)
   source("server/convert-ab1-server.R", local = T)
@@ -130,16 +108,25 @@ t <- reactiveValues(
   
   # open the AB1 modal
   observeEvent(input$select_AB1,{
-      toggleModal(session, "modal_2", toggle = "close")
+      #toggleModal(session, "modal_2", toggle = "close")
       toggleModal(session, "modal_AB1", toggle = "open")
       state$ini = TRUE
-      state$bam = T
+  })
+  
+  observeEvent(input$back_ab1,{
+    #toggleModal(session, "modal_2", toggle = "close")
+    toggleModal(session, "modal_AB1", toggle = "close")
   })
   
   # open the FASTQ modal
   observeEvent(input$select_FastQ,{
-    toggleModal(session, "modal_2", toggle = "close")
+    #toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_FASTQ", toggle = "open")
+  })
+  
+  observeEvent(input$back_fastq,{
+    #toggleModal(session, "modal_2", toggle = "close")
+    toggleModal(session, "modal_FASTQ", toggle = "close")
   })
   
   # open start modal 
@@ -154,26 +141,49 @@ t <- reactiveValues(
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_1", toggle = "open")
   })
-  
-  # open reference modal
-  observeEvent(input$create_guides, {
-    toggleModal(session, "modal_2", toggle = "close")
-    toggleModal(session, "modal_ref", toggle = "open")
-  })
-  
+
   # open metadata pannel
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_table", toggle = "open")
   })
   
+  
+   
+  
+  
+  
+  
+  
    # open metadata pannel
   observeEvent(input$reset, {
-      reset()
+      
+    v$sq_nms = NULL
+    v$ab1_fnames = NULL
+    v$fq_fnames = NULL
+    #v$fq_dir = NULL
+    #v$bam_dir = NULL
+    #v$ab1_dir = NULL
+    v$seqs = NULL
+    v$bm_fnames = NULL
+    v$srt_bm_names = NULL
+    d$cset = NULL
+    d$ref = NULL
+    d$guide = NULL
+    state$bam = F
+    d$mds = NULL
+    d$txdb = NULL
+    d$bm_fnames = NULL
+    t$DF = NULL
+    v$inFile = NULL
+      
+      
       #empty_dir(v$bam_dir)
       #empty_dir(v$fq_dir)
       #empty_dir(v$ab1_dir)
-      state$bam = FALSE
-      state$reset = TRUE
+      #setDir()
+      updateTextInput(session, "g.chr", value = NULL)
+        updateTextInput(session, "g.start", value = NULL)
+        updateTextInput(session, "g.strand", value = NULL)
       toggleModal(session,"modal_1", toggle = "open")
   })
     

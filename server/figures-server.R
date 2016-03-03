@@ -4,6 +4,7 @@
 
 
 output$plots <- renderUI({
+    if(is.null(d$cset)) return()
     plotOutput("crispplots")
 })
 
@@ -50,11 +51,9 @@ createCripSet <- reactive({
       progress$inc(1/n, detail = "B")
       Sys.sleep(0.005)
     }
-    print(d$guide)
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = setRef(), names = md$label, target.loc = input$target_loc)
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
     
-    print(d$cset)
     return(d$cset)
   }
 })

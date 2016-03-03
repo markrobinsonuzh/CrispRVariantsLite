@@ -21,7 +21,9 @@
   observe({
     output$ui_save <- renderUI({
     if(!is.null(d$cset)){
-      tags$div(
+      if(!is.null(v$fq_fnames)){
+           tags$div(
+        
         splitLayout(p("Allele Variant Plot"),
         downloadButton('downloadPlot', 'Download PDF')),
         p(),
@@ -34,7 +36,22 @@
         splitLayout(p("Metadata table"),
         downloadButton('downloadTable', 'Download CSV')
         )
-      )
+      ) 
+        }else{
+           tags$div(
+        
+        splitLayout(p("Allele Variant Plot"),
+        downloadButton('downloadPlot', 'Download PDF')),
+        p(),
+        splitLayout(p("Mapped BAM files"),
+        downloadButton('downloadBAM', 'Download ZIP')),
+        p(),
+        splitLayout(p("Metadata table"),
+        downloadButton('downloadTable', 'Download CSV')
+        )
+      )  
+        }
+      
     }else{
       p("No Data to download - to create plot click on setting")
     }
