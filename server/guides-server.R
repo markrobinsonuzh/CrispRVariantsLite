@@ -60,7 +60,10 @@ setGuides <- reactive({
 })
 
 setTxdb <- reactive({
-  f <- paste0("data/txdb/", input$txDb)
+  #f <- paste0("data/txdb/", input$txDb)
+  # Note: requires that the file names of the txdb match those of ref genome and
+  # this can be achieved by symbolic links
+  f <- paste0("./data/txdb/", gsub(".fa",".sqlite",input$select_Refgenome))
   txdb <- AnnotationDbi::loadDb(f)
   return(txdb)
 })
