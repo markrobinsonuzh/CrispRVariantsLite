@@ -107,6 +107,8 @@ output$downloadTable <- downloadHandler(
     content = function(file) {
         
         pixelratio <- session$clientData$pixelratio
+
+        print("pixelratio"); print(pixelratio); 
         
         cdata <- session$clientData
         cnames <- names(cdata)

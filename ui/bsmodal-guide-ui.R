@@ -6,7 +6,7 @@ ref_seqs <- textInput("ref_seqs", "Guide Sequence", width = NULL, placeholder = 
 
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome", choices = genlist.gz, width = "100%")
 
-txDb <- selectInput("txDb", "Transcript Database", choices = txDBl, selected = txDBl[1], width = "100%")
+#txDb <- selectInput("txDb", "Transcript Database", choices = txDBl, selected = txDBl[1], width = "100%")
 
 #run_guide <- bsButton("run_guide", 'create guides', type = "action", style = "success", block = TRUE)
 run_guide <- actionButton("run_guide", 'create guides', width='100%')
@@ -30,7 +30,7 @@ modal_ref <- bsModal(
        fluidRow(
     column(width = 12,
       select_Refgenome,
-      txDb,
+      #txDb,
       helpText("Enter guide sequence"),
       ref_seqs,
       h1("or", align = "center"),

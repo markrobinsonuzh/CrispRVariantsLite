@@ -6,12 +6,12 @@ genome <- "./data/genome"
 gendb <- dir(genome, ".fa$", recursive = TRUE, full.names = TRUE)
 
 # name of sequence
-genlist <- basename(gendb)
-genlist.gz <- basename(gendb)
+genlist.gz <- genlist <- basename(gendb)
 
 # transcript database library
-txDB.dir <- dir("./data/txdb/", recursive = TRUE, full.names = TRUE)
-txDBl <- basename(txDB.dir)
+# this is inferred from genome name now
+#txDB.dir <- dir("./data/txdb/", recursive = TRUE, full.names = TRUE)
+#txDBl <- basename(txDB.dir)
 
 ################################################################################
 # DEFAULT SETTING GUIDE
