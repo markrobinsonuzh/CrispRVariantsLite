@@ -2,6 +2,9 @@
 # UI
 ################################################################################
 
+#output$texts <- renderUI({
+#    textOutput("hello I am some text")
+#})
 
 output$plots <- renderUI({
     plotOutput("crispplots")
@@ -42,8 +45,6 @@ createCripSet <- reactive({
     }
     
     md <- t$DF
-    #d$ref <- setRef()
-    #d$guide <- setGuides()
     
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
@@ -52,9 +53,10 @@ createCripSet <- reactive({
     }
     print(d$guide)
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = setRef(), names = md$label, target.loc = input$target_loc)
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
+                 reference = setRef(), names = md$label, 
+                 target.loc = input$target_loc, verbose = FALSE)
     
-    print(d$cset)
     return(d$cset)
   }
 })
@@ -68,6 +70,14 @@ createCrispPlot <- reactive({
   pcrisp = NULL
   
   output$crispplots <- renderPlot({
+    
+    
+    ## Warn if the CrisprSet is NULL
+    validate(
+      need(!is.null(d$cset), 
+           paste(c("CrisprSet could not be created.", 
+                   "No on-target reads?"), sep = "\n"))
+    )
     
     input$replot
     
@@ -133,12 +143,10 @@ createCrispPlot <- reactive({
 
 
 # create the plot
- observeEvent(input$run_plot,{    
+ observeEvent(input$run_plot,{  
     d$cset <- createCripSet()
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
-    print("run plot")
-    print(session$clientData)
-    toggleModal(session, "modal_2", toggle = "close")
+    toggleModal(session, "modal_2", toggle = "close")  
   })
