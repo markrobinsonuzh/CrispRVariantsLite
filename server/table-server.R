@@ -83,6 +83,11 @@ observe({
     }
 })
 
+# open metadata pannel
+  observeEvent(input$guide_from_table, {
+    toggleModal(session, "modal_table", toggle = "close")
+    toggleModal(session, "modal_ref", toggle = "open")
+  })
 
 #downland the bams files on the server
 observeEvent( input$upload_bams, {
