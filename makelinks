@@ -63,9 +63,9 @@ txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37
 saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite")
 
 # goto ./data/txdb and add links to .SQLITE file
-ln -s /home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite human_hg19_Ensembl71
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite mouse_mm10_Ensembl82
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/zebrafish_GRCz10_Ensembl81_txdb.sqlite zebrafish_GRCz10_Ensembl81
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/zebrafish_danRer7_Ensembl75_txdb.sqlite zebrafish_danRer7_Ensembl75
+ln -s /home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite hg19.sqlite
+ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite mm10.sqlite
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/zebrafish_GRCz10_Ensembl81_txdb.sqlite GRCz10.sqlite
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/zebrafish_danRer7_Ensembl75_txdb.sqlite danRer7.sqlite
 
 
