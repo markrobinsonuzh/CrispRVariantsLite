@@ -62,6 +62,7 @@ setGuides <- function(){
     seq.start <- as.numeric(input$g.start)
     seq.target.loc <- as.numeric(input$target_loc)
     seq.end <-  seq.start + seq.target.loc + 5
+
   
   guide <- GRanges(
     seqnames = input$g.chr, 
@@ -75,12 +76,17 @@ setGuides <- function(){
   d$seq.width <- as.numeric(input$g.length)
   d$guide <- guide + d$seq.width
   d$t.loc <- seq.target.loc + d$seq.width
+
       
   return(d$guide)
 }
 
+
 setTxdb <- reactive({
-  f <- paste0("data/txdb/", input$txDb)
+  #f <- paste0("data/txdb/", input$txDb)
+  # Note: requires that the file names of the txdb match those of ref genome and
+  # this can be achieved by symbolic links
+  f <- paste0("./data/txdb/", gsub(".fa",".sqlite",input$select_Refgenome))
   txdb <- AnnotationDbi::loadDb(f)
   return(txdb)
 })
@@ -102,7 +108,6 @@ observeEvent(input$run_guide,{
     Sys.sleep(0.05)
   }
   
-  
       ref <- NULL
     genome_index <- paste0("./data/genome/", input$select_Refgenome)
 
@@ -114,9 +119,9 @@ observeEvent(input$run_guide,{
             ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]   
             updateTextInput(session, "ref_seqs", value = toString(ref))
             switch (input$g.strand,
-    "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-    "+" =  ref <- Biostrings::DNAString(ref)
-  )
+                "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+                "+" =  ref <- Biostrings::DNAString(ref)
+                )
     
     } 
       else if (nchar(input$ref_seqs) > 20 )
@@ -218,8 +223,5 @@ observeEvent(input$run_guide,{
   
    
  }, height = 200)
-
-
-
 
 

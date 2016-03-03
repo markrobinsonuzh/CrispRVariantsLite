@@ -125,6 +125,9 @@ output$downloadTable <- downloadHandler(
     content = function(file) {
         
         pixelratio <- session$clientData$pixelratio
+
+        print("pixelratio"); print(pixelratio); 
+
         
         cdata <- session$clientData
         cnames <- names(cdata)
@@ -139,7 +142,7 @@ output$downloadTable <- downloadHandler(
         pdf(file, height = ht, width = wd, useDingbats = FALSE)
         
         group <- as.factor(t$DF$group)
-        
+
          plotVariants(d$cset, txdb = d$txdb, 
 #      col.wdth.ratio = c(5,2),
 #      row.ht.ratio = c(1,6),

@@ -2,7 +2,6 @@
 # UI
 ################################################################################
 
-
 output$plots <- renderUI({
     if(is.null(d$cset)) return()
     plotOutput("crispplots")
@@ -43,8 +42,6 @@ createCripSet <- reactive({
     }
     
     md <- t$DF
-    #d$ref <- setRef()
-    #d$guide <- setGuides()
     
     for (i in 1:10){
       # Increment the progress bar, and update the detail text.
@@ -52,8 +49,9 @@ createCripSet <- reactive({
       Sys.sleep(0.005)
     }
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide, reference = d$ref, names = md$label, target.loc = input$target_loc)
-    
+    d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
+                 reference = d$ref, names = md$label, 
+                 target.loc = input$target_loc, verbose = FALSE)    
     return(d$cset)
   }
 })
@@ -67,11 +65,20 @@ createCrispPlot <- reactive({
   pcrisp = NULL
   
   output$crispplots <- renderPlot({
+
+    
+    ## Warn if the CrisprSet is NULL
+    validate(
+      need(!is.null(d$cset), 
+           paste(c("CrisprSet could not be created.", 
+                   "No on-target reads?"), sep = "\n"))
+    )
     
     input$replot
     
     isolate({
     
+
       progress <- shiny::Progress$new()
       # Make sure it closes when we exit this reactive, even if there's an error
       on.exit(progress$close())
@@ -132,7 +139,9 @@ createCrispPlot <- reactive({
 
 
 # create the plot
+
  observeEvent(input$run_plot,{    
+
     d$cset <- createCripSet()
     print(d$cset)
     d$txdb <- setTxdb()
