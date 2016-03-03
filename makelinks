@@ -1,6 +1,4 @@
-# goto ./data/genome and add links to the FASTA files and BWA MEM indices
-# in unix
-
+# goto ./data/genome and add links to the FASTA files and BWA MEM indices (already pre-computed)
 
 ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/danRer7.fa
 ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/danRer7.fa.amb
@@ -18,15 +16,15 @@ ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/danRer7.fa.p
 ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7/danRer7.fa.sa
 
 
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa GRCz10.fa
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz GRCz10.fa.gz
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.amb GRCz10.fa.amb
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.ann GRCz10.fa.ann
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.bwt GRCz10.fa.bwt
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.fai GRCz10.fa.fai
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.gzi GRCz10.fa.gzi
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.pac GRCz10.fa.pac
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.sa GRCz10.fa.sa
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa danRer10.fa
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz danRer10.fa.gz
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.amb danRer10.fa.amb
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.ann danRer10.fa.ann
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.bwt danRer10.fa.bwt
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.fai danRer10.fa.fai
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.gzi danRer10.fa.gzi
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.pac danRer10.fa.pac
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/genome_GRCHz10/GRCHz10.fa.gz.sa danRer10.fa.sa
 
 
 ln -s /home/Shared_taupo/data/annotation/Human/hg19/genome/hg19.fa
@@ -38,34 +36,28 @@ ln -s /home/Shared_taupo/data/annotation/Human/hg19/bwa_mem/hg19.fa.bwt
 ln -s /home/Shared_taupo/data/annotation/Human/hg19/bwa_mem/hg19.fa.pac
 ln -s /home/Shared_taupo/data/annotation/Human/hg19/bwa_mem/hg19.fa.sa   
 
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/genome/Mus_musculus.GRCm38.75.dna.toplevel.fa mm10.fa
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/genome/Mus_musculus.GRCm38.75.dna.toplevel.fa.fai mm10.fa.fai
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.amb mm10.fa.amb
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.bwt mm10.fa.bwt
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.sa mm10.fa.sa
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.ann mm10.fa.ann
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.pac mm10.fa.pac
-
 
 # in R
+# suck down the UCSC tables and use these via a TxDb SQLITE file for each chromosome
+# Note: SAME name as the genome reference
 library(GenomicFeatures)
+txdb <- makeTxDbFromUCSC("danRer7", "ensGene")
+saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Danio_rerio/danRer7.sqlite")
 
-txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/Danio_rerio.Zv9.75.gtf", format = "gtf")
-saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/zebrafish_danRer7_Ensembl75_txdb.sqlite")
+txdb <- makeTxDbFromUCSC("danRer10", "ensGene")
+saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Danio_rerio/danRer10.sqlite")
 
-txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Danio_rerio/Danio_rerio.GRCz10.81.gtf.gz", format = "gtf")
-saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Danio_rerio/zebrafish_GRCz10_Ensembl81_txdb.sqlite")
+txdb <- makeTxDbFromUCSC("mm10", "ensGene")
+saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Mouse/mm10.sqlite")
 
-txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/Mus_musculus.GRCm38.82.gtf", format = "gtf")
-saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite")
+txdb <- makeTxDbFromUCSC("hg19", "ensGene")
+saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Human/hg19.sqlite")
 
-txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/Homo_sapiens.GRCh37.71.gtf", format = "gtf")
-saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite")
 
 # goto ./data/txdb and add links to .SQLITE file
-ln -s /home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite hg19.sqlite
-ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite mm10.sqlite
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/zebrafish_GRCz10_Ensembl81_txdb.sqlite GRCz10.sqlite
-ln -s /home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/zebrafish_danRer7_Ensembl75_txdb.sqlite danRer7.sqlite
+ln -s /home/Shared_taupo/data/annotation/Human/hg19.sqlite
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10.sqlite
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/danRer10.sqlite
+ln -s /home/Shared_taupo/data/annotation/Danio_rerio/danRer7.sqlite
 
 
