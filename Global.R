@@ -14,10 +14,12 @@ library("GenomicFeatures"); packageVersion("GenomicFeatures")
 library("AnnotationDbi"); packageVersion("AnnotationDbi")
 library("GenomicRanges"); packageVersion("GenomicRanges")
 library("IRanges"); packageVersion("IRanges")
-
+library("seqinr");packageVersion("seqinr")
 
 #Utilities
 source("./core/setting.R", local = TRUE)
+source("./core/bsModal.R", local = TRUE)
+source("./core/misc.R", local = TRUE)
 
 # For pasting times into things
 simpletime = function(){gsub("\\D", "_", Sys.time())}
@@ -56,4 +58,13 @@ create_dir <- function(dirname){
   return(outDir)
 }
 
-
+# Hijacking In Style
+#https://trinkerrstuff.wordpress.com/2014/08/19/hijacking-r-functions-changing-default-arguments-3/
+hijack <- function (FUN, ...) {
+    .FUN <- FUN
+    args <- list(...)
+    invisible(lapply(seq_along(args), function(i) {
+        formals(.FUN)[[names(args)[i]]] <<- args[[i]]
+    }))
+    .FUN
+}

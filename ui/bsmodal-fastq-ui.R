@@ -9,7 +9,7 @@ upload_FastQ <- fileInput('fastq_files',
   width = "100%")
 select_genome <- selectInput("select_genome", "Select the genome", choices = genlist, width = "100%")
 
-run_fastq <- bsButton("run_fastq", 'Run', icon =  icon("list-alt"), style = "primary", block = TRUE)
+run_fastq <- bsButton("run_fastq", 'Run', style = "primary", block = TRUE)
 
 modal_FASTQ <- bsModal(
   "modal_FASTQ", "PREPROCESSING DATA | FASTQ FILES : ",

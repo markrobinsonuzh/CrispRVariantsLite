@@ -12,7 +12,7 @@ options(shiny.maxRequestSize = 10000*1024^2)
 options(shiny.reactlog=TRUE)
 
 # Run the auto-installer/updater code:
-#source("install.R", local = TRUE)
+# source("install.R", local = TRUE)
 
 shinyServer(function(input, output, session) {
 
@@ -20,17 +20,17 @@ t <- reactiveValues(
     DF = NULL,
     inFile = NULL
 )
-
   
   # This code will be run once per user
   users_data <- data.frame(START = Sys.time())
-  
+ 
   #Reactive values to monitor the state of the app
   state <- reactiveValues(
     ini = FALSE,
     bam = F,
     err = F,
-    info = 1
+    info = 1,
+    reset = FALSE
   )
   
   #Reactive values for preprocessing
@@ -44,11 +44,11 @@ t <- reactiveValues(
     seqs = NULL, # data frame of the data
     bm_fnames = NULL, #bam file
     srt_bm_names = NULL,  #bam directories
-    bam_temp = NULL
+    fasta_temp = NULL
   )
   
   #Reactive values for producing the plots
-   d <- reactiveValues(
+ d <- reactiveValues(
    cset = NULL,
    ref = NULL,
    mds = NULL,
@@ -56,7 +56,8 @@ t <- reactiveValues(
    bm_fnames = NULL,
    guide = NULL,
    seq.width = NULL,
-   t.loc = NULL
+   t.loc = NULL,
+   plot = NULL
  )
 
    # create the temp dir for the files
@@ -68,9 +69,9 @@ t <- reactiveValues(
     ifelse(!dir.exists(bam_dir), dir.create(bam_dir,  showWarnings = FALSE), FALSE)
     v$bam_dir <- bam_dir
     
-    bam_temp <- file.path(temp.dir, "bam_temp")
-    ifelse(!dir.exists(bam_temp), dir.create(bam_temp,  showWarnings = FALSE), FALSE)
-    v$bam_temp <- bam_temp
+    fasta_temp <- file.path(temp.dir, "fasta_temp")
+    ifelse(!dir.exists(fasta_temp), dir.create(fasta_temp,  showWarnings = FALSE), FALSE)
+    v$fasta_temp <- fasta_temp
     
     
     fq_dir <- file.path(temp.dir, "fastq")
@@ -84,22 +85,27 @@ t <- reactiveValues(
   })
 
   reset <- reactive({
-    v$sq_nms = NULL
-    v$ab1_fnames = NULL
-    v$fq_fnames = NULL
-    v$fq_dir = NULL
-    v$bam_dir = NULL
-    v$ab1_dir = NULL
-    v$seqs = NULL
+    #v$sq_nms = NULL
+    #v$ab1_fnames = NULL
+    #v$fq_fnames = NULL
+    #v$fq_dir = NULL
+    #v$bam_dir = NULL
+    #v$ab1_dir = NULL
+    #v$seqs = NULL
+    print(v$bm_fnames)
+    print(" reset v$bm_fnames ")
     v$bm_fnames = NULL
-    v$srt_bm_names = NULL
+    print(v$bm_fnames)
+    #v$srt_bm_names = NULL
     d$cset = NULL
     d$ref = NULL
-    d$mds = NULL
-    d$txdb = NULL
+    d$guide = NULL
+    state$bam = F
+    #d$mds = NULL
+    #d$txdb = NULL
     d$bm_fnames = NULL
-    t$DF = NULL
-    t$inFile = NULL
+    #t$DF = NULL
+    #t$inFile = NULL
   })
   
 
@@ -141,7 +147,6 @@ t <- reactiveValues(
     toggleModal(session, "modal_1", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
     state$ini = TRUE
-    state$bam = F
   })
   
   # open instructions modal
@@ -159,6 +164,17 @@ t <- reactiveValues(
   # open metadata pannel
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_table", toggle = "open")
+  })
+  
+   # open metadata pannel
+  observeEvent(input$reset, {
+      reset()
+      #empty_dir(v$bam_dir)
+      #empty_dir(v$fq_dir)
+      #empty_dir(v$ab1_dir)
+      state$bam = FALSE
+      state$reset = TRUE
+      toggleModal(session,"modal_1", toggle = "open")
   })
     
 })

@@ -22,6 +22,12 @@ output$htable <- renderRHandsontable({
 })
 
 
+output$table <- renderUI({
+    rHandsontableOutput("htable")
+  })
+
+
+
 createHTable <- reactive({
   
   # Create a Progress object
@@ -55,13 +61,10 @@ createHTable <- reactive({
     Sys.sleep(0.005)
   }
   
-  output$table <- renderUI({
-    rHandsontableOutput("htable")
-  })
   
-  output$metadata <- renderUI({
-    bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
-  })
+  
+  
+
   
   toggleModal(session, "modal_table", toggle = "open")
   
@@ -71,13 +74,25 @@ createHTable <- reactive({
 # BEHAVIOUR
 ################################################################################
 
-#downland the bams files on the server
+# Disable creating the guides until Reference and Bams defined
 observe({
-  # list BAM files
+   if(is.null(v$bm_fnames)){
+      updateButton(session,"edit_xls", style ="default", icon = icon("ban"), disable = TRUE )
+    }else{
+      updateButton(session,"edit_xls", style = "success",  icon = icon("table"), block = TRUE, disable = FALSE ) 
+    }
+})
+
+
+#downland the bams files on the server
+observeEvent( input$upload_bams, {
+   print(state$bam)
+
+      # list BAM files
   data_dir <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(v$bm_fnames))
+  if(!is.null(data_dir))
   {
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
@@ -103,9 +118,12 @@ observe({
     }
     
     createHTable()
+  
   }
   
+  
 })
+
 
 
 

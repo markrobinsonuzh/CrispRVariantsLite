@@ -6,7 +6,7 @@ upload_AB1 <- fileInput('ab1_files', 'Upload ZIP file with .AB1 files in directo
 
 select_genome <- selectInput("select_genome", "Select genome", choices = genlist, width = "100%")
 
-run_prep <- bsButton("run_prep", 'Run', icon =  icon("list-alt"), style = "primary", block = TRUE)
+run_prep <- bsButton("run_prep", 'Run',  style = "primary", block = TRUE)
 
 modal_AB1 <- bsModal(
   "modal_AB1", "PREPROCESSING DATA | ZIP of directories with AB1 FILES: ",

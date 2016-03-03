@@ -31,6 +31,16 @@ convertAb1toFasq <- reactive({
 # run mapping
 # ---------------
 mapFastQ <- reactive({
+  
+  # If bwa cannot be run, stop the app
+  if (system("bwa", ignore.stderr = TRUE) == 127){
+    createAlert(session, "alertAB1", title = "WARNING",
+       content = "Please make sure BWA is available", 
+       style = "warning",
+       append = FALSE, dismiss = FALSE)
+    stopApp()
+  }
+  
   #BWA indices were generated using bwa version 0.7.10
   ind <- paste0(genome,"/", input$select_genome)
     if(file.exists(ind) && !is.null(v$fq_fnames))
@@ -51,13 +61,14 @@ mapFastQ <- reactive({
         for(i in 1:length(v$fq_fnames))
         {
           progress$inc(1/n, detail = paste0("Mapping FASTQs ", i, "/", n))
-          cmd <- paste0("bwa mem -t 2 ", bwa_index, " ", v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
+          cmd <- paste0("bwa mem -t 2 ", bwa_index, " ", 
+                    v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
           cat(cmd, "\n"); system(cmd)
           indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
           unlink(bm_fnames[i])
         }
         
-          v$bm_fnames <- dir(file.path(v$bam_dir), ".bam$", full.names = TRUE, recursive = T)
+        v$bm_fnames <- dir(file.path(v$bam_dir), ".bam$", full.names = TRUE, recursive = T)
            
     }
     else

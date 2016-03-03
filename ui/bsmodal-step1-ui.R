@@ -6,9 +6,9 @@
 
 start_btn <- bsButton("start_btn", "Start", style = "info", block = TRUE)
 
-modal_1 <- bsModal(
+modal_1 <- .bsModal(
   "modal_1", "CrispRVariantsLite",
-  "setting_btn", size = "large",
+  "setting_btn", 
   fluidRow(column(width = 12,
     tabBox( width = 12,
       tabPanel("QUICK GUIDE",
@@ -24,10 +24,10 @@ modal_1 <- bsModal(
       )
     )
     )),
-  fluidRow(
+    footer = tags$footer(
+        fluidRow(
     column(width = 4),
     column(width = 4, 
            start_btn),
     column(width = 4)
-  )
-)
+    )), close.button = F)

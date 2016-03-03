@@ -5,7 +5,7 @@
  #---------------------
  # Converting AB1 file to FastQ
  #---------------------
-  
+   
  observeEvent(input$run_prep,{
    #check if file is compressed
    if(!is.null(input$ab1_files)){
@@ -53,8 +53,8 @@
        createHTable()
        
      }
-          }else{
+   }else{
       createAlert(session, "alertAB1", "prepAlertAB1", title = "WARNING",
         content = "AB1 files (.zip) not loaded", style = "warning", append = FALSE)
-    }
-  })
+   }
+ })

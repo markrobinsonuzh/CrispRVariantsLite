@@ -2,6 +2,25 @@ data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon
 info_btn <- bsButton("info_btn", 'Help', type='action', icon =  icon("fa fa-pencil"), style = "primary", block = TRUE)
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
 
+reset <- bsButton("reset", 'Reset', type='action', style = "info", block = TRUE)
+update <- bsButton("update", 'Update', type='action', style = "primary", block = TRUE)
+
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
+
+#----------------
+# Select boxes
+#----------------
+
+# Row height ratio
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
+
+# Column width ratio
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
+
+
 #----------------
 # Slider
 #----------------
@@ -28,8 +47,16 @@ legend.text.size <- sliderInput("legend.text.size", "Size of insertion legend:",
 plot.type <- radioButtons("plot.type", "plot type", choices = c("proportions","counts"), selected = "counts", inline = TRUE) 
 
 bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options",
+  
+  bsCollapsePanel("Layout Options",
+    hr(),
+    row.ht.ratio,
+    col.wdth.ratio,
+    hr(),
+    style = "info"),
+  
   bsCollapsePanel("Plot Alignments Options",
-    p("Plots update automatically when parameters are changed"),
+    p("Click 'Plot' to replot the data with the new options"),
     hr(),
     #helpText("Text sizes"),
     axis.text.size,
@@ -55,5 +82,12 @@ plotOptions <- box(width = 4,
       data_setting),
     column(width=6,
       save_data )
+  ),
+  hr(),
+  fluidRow(
+      column(width=6,
+      replot),
+    column(width=6,
+      reset)
   )
 )
