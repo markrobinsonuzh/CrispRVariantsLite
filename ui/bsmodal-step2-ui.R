@@ -57,15 +57,15 @@ modal_2 <- .bsModal(
           edit_xls
         ))
     ),
-    column(width = 3,
-    h3("Filters: "),
-      fluidRow(
-          column(width = 12, helpText("Table of counts options"))),
-          top.n,
-          min.freq,
-          min.count
-      ),
-      column(width = 6,
+    #column(width = 3,
+    #h3("Filters: "),
+    #  fluidRow(
+    #      column(width = 12, helpText("Table of counts options"))),
+    #      top.n,
+    #      min.freq,
+    #      min.count
+    #  ),
+      column(width = 9,
       h3("Guide Plot"),
       ref_plot
   ))
