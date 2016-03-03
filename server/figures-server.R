@@ -2,10 +2,6 @@
 # UI
 ################################################################################
 
-#output$texts <- renderUI({
-#    textOutput("hello I am some text")
-#})
-
 output$plots <- renderUI({
     plotOutput("crispplots")
 })
