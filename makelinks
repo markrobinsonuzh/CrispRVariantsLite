@@ -37,8 +37,12 @@ ln -s /home/Shared_taupo/data/annotation/Human/hg19/bwa_mem/hg19.fa.pac
 ln -s /home/Shared_taupo/data/annotation/Human/hg19/bwa_mem/hg19.fa.sa   
 
 ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.sa
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.pac
 ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.gz
-
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.bwt
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.ann
+ln -s /home/Shared_taupo/data/annotation/Mouse/mm10/mm10.fa.amb
 
 
 # in R
