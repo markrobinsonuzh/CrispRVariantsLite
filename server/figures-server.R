@@ -69,7 +69,8 @@ createCrispPlot <- reactive({
     
     ## Warn if the CrisprSet is NULL
     validate(
-      need(!is.null(d$cset), 
+      need(!is.null(d$cset),
+       
            paste(c("CrisprSet could not be created.", 
                    "No on-target reads?"), sep = "\n"))
     )

@@ -164,15 +164,15 @@ observeEvent(input$run_guide,{
         write.fasta(sequences = ref, names = "reference", file.out = fa ) 
         
         
-        ref <- Biostrings::DNAString(ref)
+        
         
         #Helen implementaion BWA MEM read to shorts
-        cmd <- paste("bwa aln %s %s | bwa samse %s - %s |  grep -v '^@' | awk -F \"\t\"",
+        cmd <- paste("bwa aln %s %s | bwa samse %s - %s | grep -v '^@' | awk -F \"\t\"",
               "'{if ($2 == 0)print $3, $4, length($10), \"+\";",
               "else if ($2 == 16) print $3, $4, length($10), \"-\"}' && rm %s")
         
         # Run the mapping
-        #result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
+        print(sprintf(cmd, idx, fa, idx, fa, fa))
         
         
          #bwa fastmap ./data/genome/hg19.fa test.fa | grep EM | awk '{print $5}'
@@ -183,11 +183,12 @@ observeEvent(input$run_guide,{
         #result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         
-        print(result)
-        
+        chr <- result[1]
+        start <- as.numeric(result[2])
+        length <- as.numeric(result[3])
+        strd <- result[4]
         #scmd <- system(cmd,intern=TRUE)
         #result <- sapply(strsplit(scmd,":"), function(u) c(u[1],substr(u[2],1,1),substr(u[2],2,50)))[,1]
-        
         
         
          for (i in 1:2){
@@ -196,8 +197,12 @@ observeEvent(input$run_guide,{
              Sys.sleep(0.05)
             }
         
-        #d$guide <- GenomicRanges::GRanges(result[1], IRanges(as.numeric(result[2]), 
-         #     width = as.numeric(result[3])), strand = result[4])
+        guide <- GenomicRanges::GRanges(chr, IRanges( start , end = (start + length - 1)), strand = strd)
+        
+        seq.target.loc <- as.numeric(input$target_loc)
+        d$seq.width <- length
+        d$guide <- guide + d$seq.width
+        d$t.loc <- seq.target.loc + d$seq.width
         
         
         for (i in 1:3){
@@ -206,12 +211,12 @@ observeEvent(input$run_guide,{
              Sys.sleep(0.05)
             }
         
-        # update the text input
-         updateTextInput(session, "g.chr", value = paste(result[[1]]))
-         updateTextInput(session, "g.start", value = paste(result[[2]]))
-         updateTextInput(session, "g.strand", value = paste(result[[4]]))
+         # update the text input
+          updateTextInput(session, "g.chr", value = paste(chr))
+          updateTextInput(session, "g.start", value = paste(start))
+          updateTextInput(session, "g.strand", value = paste(strd))
         
-         gd <- setGuides()
+        # gd <- setGuides()
         
         for (i in 1:3){
              #Increment the progress bar, and update the detail text.
@@ -239,7 +244,7 @@ observeEvent(input$run_guide,{
     Sys.sleep(0.05)
   }
   
-  d$ref <- ref
+  d$ref <- Biostrings::DNAString(ref)
   
 })
 
