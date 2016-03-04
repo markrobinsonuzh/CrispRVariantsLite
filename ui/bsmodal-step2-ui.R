@@ -32,7 +32,7 @@ top.n = numericInput("top.n", "Top ranked variants", value = 50 )
 min.freq = numericInput("min.freq", "Frequency cutoff", value = 0 )
 min.count = numericInput("min.count", "No count cutoff", value = 0 )
 
-ref_plot = plotOutput("ref_plot")
+ref_plot = plotOutput("ref_plot", width="100%", height="200")
 
 #sample_names <- textInput("sample_names", "Sample Names")
 create_guides <- bsButton("create_guides", "Create guides", icon =  icon("fa fa-list"), style = "info", block = TRUE)
@@ -67,7 +67,10 @@ modal_2 <- .bsModal(
     #  ),
       column(width = 9,
       h3("Guide Plot"),
-      ref_plot
+      wellPanel(
+        ref_plot
+      )
+      
   ))
     , footer =   fluidRow(
     column(width = 6,

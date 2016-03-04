@@ -4,7 +4,7 @@
 
 output$plots <- renderUI({
     if(is.null(d$cset)) return()
-    plotOutput("crispplots")
+    plotOutput("crispplots", width="auto", height ="600px")
 })
 
 
@@ -133,7 +133,7 @@ createCrispPlot <- reactive({
         ) + theme(legend.position="none")  
       }, silent = TRUE) 
     })
-  }, height = 600)
+  })
   return(pcrisp)
 })
 
@@ -146,7 +146,6 @@ createCrispPlot <- reactive({
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
-    print("run plot")
     print(session$clientData)
     toggleModal(session, "modal_2", toggle = "close")
   })

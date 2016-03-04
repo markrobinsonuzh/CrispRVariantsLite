@@ -3,23 +3,26 @@
 ################################################################################
 
 output$error1 <- renderUI({
-  p(paste0("Reference : " , d$ref, " strand : ", input$g.strand))
+    tags$div(
+        p(paste0("Reference : " , input$g.start, " strand : ", input$g.strand))
+    )
 })
 
-output$guide <- renderUI({ 
-  
-     plotOutput("guide_plot")  
-
+output$guide <- renderUI({
+    tags$div(
+        plotOutput("guide_plot", width="100%", height="200px"),
+        uiOutput("error1")
+    )
+    
 })
 
 
 output$next_step <- renderUI({
-    if(!is.null(d$ref)){
+    if(!is.null(d$ref)){  
        bsButton("next_step", "Next" , type="action", style = "success", block = TRUE)    
     }else{
        bsButton("next_step", "Back" , type="action", style = "default", block = TRUE)
     }
-    #actionButton("next_step", "Next step" , width="100%", style="primary")
 })
 
 
@@ -59,10 +62,9 @@ observe({
 setGuides <- function(){
   if(input$run_guide == 0) return()
  
-    seq.start <- as.numeric(input$g.start)
-    seq.target.loc <- as.numeric(input$target_loc)
-    seq.end <-  seq.start + seq.target.loc + 5
-
+  seq.start <- as.numeric(input$g.start)
+  seq.target.loc <- as.numeric(input$target_loc)
+  seq.end <-  seq.start + seq.target.loc + 5
   
   guide <- GRanges(
     seqnames = input$g.chr, 
@@ -76,7 +78,6 @@ setGuides <- function(){
   d$seq.width <- as.numeric(input$g.length)
   d$guide <- guide + d$seq.width
   d$t.loc <- seq.target.loc + d$seq.width
-
       
   return(d$guide)
 }
@@ -87,8 +88,8 @@ setTxdb <- reactive({
   # Note: requires that the file names of the txdb match those of ref genome and
   # this can be achieved by symbolic links
   f <- paste0("./data/txdb/", gsub(".fa",".sqlite",input$select_Refgenome))
-  txdb <- AnnotationDbi::loadDb(f)
-  return(txdb)
+  d$txdb <- AnnotationDbi::loadDb(f)
+  return(d$txdb)
 })
 
 observeEvent(input$run_guide,{
@@ -100,38 +101,60 @@ observeEvent(input$run_guide,{
   on.exit(progress$close())
   progress$set(message = "Creating  Reference ", value = 0)
   
-  n <- 15
+  n <- 20
   
-  for (i in 1:8){
+  for (i in 1:3){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n, detail="Prepare for mapping sequence")
     Sys.sleep(0.05)
   }
   
-      ref <- NULL
+    ref <- NULL
     genome_index <- paste0("./data/genome/", input$select_Refgenome)
 
-    if(nchar(input$g.start) > 3 && nchar(input$g.chr) > 3){
+    if(nchar(input$g.start) > 0 ){
+            
+            for (i in 1:5){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="mapping sequence")
+             Sys.sleep(0.05)
+            }
+            
+            print(input$ref_seqs)
             gd <- setGuides()
             
             cmd <- paste0("samtools faidx ", genome_index)
             cmd <- paste0(cmd, " %s:%s-%s")
             ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]   
-            updateTextInput(session, "ref_seqs", value = toString(ref))
+            
+             for (i in 1:5){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="finding strand")
+             Sys.sleep(0.05)
+            }
+                
             switch (input$g.strand,
                 "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
                 "+" =  ref <- Biostrings::DNAString(ref)
                 )
+            
+            updateTextInput(session, "ref_seqs", value = toString(ref))
     
-    } 
-      else if (nchar(input$ref_seqs) > 20 )
-    {
-        nchar(input$ref_seqs)
+    } else if (nchar(input$ref_seqs) >=  10 ) {
+        
+        
+            for (i in 1:2){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="getting coordinates")
+             Sys.sleep(0.05)
+            }
+            
+        print(nchar(input$ref_seqs))
         
         idx <- genome_index
         ref <- input$ref_seqs
         
-        print(ref)
+        
         print(sprintf("this is the index genome : %s ",idx))
         print(sprintf("this is the reference sequence from the user : %s ", ref))
         
@@ -139,34 +162,75 @@ observeEvent(input$run_guide,{
         fa <- file.path(v$fasta_temp, fa)
 
         write.fasta(sequences = ref, names = "reference", file.out = fa ) 
-
+        
+        
+        ref <- Biostrings::DNAString(ref)
+        
         #Helen implementaion BWA MEM read to shorts
         cmd <- paste("bwa aln %s %s | bwa samse %s - %s |  grep -v '^@' | awk -F \"\t\"",
               "'{if ($2 == 0)print $3, $4, length($10), \"+\";",
               "else if ($2 == 16) print $3, $4, length($10), \"-\"}' && rm %s")
         
         # Run the mapping
+        #result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
+        
+        
+         #bwa fastmap ./data/genome/hg19.fa test.fa | grep EM | awk '{print $5}'
+        #cmd <- sprintf("bwa fastmap %s %s | grep EM | awk '{print $5}'", idx, fa)
+
+        
+        # Run the mapping
+        #result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         
-        print(sprintf("result %s", result))
+        print(result)
+        
+        #scmd <- system(cmd,intern=TRUE)
+        #result <- sapply(strsplit(scmd,":"), function(u) c(u[1],substr(u[2],1,1),substr(u[2],2,50)))[,1]
+        
+        
+        
+         for (i in 1:2){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="creating the guide")
+             Sys.sleep(0.05)
+            }
+        
+        #d$guide <- GenomicRanges::GRanges(result[1], IRanges(as.numeric(result[2]), 
+         #     width = as.numeric(result[3])), strand = result[4])
+        
+        
+        for (i in 1:3){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="updating text input")
+             Sys.sleep(0.05)
+            }
         
         # update the text input
-        updateTextInput(session, "g.chr", value = result[[1]])
-        updateTextInput(session, "g.start", value = result[[2]])
-        updateTextInput(session, "g.strand", value = result[[4]])
+         updateTextInput(session, "g.chr", value = paste(result[[1]]))
+         updateTextInput(session, "g.start", value = paste(result[[2]]))
+         updateTextInput(session, "g.strand", value = paste(result[[4]]))
         
-        gd <- setGuides()
+         gd <- setGuides()
+        
+        for (i in 1:3){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="finding strand")
+             Sys.sleep(0.05)
+            }
         
         switch (input$g.strand,
-    "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-    "+" =  ref <- Biostrings::DNAString(ref)
-  )
+                "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+                "+" =  ref <- Biostrings::DNAString(ref)
+                )
+                
     } else{
-        #trow error
+        createAlert(session, "alertRef", alertId = "alertRef1", title = "WARNING",
+        content = "Please enter the sequence or set the coordinates", style = "danger", 
+        dismiss = TRUE, append = FALSE)
     }
         
-  
-  
+ 
   
       
   for (i in 1:7){
@@ -176,15 +240,12 @@ observeEvent(input$run_guide,{
   }
   
   d$ref <- ref
-  print(d$ref)
-  print(d$guide)
+  
 })
 
 ################################################################################
-# PLOTS
-################################################################################
-
-
+#  ###############################################################################
+ 
  output$guide_plot <- renderPlot({
 
    if(is.null(d$ref)) return()
@@ -203,7 +264,7 @@ observeEvent(input$run_guide,{
        )
   
    
-   }, height = 200)
+   })
   
   output$ref_plot <- renderPlot({
 
@@ -222,6 +283,17 @@ observeEvent(input$run_guide,{
        )
   
    
- }, height = 200)
-
+ })
+ 
+ output$plot_anot <- renderPlot({
+  if(is.null(d$guide)){
+        return()
+  } 
+     d$txdb <- setTxdb()
+     print("output$plot_anot")
+     print(d$guide)
+     print(d$txdb)
+    CrispRVariants:::annotateGenePlot(txdb = d$txdb, target = d$guide)    
+ })
+ 
 
