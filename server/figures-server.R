@@ -31,7 +31,7 @@ createCripSet <- reactive({
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
-    progress$set(message = "Creating  CrispR set ", value = 0)
+    progress$set(message = "Creating  CrisprSet object ", value = 0)
     
     n <- 20
     
@@ -61,12 +61,47 @@ createCripSet <- reactive({
 # PLOT FUNCTION
 ################################################################################
 
+frequency_heatmap <- reactive({
+  
+  group <- as.factor(t$DF$group)
+  
+    plotFreqHeatmap(d$cset,
+      top.n = input$top.n,
+      min.freq = input$min.freq,
+      min.count = input$min.count,
+      type =  input$plot.type,
+      x.size = input$x.size, 
+      plot.text.size = input$plot.text.size, 
+      legend.text.size = input$legend.text.size,
+      x.angle = input$x.angle,
+      group = group
+  )
+})
+
+
+allele_plot <- reactive({
+{
+    plotAlignments(d$cset,
+      top.n = input$top.n,
+      min.freq = input$min.freq,
+      min.count = input$min.count,
+      target.loc = d$t.loc,
+      guide.loc = IRanges(
+      start = d$seq.width + 1,
+      end = end(d$guide) - start(d$guide) - d$seq.width + 1),
+      axis.text.size = input$axis.text.size, 
+      ins.size = input$ins.size,
+      plot.text.size = input$plot.text.size, 
+      legend.symbol.size = input$legend.symbol.size,
+      legend.text.size = input$legend.text.size
+    )
+})
+
+
 createCrispPlot <- reactive({
-  pcrisp = NULL
   
   output$crispplots <- renderPlot({
 
-    
     ## Warn if the CrisprSet is NULL
     validate(
       need(!is.null(d$cset),
@@ -74,70 +109,39 @@ createCrispPlot <- reactive({
            paste(c("CrisprSet could not be created.", 
                    "No on-target reads?"), sep = "\n"))
     )
-    
+            
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+    progress$set(message = "Creating  the plot ", value = 0)
+  
+    # Number of times we'll go through the loop
+    n <- 20
+  
+    for (i in 1:20){
+      #Increment the progress bar, and update the detail text.
+      progress$inc(1/n, detail = "plotting")
+      Sys.sleep(0.005)
+    }
+  
     input$replot
-    
+  
     isolate({
-    
-
-      progress <- shiny::Progress$new()
-      # Make sure it closes when we exit this reactive, even if there's an error
-      on.exit(progress$close())
-      progress$set(message = "Creating  the plot ", value = 0)
-    
-      # Number of times we'll go through the loop
-      n <- 20
-    
-      for (i in 1:20){
-        #Increment the progress bar, and update the detail text.
-        progress$inc(1/n, detail = "plotting")
-        Sys.sleep(0.005)
-      }
-    
+  
       r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
       c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
-     
+  
       try({
-        group <- as.factor(t$DF$group)
-
-        plotVariants(d$cset, txdb = d$txdb, 
-          col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
-          gene.text.size = 8,
-          left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
-      
-          plotAlignments.args = list(
-            top.n = input$top.n,
-            min.freq = input$min.freq,
-            min.count = input$min.count,
-            target.loc = d$t.loc,
-            guide.loc = IRanges(
-            start = d$seq.width + 1,
-            end = end(d$guide) - start(d$guide) - d$seq.width + 1),
-            axis.text.size = input$axis.text.size, 
-            ins.size = input$ins.size,
-            plot.text.size = input$plot.text.size, 
-            legend.symbol.size = input$legend.symbol.size,
-            legend.text.size = input$legend.text.size
-          ), 
-        
-          plotFreqHeatmap.args = list(
-            top.n = input$top.n,
-            min.freq = input$min.freq,
-            min.count = input$min.count,
-            type =  input$plot.type,
-            x.size = input$x.size, 
-            plot.text.size = input$plot.text.size, 
-            legend.text.size = input$legend.text.size,
-            x.angle = input$x.angle,
-            group = group
-          )
-        ) + theme(legend.position="none")  
+      CrispRVariants:::arrangePlots(
+        annotation_plot(), allele_plot(), frequency_heatmap(),
+        col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
+        left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines")) 
       }, silent = TRUE) 
+    
     })
+  
   })
-  return(pcrisp)
 })
-
 
 # create the plot
 
@@ -147,6 +151,5 @@ createCrispPlot <- reactive({
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
-    print(session$clientData)
     toggleModal(session, "modal_2", toggle = "close")
   })

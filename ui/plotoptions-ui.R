@@ -54,14 +54,14 @@ x.size <- sliderInput("x.size", "X-axis label text size:", min=0, max=20,
 
 # Decimal interval with step value
 plot.text.size <- sliderInput("plot.text.size", "Text size of sequence letters / numbers in plots: ", 
-    min = 0, max = 10, value = 2, step = 1)
+    min = 0, max = 10, value = 3, step = 1)
 
 # Specification of range within an interval
 legend.text.size <- sliderInput("legend.text.size", "Legend text Size :", min = 1, max = 20, value = 8)
 
 # Provide a custom currency format for value display, 
 # with basic animation
-x.angle <- sliderInput("x.angle", "Angle of sample label:", min = 1, max = 90, value = 90, step = 5, animate=TRUE)
+x.angle <- sliderInput("x.angle", "Angle of sample label:", min = 0, max = 90, value = 90, step = 5, animate=TRUE)
 
 axis.text.size  <- sliderInput("axis.text.size", "Text size of variant labels (e.g., 3:3D):", min = 1, max = 20, value = 10)
 

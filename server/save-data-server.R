@@ -128,7 +128,6 @@ output$downloadTable <- downloadHandler(
 
         print("pixelratio"); print(pixelratio); 
 
-        
         cdata <- session$clientData
         cnames <- names(cdata)
         br_ht <- cdata[["output_crispplots_height"]]
@@ -140,43 +139,14 @@ output$downloadTable <- downloadHandler(
         wd <- (br_wd*pixelratio)/res
                 
         pdf(file, height = ht, width = wd, useDingbats = FALSE)
-        
-        group <- as.factor(t$DF$group)
+                
         r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
         c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
 
-    plotVariants(d$cset, txdb = d$txdb, 
-      col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
-      gene.text.size = 8,
-      left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines"),
-      
-      plotAlignments.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        target.loc = d$t.loc,
-        guide.loc = IRanges(
-         start = d$seq.width + 1,
-         end = end(d$guide) - start(d$guide) - d$seq.width + 1),
-        axis.text.size = input$axis.text.size, 
-        ins.size = input$ins.size,
-        plot.text.size = input$plot.text.size, 
-        legend.symbol.size = input$legend.symbol.size,
-        legend.text.size = input$legend.text.size
-        ), 
-        
-      plotFreqHeatmap.args = list(
-        top.n = input$top.n,
-        min.freq = input$min.freq,
-        min.count = input$min.count,
-        type =  input$plot.type,
-        x.size = input$x.size, 
-        plot.text.size = input$plot.text.size, 
-        legend.text.size = input$legend.text.size,
-        x.angle = input$x.angle,
-        group = group
-        )
-      ) + theme(legend.position="none")  
+        CrispRVariants:::arrangePlots(
+        annotation_plot(), allele_plot(), frequency_heatmap(),
+        col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
+        left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines")) 
     
         dev.off()
     }

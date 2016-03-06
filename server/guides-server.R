@@ -94,8 +94,6 @@ setTxdb <- reactive({
 
 observeEvent(input$run_guide,{
 
-  
-  
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
@@ -162,8 +160,6 @@ observeEvent(input$run_guide,{
         fa <- file.path(v$fasta_temp, fa)
 
         write.fasta(sequences = ref, names = "reference", file.out = fa ) 
-        
-        
         
         
         #Helen implementaion BWA MEM read to shorts
@@ -251,13 +247,12 @@ observeEvent(input$run_guide,{
 ################################################################################
 #  ###############################################################################
  
- output$guide_plot <- renderPlot({
-
-   if(is.null(d$ref)) return()
-  
-   box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
+  reference_plot <- reactive({
+    if(is.null(d$ref)) return(NULL)
+     
+    box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
    
-   plotAlignments(
+    plotAlignments(
        d$ref,
        alns = NULL,
        target.loc = d$t.loc,
@@ -266,39 +261,39 @@ observeEvent(input$run_guide,{
          end = box_end),
        ins.sites = data.frame(),
        axis.text.size = 14
-       )
+    )
+  })
+ 
+  annotation_plot <- reactive({
+    progress <- shiny::Progress$new()
+    on.exit(progress$close())
+    progress$set(message = "Annotating transcript location ", value = 0)
+    for (i in 1:7){
+      # Increment the progress bar, and update the detail text.
+      progress$inc(1/i)
+      Sys.sleep(0.05)
+    }
   
-   
-   })
+    if(is.null(d$guide)){
+        return(NULL)
+    } 
+    d$txdb <- setTxdb()
+    print("output$plot_anot")
+    print(d$guide)
+    print(d$txdb)
+    CrispRVariants:::annotateGenePlot(txdb = d$txdb, target = d$guide, 
+                          gene.text.size = 8)      
+  })
+ 
+  output$guide_plot <- renderPlot({
+    reference_plot()
+  })
   
   output$ref_plot <- renderPlot({
-
-   if(is.null(d$ref)) return()
-   box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
-   
-   plotAlignments(
-       d$ref,
-       alns = NULL,
-       target.loc = d$t.loc,
-       guide.loc = IRanges(
-         start = d$seq.width + 1,
-         end = box_end),
-       ins.sites = data.frame(),
-       axis.text.size = 14
-       )
-  
-   
- })
+    reference_plot()
+  })
  
  output$plot_anot <- renderPlot({
-  if(is.null(d$guide)){
-        return()
-  } 
-     d$txdb <- setTxdb()
-     print("output$plot_anot")
-     print(d$guide)
-     print(d$txdb)
-    CrispRVariants:::annotateGenePlot(txdb = d$txdb, target = d$guide)    
+   annotation_plot()
  })
  
-
