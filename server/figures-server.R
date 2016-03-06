@@ -3,7 +3,8 @@
 ################################################################################
 
 output$plots <- renderUI({
-    plotOutput("crispplots")
+    if(is.null(d$cset)) return()
+    plotOutput("crispplots", width="auto", height ="600px")
 })
 
 
@@ -47,12 +48,10 @@ createCripSet <- reactive({
       progress$inc(1/n, detail = "B")
       Sys.sleep(0.005)
     }
-    print(d$guide)
     
     d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
-                 reference = setRef(), names = md$label, 
-                 target.loc = input$target_loc, verbose = FALSE)
-    
+                 reference = d$ref, names = md$label, 
+                 target.loc = input$target_loc, verbose = FALSE)    
     return(d$cset)
   }
 })
@@ -66,11 +65,12 @@ createCrispPlot <- reactive({
   pcrisp = NULL
   
   output$crispplots <- renderPlot({
-    
+
     
     ## Warn if the CrisprSet is NULL
     validate(
-      need(!is.null(d$cset), 
+      need(!is.null(d$cset),
+       
            paste(c("CrisprSet could not be created.", 
                    "No on-target reads?"), sep = "\n"))
     )
@@ -79,6 +79,7 @@ createCrispPlot <- reactive({
     
     isolate({
     
+
       progress <- shiny::Progress$new()
       # Make sure it closes when we exit this reactive, even if there's an error
       on.exit(progress$close())
@@ -133,16 +134,19 @@ createCrispPlot <- reactive({
         ) + theme(legend.position="none")  
       }, silent = TRUE) 
     })
-  }, height = 600)
+  })
   return(pcrisp)
 })
 
 
 # create the plot
- observeEvent(input$run_plot,{  
+
+ observeEvent(input$run_plot,{    
+
     d$cset <- createCripSet()
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
-    toggleModal(session, "modal_2", toggle = "close")  
+    print(session$clientData)
+    toggleModal(session, "modal_2", toggle = "close")
   })

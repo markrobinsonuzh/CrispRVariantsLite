@@ -11,6 +11,7 @@ setHot = function(x) values[["htable"]] = x
 
 
 output$htable <- renderRHandsontable({
+    input$update_table
     if (!is.null(input$htable)) {
       t$DF <- hot_to_r(input$htable)
     }else{
@@ -20,6 +21,13 @@ output$htable <- renderRHandsontable({
     rhandsontable(t$DF) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE)
 })
+
+
+output$table <- renderUI({
+    if(is.null(v$bm_fnames)) return()
+    rHandsontableOutput("htable")
+  })
+
 
 
 createHTable <- reactive({
@@ -55,14 +63,6 @@ createHTable <- reactive({
     Sys.sleep(0.005)
   }
   
-  output$table <- renderUI({
-    rHandsontableOutput("htable")
-  })
-  
-  output$metadata <- renderUI({
-    bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
-  })
-  
   toggleModal(session, "modal_table", toggle = "open")
   
 })
@@ -71,14 +71,32 @@ createHTable <- reactive({
 # BEHAVIOUR
 ################################################################################
 
-#downland the bams files on the server
+# Disable creating the guides until Reference and Bams defined
 observe({
-  # list BAM files
-  data_dir <- input$upload_bams
+   if(is.null(v$bm_fnames)){
+      updateButton(session,"edit_xls", style ="default", icon = icon("ban"), disable = TRUE )
+    }else{
+      updateButton(session,"edit_xls", style = "success",  icon = icon("table"), block = TRUE, disable = FALSE ) 
+    }
+})
+
+# open metadata pannel
+  observeEvent(input$guide_from_table, {
+    toggleModal(session, "modal_table", toggle = "close")
+    toggleModal(session, "modal_ref", toggle = "open")
+  })
+
+#downland the bams files on the server
+observeEvent( input$upload_bams, {
+   print(state$bam)
+
+      # list BAM files
+  v$inFile <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(v$bm_fnames))
+  if(!is.null(v$inFile))
   {
+      data_dir <- v$inFile
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -103,9 +121,12 @@ observe({
     }
     
     createHTable()
+  
   }
   
+  
 })
+
 
 
 

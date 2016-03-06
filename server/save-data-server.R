@@ -1,4 +1,5 @@
    output$bams <- renderUI({
+       
         if(!is.null(v$bm_fnames))
         {
             tags$div(
@@ -8,10 +9,10 @@
         else
         {
             tags$div(
-                fileInput('upload_bams', 'Upload ZIP of BAMs', multiple = F, width = "100%"),
-                bsButton("select_FastQ", 'Upload ZIP of FASTQs', style = "primary", block = TRUE),
                 bsButton("select_AB1", 'Upload ZIP of AB1s', style = "primary", block = TRUE),
-                p()
+                bsButton("select_FastQ", 'Upload ZIP of FASTQs', style = "primary", block = TRUE),
+                p(),
+                fileInput('upload_bams', 'Upload ZIP of BAMs', multiple = F, width = "100%")
 
             )
         }
@@ -20,7 +21,9 @@
   observe({
     output$ui_save <- renderUI({
     if(!is.null(d$cset)){
-      tags$div(
+      if(!is.null(v$fq_fnames)){
+           tags$div(
+        
         splitLayout(p("Allele Variant Plot"),
         downloadButton('downloadPlot', 'Download PDF')),
         p(),
@@ -33,7 +36,22 @@
         splitLayout(p("Metadata table"),
         downloadButton('downloadTable', 'Download CSV')
         )
-      )
+      ) 
+        }else{
+           tags$div(
+        
+        splitLayout(p("Allele Variant Plot"),
+        downloadButton('downloadPlot', 'Download PDF')),
+        p(),
+        splitLayout(p("Mapped BAM files"),
+        downloadButton('downloadBAM', 'Download ZIP')),
+        p(),
+        splitLayout(p("Metadata table"),
+        downloadButton('downloadTable', 'Download CSV')
+        )
+      )  
+        }
+      
     }else{
       p("No Data to download - to create plot click on setting")
     }
@@ -109,6 +127,7 @@ output$downloadTable <- downloadHandler(
         pixelratio <- session$clientData$pixelratio
 
         print("pixelratio"); print(pixelratio); 
+
         
         cdata <- session$clientData
         cnames <- names(cdata)

@@ -17,8 +17,15 @@ genlist.gz <- genlist <- basename(gendb)
 # DEFAULT SETTING GUIDE
 ################################################################################
 
-d.start <- "23648474"
-d.length <- "5"
-d.chr <- "chr17"
+#d.start <- "23648474"
+#d.length <- "5"
+#d.chr <- "chr17"
+#d.strand <-  "-"
+g.seq <- "GGAGATCGCCACAAGATGTGAGG"
+
+d.start <- NULL
+d.length <- NULL
+d.chr <- NULL
 d.strand <-  "-"
+#g.seq <- NULL
 

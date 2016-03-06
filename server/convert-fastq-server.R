@@ -40,7 +40,7 @@ observeEvent(input$run_fastq,{
         state$ini = TRUE
         
         toggleModal(session, "modal_FASTQ", toggle = "close")
-        toggleModal(session, "modal_2", toggle = "open")
+        #toggleModal(session, "modal_2", toggle = "open")
         
         for (i in 1:4){
           progress$inc(1/n, detail = "Create Metadata")

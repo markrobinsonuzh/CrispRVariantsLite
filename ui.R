@@ -19,9 +19,12 @@ source("ui/bsmodal-save-ui.R", local = T)
 
 body <- dashboardBody(
   fluidRow(
-    box(width = 8, height = "600px",
+    
+    box(width = 8, height = "100%",
       solidHeader = T,
-      htmlOutput("plots")),
+      bsAlert("AlertUI"),
+      wellPanel(htmlOutput("plots"))
+      ),
     plotOptions,
     modal_1,
     modal_2,

@@ -25,6 +25,25 @@ row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
 col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
     selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
 
+reset <- bsButton("reset", 'Reset', type='action', style = "info", block = TRUE)
+update <- bsButton("update", 'Update', type='action', style = "primary", block = TRUE)
+
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
+
+#----------------
+# Select boxes
+#----------------
+
+# Row height ratio
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
+
+# Column width ratio
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
+
+
 #----------------
 # Slider
 #----------------
@@ -58,7 +77,7 @@ plot.type <- radioButtons("plot.type", "Plot type", choices = c("proportions","c
 #----------------
 
 bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options",
-  
+
   bsCollapsePanel("Layout options",
     helpText(paste("These options control the relative sizes of the plots.",
                    "Click 'Plot' to replot the data with the new options.")),
@@ -79,6 +98,7 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
   bsCollapsePanel("Allele plot options",
     helpText(paste("These options control the appearance of the allele plot.",  
                    "Click 'Plot' to replot.")),
+
     hr(),
     helpText("Text sizes"),
     axis.text.size,
@@ -107,11 +127,11 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=4,
-      data_setting),
-    column(width=4,
-      save_data ),
-    column(width=4, 
-      replot)
-  )
-)
+    column(width=6,data_setting),
+    column(width=6, save_data )
+  ),
+  hr(),
+  fluidRow(
+    column(width=6,replot),
+    column(width=6,reset)
+))

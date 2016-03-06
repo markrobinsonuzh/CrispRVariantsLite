@@ -1,0 +1,19 @@
+library(GenomicRanges)
+
+idx <- "./data/genome/danRer10.fa"
+ref <- "GGAGATCGCCACAAGATGTGAGG"
+fa <- sprintf("%s.fasta", gsub(" ", "", date()))
+
+# Write the fasta
+cat(sprintf(">ref\n%s\n", x), file=fa)
+
+cmd <- paste("bwa fastmap -l 20 %s %s | bwa samse %s - %s |  grep -v '^@' | awk -F \"\t\"",
+              "'{if ($2 == 0)print $3, $4, length($10), \"+\";",
+              "else if ($2 == 16) print $3, $4, length($10), \"-\"}' && rm %s")
+
+# Run the mapping
+result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
+
+guide <- GenomicRanges::GRanges(result[1], IRanges(as.numeric(result[2]), 
+              width = as.numeric(result[3])), strand = result[4])
+              
