@@ -130,11 +130,12 @@ output$downloadTable <- downloadHandler(
 
         cdata <- session$clientData
         cnames <- names(cdata)
-        br_ht <- cdata[["output_crispplots_height"]]
+        #br_ht <- cdata[["output_crispplots_height"]]
         br_wd <- cdata[["output_crispplots_width"]]
           
         br_ht <- 600 # MAKE THESE GLOBAL VARIABLES
         res <- 72
+
         ht <- (br_ht*pixelratio)/res
         wd <- (br_wd*pixelratio)/res
                 

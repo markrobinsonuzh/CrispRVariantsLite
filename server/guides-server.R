@@ -16,7 +16,6 @@ output$guide <- renderUI({
     
 })
 
-
 output$next_step <- renderUI({
     if(!is.null(d$ref)){  
        bsButton("next_step", "Next" , type="action", style = "success", block = TRUE)    
@@ -24,7 +23,6 @@ output$next_step <- renderUI({
        bsButton("next_step", "Back" , type="action", style = "default", block = TRUE)
     }
 })
-
 
 
 
@@ -59,7 +57,7 @@ observe({
 # FUNCTIONS
 ################################################################################
 
-setGuides <- function(){
+setGuidesFromCoords <- function(){
   if(input$run_guide == 0) return()
  
   seq.start <- as.numeric(input$g.start)
@@ -119,7 +117,7 @@ observeEvent(input$run_guide,{
             }
             
             print(input$ref_seqs)
-            gd <- setGuides()
+            gd <- setGuidesFromCoords()
             
             cmd <- paste0("samtools faidx ", genome_index)
             cmd <- paste0(cmd, " %s:%s-%s")
@@ -140,27 +138,21 @@ observeEvent(input$run_guide,{
     
     } else if (nchar(input$ref_seqs) >=  10 ) {
         
+        updateSliderInput(session, "g.length", value = 0)
         
             for (i in 1:2){
              #Increment the progress bar, and update the detail text.
              progress$inc(1/n, detail="getting coordinates")
              Sys.sleep(0.05)
             }
-            
-        print(nchar(input$ref_seqs))
-        
+                
         idx <- genome_index
         ref <- input$ref_seqs
-        
-        
-        print(sprintf("this is the index genome : %s ",idx))
-        print(sprintf("this is the reference sequence from the user : %s ", ref))
-        
+                     
         fa <- paste0(MHmakeRandomString(),gsub("[- :]", "", Sys.time()),"_reference.fasta")
         fa <- file.path(v$fasta_temp, fa)
 
-        write.fasta(sequences = ref, names = "reference", file.out = fa ) 
-        
+        write.fasta(sequences = ref, names = "reference", file.out = fa )  
         
         #Helen implementaion BWA MEM read to shorts
         cmd <- paste("bwa aln %s %s | bwa samse %s - %s | grep -v '^@' | awk -F \"\t\"",
@@ -173,34 +165,28 @@ observeEvent(input$run_guide,{
         
          #bwa fastmap ./data/genome/hg19.fa test.fa | grep EM | awk '{print $5}'
         #cmd <- sprintf("bwa fastmap %s %s | grep EM | awk '{print $5}'", idx, fa)
-
-        
+  
         # Run the mapping
-        #result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
         
         chr <- result[1]
-        start <- as.numeric(result[2])
-        length <- as.numeric(result[3])
+        sq.start <- as.numeric(result[2])
+        sq.length <- as.numeric(result[3])
         strd <- result[4]
-        #scmd <- system(cmd,intern=TRUE)
-        #result <- sapply(strsplit(scmd,":"), function(u) c(u[1],substr(u[2],1,1),substr(u[2],2,50)))[,1]
-        
-        
+       
          for (i in 1:2){
              #Increment the progress bar, and update the detail text.
              progress$inc(1/n, detail="creating the guide")
              Sys.sleep(0.05)
             }
         
-        guide <- GenomicRanges::GRanges(chr, IRanges( start , end = (start + length - 1)), strand = strd)
+        guide <- GenomicRanges::GRanges(chr,
+                   IRanges( sq.start , end = (sq.start + sq.length - 1)), strand = strd)
         
-        seq.target.loc <- as.numeric(input$target_loc)
-        d$seq.width <- length
-        d$guide <- guide + d$seq.width
-        d$t.loc <- seq.target.loc + d$seq.width
-        
-        
+        d$seq.width <- 0
+        d$guide <- guide 
+        d$t.loc <- as.numeric(input$target_loc) 
+                
         for (i in 1:3){
              #Increment the progress bar, and update the detail text.
              progress$inc(1/n, detail="updating text input")
@@ -209,21 +195,16 @@ observeEvent(input$run_guide,{
         
          # update the text input
           updateTextInput(session, "g.chr", value = paste(chr))
-          updateTextInput(session, "g.start", value = paste(start))
+          updateTextInput(session, "g.start", value = paste(sq.start))
           updateTextInput(session, "g.strand", value = paste(strd))
-        
-        # gd <- setGuides()
-        
+                
         for (i in 1:3){
              #Increment the progress bar, and update the detail text.
              progress$inc(1/n, detail="finding strand")
              Sys.sleep(0.05)
             }
         
-        switch (input$g.strand,
-                "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
-                "+" =  ref <- Biostrings::DNAString(ref)
-                )
+        ref <- Biostrings::DNAString(ref)
                 
     } else{
         createAlert(session, "alertRef", alertId = "alertRef1", title = "WARNING",
@@ -248,6 +229,7 @@ observeEvent(input$run_guide,{
 #  ###############################################################################
  
   reference_plot <- reactive({
+   
     if(is.null(d$ref)) return(NULL)
      
     box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
@@ -260,7 +242,8 @@ observeEvent(input$run_guide,{
          start = d$seq.width + 1,
          end = box_end),
        ins.sites = data.frame(),
-       axis.text.size = 14
+       axis.text.size = 14,
+       plot.text.size = 3,
     )
   })
  

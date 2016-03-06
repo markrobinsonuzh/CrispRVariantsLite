@@ -130,11 +130,16 @@ createCrispPlot <- reactive({
       r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
       c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
   
+      plot_margin <- switch(input$plot.margins,
+                       "Less" = ggplot2::unit(c(1,0,2,2), "lines"),
+                       "Normal" = ggplot2::unit(c(1,0,5,2), "lines"),
+                       "More" = ggplot2::unit(c(1,0,10,2), "lines"))
+  
       try({
       CrispRVariants:::arrangePlots(
         annotation_plot(), allele_plot(), frequency_heatmap(),
         col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
-        left.plot.margin = ggplot2::unit(c(1,0,5,2), "lines")) 
+        left.plot.margin = plot_margin)
       }, silent = TRUE) 
     
     })

@@ -3,7 +3,7 @@
 ################################################################################
 
 
-ref_seqs <- textInput("ref_seqs", "Guide Sequence", width = "100%", value=g.seq, placeholder = "ATGCTGCTGGTTATTAGATTAGT")
+ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%", value=g.seq, placeholder = "ATGCTGCTGGTTATTAGATTAGT")
 
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome", choices = genlist.gz, width = "100%")
 

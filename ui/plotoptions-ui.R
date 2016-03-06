@@ -43,6 +43,10 @@ row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
 col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
     selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
 
+# Plot margins
+plot.margins <- selectInput("plot.margins", "Space beneath plot",
+    selected = "Normal", choices = c("Less", "Normal", "More"), width = 100)
+
 
 #----------------
 # Slider
@@ -67,7 +71,7 @@ axis.text.size  <- sliderInput("axis.text.size", "Text size of variant labels (e
 
 ins.size <- sliderInput("ins.size", "Size of insertion symbols: ", min = 1, max = 10, value = 3)
 legend.symbol.size <- sliderInput("legend.symbol.size", "legendsymbol size :", min = 1, max = 20, value = 5)
-legend.text.size <- sliderInput("legend.text.size", "Size of insertion legend:", min = 1, max = 20, value = 8)
+legend.text.size <- sliderInput("legend.text.size", "Text size of insertion legend:", min = 1, max = 20, value = 8)
 
 plot.type <- radioButtons("plot.type", "Plot type", choices = c("proportions","counts"), selected = "counts", inline = TRUE) 
 
@@ -84,6 +88,7 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
     hr(),
     row.ht.ratio,
     col.wdth.ratio,
+    plot.margins,
     style = "info"),
   
   bsCollapsePanel("Filtering options",
