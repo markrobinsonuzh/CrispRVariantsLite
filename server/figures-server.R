@@ -80,7 +80,6 @@ frequency_heatmap <- reactive({
 
 
 allele_plot <- reactive({
-{
     plotAlignments(d$cset,
       top.n = input$top.n,
       min.freq = input$min.freq,
