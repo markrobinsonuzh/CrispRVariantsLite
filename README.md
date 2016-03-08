@@ -4,7 +4,7 @@ This github repository contains the code underlying the *CrispRVariantsLite* Shi
 
 ## Example data
 
-Example ZIP files (and corresponding TXT files with description of genome location and/or guide+PAM sequence) for the different entry points can be found in the [/examples/](https://github.com/markrobinsonuzh/CrispRVariantsLite/tree/master/examples) directory.
+Example ZIP files (and corresponding TXT files with description of genome location and/or guide+PAM sequence) for the different entry points can be found in the [/examples/](https://github.com/markrobinsonuzh/CrispRVariantsLite/tree/master/examples) directory.  If retrieving these files from the github repo, be sure to click on 'Raw' or 'View Raw'.
 
 ## Running this app locally
 
