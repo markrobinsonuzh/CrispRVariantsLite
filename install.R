@@ -76,22 +76,6 @@ if(!rmarkdown_okay){
   devtools::install_github("rstudio/rmarkdown")
 }
 
-################################################################################
-# Should use latest GitHub version of shinythemes
-# https://github.com/rstudio/shinythemes
-################################################################################
-rshinythemes_okay = FALSE
-if("shinythemes" %in% .packages(all.available = TRUE)){
-  rshinythemes_min_version = "0.5"
-  rshinythemes_compare = compareVersion(as.character(packageVersion("shinythemes")), rshinythemes_min_version)
-  if( rshinythemescompare >= 0 ){
-    rshinythemes_okay <- TRUE
-  }
-}
-if(!rshinythemes_okay){
-  install.packages("devtools")
-  devtools::install_github("rstudio/shinythemes")
-}
 
 ################################################################################
 # flowCore existence/version test, and installation

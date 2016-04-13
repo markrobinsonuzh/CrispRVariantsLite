@@ -40,14 +40,20 @@ observeEvent(input$run_fastq,{
         state$ini = TRUE
         
         toggleModal(session, "modal_FASTQ", toggle = "close")
-        toggleModal(session, "modal_2", toggle = "open")
+        #toggleModal(session, "modal_2", toggle = "open")
         
         for (i in 1:4){
           progress$inc(1/n, detail = "Create Metadata")
           Sys.sleep(0.05)
         }
         
-        createHTable()
+        toggleModal(session, "modal_FASTQ", toggle = "close")
+
+        state$reset <- F
+        print(sprintf("d$id %s #1", d$id))
+        if(!is.null(d$id)){
+            createHTable(d$id)    
+        } 
         
       }
       

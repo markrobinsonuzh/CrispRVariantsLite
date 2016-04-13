@@ -6,7 +6,7 @@
 # fileInput
 #--------------
 upload_bams <- htmlOutput("bams")
-reference <- fileInput('reference', 'Upload reference', multiple = F, width = "100%")
+#reference <- fileInput('reference', 'Upload reference', multiple = F, width = "100%")
 
 
 targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), width = "100%")
@@ -32,11 +32,13 @@ top.n = numericInput("top.n", "Top ranked variants", value = 50 )
 min.freq = numericInput("min.freq", "Frequency cutoff", value = 0 )
 min.count = numericInput("min.count", "No count cutoff", value = 0 )
 
-ref_plot = plotOutput("ref_plot")
+ref_plot = plotOutput("ref_plot", width="100%", height="200")
 
 #sample_names <- textInput("sample_names", "Sample Names")
 create_guides <- bsButton("create_guides", "Create guides", icon =  icon("fa fa-list"), style = "info", block = TRUE)
-modal_2 <- bsModal(
+edit_xls <- bsButton("edit_xls", "metadata", type="action", icon =  icon("table"), style = "success", block = TRUE) 
+
+modal_2 <- .bsModal(
   "modal_2", "Figures setting : ",
   "data_setting", size = "large",
   fluidRow(column(width = 12,
@@ -52,21 +54,25 @@ modal_2 <- bsModal(
           upload_bams,
           create_guides,
           p(),
-          uiOutput("metadata")
+          edit_xls
         ))
     ),
-    column(width = 3,
-      h3("Filters: "),
-      fluidRow(column(width = 12, helpText("Table of counts options"))),
-          top.n,
-          min.freq,
-          min.count
-      ),
-    column(width = 6,
-      ref_plot)
-  ),
-  hr(),
-  fluidRow(
+    #column(width = 3,
+    #h3("Filters: "),
+    #  fluidRow(
+    #      column(width = 12, helpText("Table of counts options"))),
+    #      top.n,
+    #      min.freq,
+    #      min.count
+    #  ),
+      column(width = 9,
+      h3("Guide Plot"),
+      wellPanel(
+        ref_plot
+      )
+      
+  ))
+    , footer =   fluidRow(
     column(width = 6,
       fluidRow(
         column(width = 6),
@@ -81,5 +87,4 @@ modal_2 <- bsModal(
           run_plot)
         )
       )
-    )
-  )
+    ), close.button = F)

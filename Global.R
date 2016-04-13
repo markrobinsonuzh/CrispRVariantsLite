@@ -14,10 +14,12 @@ library("GenomicFeatures"); packageVersion("GenomicFeatures")
 library("AnnotationDbi"); packageVersion("AnnotationDbi")
 library("GenomicRanges"); packageVersion("GenomicRanges")
 library("IRanges"); packageVersion("IRanges")
-
+library("seqinr");packageVersion("seqinr")
 
 #Utilities
 source("./core/setting.R", local = TRUE)
+source("./core/bsModal.R", local = TRUE)
+source("./core/misc.R", local = TRUE)
 
 # For pasting times into things
 simpletime = function(){gsub("\\D", "_", Sys.time())}
@@ -26,6 +28,8 @@ simpletime = function(){gsub("\\D", "_", Sys.time())}
 # MHmakeRandomString(n, length)
 # function generates a random string random string of the
 # length (length), made up of numbers, small and capital letters
+
+is.error <- function(x) inherits(x, "try-error")
 
 MHmakeRandomString <- function(n=1, lenght=12)
 {
@@ -41,10 +45,8 @@ MHmakeRandomString <- function(n=1, lenght=12)
 
 # remove all the files in a directory
 empty_dir <- function(dirname){
-  ## Get vector of all file names
-  ff <- dir(create_dir(dirname), recursive=TRUE, full.names=TRUE)
   ## Remove all files
-  unlink(ff, recursive=TRUE, force=FALSE)
+  unlink(dirname, recursive=TRUE, force=FALSE)
 }
 
 #create empty directory if not created
@@ -52,8 +54,7 @@ create_dir <- function(dirname){
   #Check existence of directory and create if doesn't exist
   #http://stackoverflow.com/questions/4216753/check-existence-of-directory-and-create-if-doesnt-exist
   ifelse(!dir.exists(file.path(dirname)), dir.create(file.path(dirname)), FALSE)
-  outDir <- file.path(mainDir, subDir)
-  return(outDir)
+  #outDir <- file.path(tempdir(), dirname)
+  return(dirname)
 }
-
 

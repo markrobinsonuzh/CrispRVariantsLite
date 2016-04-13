@@ -6,23 +6,46 @@
 # setHot = function(x) values[["hot"]] <<- x
 
 # comment lines below if action button is used to commit changes
+
+setHot = function(x, y) values[[y]] = x
+
 values = reactiveValues()
-setHot = function(x) values[["htable"]] = x
+val_ = NULL
 
+table <- function(name){
+    y <- paste0(name)
+    output[[y]] <- renderRHandsontable({
+    #solution from : https://github.com/jrowen/rhandsontable/issues/27
+       if (is.null(input[[y]]) || val_ != y ) 
+       {    
+           val_ <<- y
+            values[[y]] <- getMetadata()         
+        }
+        else if(!is.null(input[[y]]) && val_ == y)
+        {
+            values[[y]] <- hot_to_r(input[[y]])
 
-output$htable <- renderRHandsontable({
-    if (!is.null(input$htable)) {
-      t$DF <- hot_to_r(input$htable)
-    }else{
-      t$DF <- getMetadata()
-    }
-    setHot(t$DF)
+        } 
+    
+    t$DF <- values[[y]]
     rhandsontable(t$DF) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+      hot_table(highlightCol = TRUE, highlightRow = TRUE) 
+  
+    
+})
+    
+}
+
+output$table <- renderUI({
+   if(!state$reset) {
+     rHandsontableOutput(d$id)
+   }else{
+        t$DF = NULL
+        return()
+    }
 })
 
-
-createHTable <- reactive({
+createHTable <- function(id){
   
   # Create a Progress object
   progress <- shiny::Progress$new()
@@ -33,14 +56,15 @@ createHTable <- reactive({
   # Number of times we'll go through the loop
   n <- 15
   for (i in 1:5){
-    #Increment the progress bar, and update the detail text.
+    # Increment the progress bar, and update the detail text.
     progress$inc(1/n)
     Sys.sleep(0.005)
   }
   
-  
-  
-  
+  print(sprintf("d$id %s #1", d$id))
+  table(id)  
+
+  # print(inFile$name)
   for (i in 1:5){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n, detail = "Compiling data")
@@ -55,30 +79,41 @@ createHTable <- reactive({
     Sys.sleep(0.005)
   }
   
-  output$table <- renderUI({
-    rHandsontableOutput("htable")
-  })
-  
-  output$metadata <- renderUI({
-    bsButton("edit_xls", "metadata", icon =  icon("table"), style = "success", block = TRUE) 
-  })
-  
   toggleModal(session, "modal_table", toggle = "open")
   
-})
+}
 
 ################################################################################
 # BEHAVIOUR
 ################################################################################
 
-#downland the bams files on the server
+# Disable creating the guides until Reference and Bams defined
 observe({
-  # list BAM files
-  data_dir <- input$upload_bams
+   if(is.null(v$bm_fnames)){
+      updateButton(session,"edit_xls", style ="default", icon = icon("ban"), disable = TRUE )
+    }else{
+      updateButton(session,"edit_xls", style = "success",  icon = icon("table"), block = TRUE, disable = FALSE ) 
+    }
+})
+
+# open metadata pannel
+  observeEvent(input$guide_from_table, {
+    toggleModal(session, "modal_table", toggle = "close")
+    toggleModal(session, "modal_ref", toggle = "open")
+  })
+
+#downland the bams files on the server
+observeEvent( input$upload_bams, {
+   #print(state$bam)
+   #print(v$inFile)
+   v$inFile <- input$upload_bams
   
   # if the file doesn't exist
-  if(!is.null(data_dir) && is.null(v$bm_fnames))
+  if(!is.null(v$inFile))
   {
+    # list BAM files
+    #print(v$inFile)
+    data_dir <- v$inFile
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -96,16 +131,19 @@ observe({
     downloadbm <- file.path(v$bam_dir)
     temp <- unzip(data_dir$datapath, exdir = downloadbm)
     v$bm_fnames <- dir(downloadbm, ".bam$", full.names = TRUE, recursive = T)
+    
     for (i in 1:10){
       #Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail("storing files on the server"))
       Sys.sleep(0.005)
     }
     
-    createHTable()
+    state$reset <- F
+    createHTable(d$id)
   }
   
 })
+
 
 
 
@@ -116,7 +154,8 @@ observe({
 # ----------------------
 #  make table of all sequences
 # ----------------------
-getMetadata <- reactive({
+getMetadata <- function(){
+
   # Create a Progress object
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
@@ -168,7 +207,7 @@ getMetadata <- reactive({
     Sys.sleep(0.005)
   }
   return(t.DF)
-})
+}
 
 
 
