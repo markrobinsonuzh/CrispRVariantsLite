@@ -183,7 +183,9 @@ observeEvent(input$run_guide,{
         
         
         # Run the mapping
-        print(sprintf(cmd, idx, fa, idx, fa, fa))
+        cat(cmd)
+        cat(idx)
+        cat(sprintf(cmd, idx, fa, idx, fa, fa))
         
         
         #bwa fastmap ./data/genome/hg19.fa test.fa | grep EM | awk '{print $5}'
@@ -194,6 +196,7 @@ observeEvent(input$run_guide,{
         
         err <- try({
             result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
+            print(result)
         })
         
         isolate({

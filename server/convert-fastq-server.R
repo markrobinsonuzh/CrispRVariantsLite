@@ -22,8 +22,12 @@ observeEvent(input$run_fastq,{
           progress$inc(1/n, detail = "unzip Fast FASTQs files")
           Sys.sleep(0.05)
         }
-        
-        uploadFastq()
+
+        #data_dir <- v$inFile 
+        #data_dir <- input[[v$fq_input]]
+        #temp <- unzip(data_dir$datapath, exdir = v$fq_dir)     
+        #v$fq_fnames <- dir(v$fq_dir, "fastq|fq$", recursive = TRUE, full.names = TRUE) 
+        #uploadFastq()
         
         for (i in 1:3){
           progress$inc(1/n, detail = "Map FastQs reads")
