@@ -6,6 +6,7 @@
 
 start_btn <- bsButton("start_btn", "Start", style = "info", block = TRUE)
 
+<<<<<<< HEAD
 
 bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow using BAM files", 
     bsCollapsePanel("Overall workflow using BAM files",
@@ -26,6 +27,8 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
 
         
 
+=======
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 modal_1 <- .bsModal(
   "modal_1", "CrispRVariantsLite",
   "setting_btn", 

@@ -27,5 +27,9 @@ d.start <- NULL
 d.length <- NULL
 d.chr <- NULL
 d.strand <-  "-"
+<<<<<<< HEAD
 g.seq <- NULL
+=======
+#g.seq <- NULL
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 

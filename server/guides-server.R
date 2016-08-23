@@ -4,7 +4,11 @@
 
 output$error1 <- renderUI({
     tags$div(
+<<<<<<< HEAD
         p(paste0("coordinates : " , input$g.start, " strand : ", input$g.strand, " chr : ", input$g.chr))
+=======
+        p(paste0("Reference : " , input$g.start, " strand : ", input$g.strand))
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     )
 })
 
@@ -17,7 +21,15 @@ output$guide <- renderUI({
 })
 
 output$next_step <- renderUI({
+<<<<<<< HEAD
     bsButton("next_step", "Back" , type="action", style = "default", block = TRUE)
+=======
+    if(!is.null(d$ref)){  
+       bsButton("next_step", "Next" , type="action", style = "success", block = TRUE)    
+    }else{
+       bsButton("next_step", "Back" , type="action", style = "default", block = TRUE)
+    }
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 })
 
 
@@ -37,9 +49,22 @@ observe({
 
 # open reference modal
   observeEvent(input$create_guides, {
+<<<<<<< HEAD
    #toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_ref", toggle = "open")
   })
+=======
+    # toggleModal(session, "modal_2", toggle = "close")
+    toggleModal(session, "modal_ref", toggle = "open")
+  })
+
+ observeEvent(input$next_step,{
+      toggleModal(session, "modal_ref", toggle = "close")
+     #toggleModal(session, "modal_2", toggle = "open")
+ })
+ 
+
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 
  observeEvent(input$next_step,{
       toggleModal(session, "modal_ref", toggle = "close")
@@ -84,6 +109,7 @@ setTxdb <- reactive({
 })
 
 observeEvent(input$run_guide,{
+<<<<<<< HEAD
   
   # If bwa cannot be run, stop the app
   if (system("bwa", ignore.stderr = TRUE) == 127){
@@ -95,15 +121,23 @@ observeEvent(input$run_guide,{
   }
   
   
+=======
+
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
   progress$set(message = "Creating  Reference ", value = 0)
   
+<<<<<<< HEAD
   
   
   n <- 20
   
+=======
+  n <- 20
+  
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   for (i in 1:3){
     #Increment the progress bar, and update the detail text.
     progress$inc(1/n, detail="Prepare for mapping sequence")
@@ -112,6 +146,7 @@ observeEvent(input$run_guide,{
   
     ref <- NULL
     genome_index <- paste0("./data/genome/", input$select_Refgenome)
+<<<<<<< HEAD
     
     
     
@@ -158,6 +193,37 @@ observeEvent(input$run_guide,{
             
             #updateTextInput(session, "ref_seqs", value = toString(ref))
     
+=======
+
+    if(nchar(input$g.start) > 0 ){
+            
+            for (i in 1:5){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="mapping sequence")
+             Sys.sleep(0.05)
+            }
+            
+            print(input$ref_seqs)
+            gd <- setGuidesFromCoords()
+            
+            cmd <- paste0("samtools faidx ", genome_index)
+            cmd <- paste0(cmd, " %s:%s-%s")
+            ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]   
+            
+             for (i in 1:5){
+             #Increment the progress bar, and update the detail text.
+             progress$inc(1/n, detail="finding strand")
+             Sys.sleep(0.05)
+            }
+                
+            switch (input$g.strand,
+                "-" =  ref <- Biostrings::reverseComplement(Biostrings::DNAString(ref)),
+                "+" =  ref <- Biostrings::DNAString(ref)
+                )
+            
+            updateTextInput(session, "ref_seqs", value = toString(ref))
+    
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     } else if (nchar(input$ref_seqs) >=  10 ) {
         
         updateSliderInput(session, "g.length", value = 0)
@@ -181,6 +247,7 @@ observeEvent(input$run_guide,{
               "'{if ($2 == 0)print $3, $4, length($10), \"+\";",
               "else if ($2 == 16) print $3, $4, length($10), \"-\"}' && rm %s")
         
+<<<<<<< HEAD
         
         # Run the mapping
         cat(cmd)
@@ -209,6 +276,17 @@ observeEvent(input$run_guide,{
         }  
         })
         
+=======
+        # Run the mapping
+        print(sprintf(cmd, idx, fa, idx, fa, fa))
+        
+        
+         #bwa fastmap ./data/genome/hg19.fa test.fa | grep EM | awk '{print $5}'
+        #cmd <- sprintf("bwa fastmap %s %s | grep EM | awk '{print $5}'", idx, fa)
+  
+        # Run the mapping
+        result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
         
         chr <- result[1]
         sq.start <- as.numeric(result[2])
@@ -222,7 +300,11 @@ observeEvent(input$run_guide,{
             }
         
         guide <- GenomicRanges::GRanges(chr,
+<<<<<<< HEAD
              IRanges( sq.start , end = (sq.start + sq.length - 1)), strand = strd)
+=======
+                   IRanges( sq.start , end = (sq.start + sq.length - 1)), strand = strd)
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
         
         d$seq.width <- 0
         d$guide <- guide 
@@ -249,12 +331,21 @@ observeEvent(input$run_guide,{
                 
     } else{
         createAlert(session, "alertRef", alertId = "alertRef1", title = "WARNING",
+<<<<<<< HEAD
         content = "Please enter the sequence or set the coordinates", style = "info", 
         dismiss = TRUE, append = FALSE)
         
         return()
     }
         
+=======
+        content = "Please enter the sequence or set the coordinates", style = "danger", 
+        dismiss = TRUE, append = FALSE)
+    }
+        
+ 
+  
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
       
   for (i in 1:7){
     # Increment the progress bar, and update the detail text.
@@ -268,6 +359,7 @@ observeEvent(input$run_guide,{
 
 
 ################################################################################
+<<<<<<< HEAD
 # PLOTS
 ################################################################################
 
@@ -283,6 +375,10 @@ observeEvent(input$run_plot_guide,{
   })
 
 
+=======
+#  ###############################################################################
+ 
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   reference_plot <- reactive({
    
     if(is.null(d$ref)) return(NULL)
@@ -302,7 +398,11 @@ observeEvent(input$run_plot_guide,{
     )
   })
  
+<<<<<<< HEAD
 annotation_plot <- reactive({
+=======
+  annotation_plot <- reactive({
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(message = "Annotating transcript location ", value = 0)
@@ -312,12 +412,22 @@ annotation_plot <- reactive({
       Sys.sleep(0.05)
     }
   
+<<<<<<< HEAD
     if(is.null(d$guide)){    
         return()
     } 
     
     d$txdb <- setTxdb()
      
+=======
+    if(is.null(d$guide)){
+        return(NULL)
+    } 
+    d$txdb <- setTxdb()
+    print("output$plot_anot")
+    print(d$guide)
+    print(d$txdb)
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     CrispRVariants:::annotateGenePlot(txdb = d$txdb, target = d$guide, 
                           gene.text.size = 8)      
   })
@@ -333,4 +443,8 @@ annotation_plot <- reactive({
  output$plot_anot <- renderPlot({
    annotation_plot()
  })
+<<<<<<< HEAD
  
+=======
+ 
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5

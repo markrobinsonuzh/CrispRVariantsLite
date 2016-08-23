@@ -25,9 +25,20 @@ table <- function(name){
         {
             values[[y]] <- hot_to_r(input[[y]])
 
+<<<<<<< HEAD
         } 
     
     t$DF <- values[[y]]
+=======
+output$htable <- renderRHandsontable({
+    input$update_table
+    if (!is.null(input$htable)) {
+      t$DF <- hot_to_r(input$htable)
+    }else{
+      t$DF <- getMetadata()
+    }
+    setHot(t$DF)
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     rhandsontable(t$DF) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE) 
   
@@ -45,7 +56,18 @@ output$table <- renderUI({
     }
 })
 
+<<<<<<< HEAD
 createHTable <- function(id){
+=======
+output$table <- renderUI({
+    if(is.null(v$bm_fnames)) return()
+    rHandsontableOutput("htable")
+  })
+
+
+
+createHTable <- reactive({
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   
   # Create a Progress object
   progress <- shiny::Progress$new()
@@ -104,16 +126,27 @@ observe({
 
 #downland the bams files on the server
 observeEvent( input$upload_bams, {
+<<<<<<< HEAD
    #print(state$bam)
    #print(v$inFile)
    v$inFile <- input$upload_bams
+=======
+   print(state$bam)
+
+      # list BAM files
+  v$inFile <- input$upload_bams
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   
   # if the file doesn't exist
   if(!is.null(v$inFile))
   {
+<<<<<<< HEAD
     # list BAM files
     #print(v$inFile)
     data_dir <- v$inFile
+=======
+      data_dir <- v$inFile
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -138,9 +171,15 @@ observeEvent( input$upload_bams, {
       Sys.sleep(0.005)
     }
     
+<<<<<<< HEAD
     state$reset <- F
     createHTable(d$id)
+=======
+    createHTable()
+  
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
   }
+  
   
 })
 

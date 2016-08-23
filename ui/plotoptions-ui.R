@@ -3,6 +3,52 @@
 
 data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon("list-alt"), style = "primary", block = TRUE)
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
+
+
+#----------------
+# Filter buttons
+#----------------
+
+top.n = numericInput("top.n", "Top ranked variants", value = 50, min = 0)
+min.freq = numericInput("min.freq", "Frequency cutoff", value = 0, min = 0)
+min.count = numericInput("min.count", "Count cutoff", value = 0, min = 0)
+
+#----------------
+# Select boxes
+#----------------
+
+# Row height ratio
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1.5", "1:1", "2:1"), width = 75)
+
+# Column width ratio
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
+
+reset <- bsButton("reset", 'Reset', type='action', style = "info", block = TRUE)
+update <- bsButton("update", 'Update', type='action', style = "primary", block = TRUE)
+
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
+
+#----------------
+# Select boxes
+#----------------
+
+# Row height ratio
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
+
+# Column width ratio
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
+
+# Plot margins
+plot.margins <- selectInput("plot.margins", "Space beneath plot",
+    selected = "Normal", choices = c("Less", "Normal", "More"), width = 100)
+
 
 reset <- bsButton("reset", 'Reset', type='action', style = "warning", block = TRUE)
 
@@ -84,6 +130,7 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
 
   bsCollapsePanel("Layout options",
     helpText(paste("These options control the relative sizes of the plots.",
+<<<<<<< HEAD
                    "Click 'Replot' to replot the data with the new options.")),
     hr(),
     fluidRow(
@@ -91,11 +138,19 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
         column(width = 4,  col.wdth.ratio),
         column(width = 4,plot.margins)
         ),
+=======
+                   "Click 'Plot' to replot the data with the new options.")),
+    hr(),
+    row.ht.ratio,
+    col.wdth.ratio,
+    plot.margins,
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     style = "info"),
   
   bsCollapsePanel("Filtering options",
     helpText(paste("These options control how many variant alleles are shown", 
                    "in the plot. Click 'Plot' to replot.")),
+<<<<<<< HEAD
     hr(),
     top.n,
     min.freq,
@@ -107,6 +162,19 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
                    "Click 'Plot' to replot.")),
 
     hr(),
+=======
+    hr(),
+    top.n,
+    min.freq,
+    min.count,
+    style = "danger"),
+  
+  bsCollapsePanel("Allele plot options",
+    helpText(paste("These options control the appearance of the allele plot.",  
+                   "Click 'Plot' to replot.")),
+
+    hr(),
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     helpText("Text sizes"),
     axis.text.size,
     plot.text.size,
@@ -135,10 +203,18 @@ plotOptions <- box(width = 4,
   bscollapse_1,
   fluidRow(
     column(width=6,data_setting),
+<<<<<<< HEAD
     column(width=6,replot)
   ),
   hr(),
   fluidRow(
     column(width=6,save_data ),
+=======
+    column(width=6, save_data )
+  ),
+  hr(),
+  fluidRow(
+    column(width=6,replot),
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     column(width=6,reset)
 ))

@@ -8,10 +8,15 @@ ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%", va
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome", choices = genlist.gz, width = "100%")
 
 #txDb <- selectInput("txDb", "Transcript Database", choices = txDBl, selected = txDBl[1], width = "100%")
+<<<<<<< HEAD
 
 run_guide <- bsButton("run_guide", 'create guides', type = "action", style = "success", block = TRUE)
 run_plot_guide <- bsButton("run_plot_guide", 'create plot', type = "action", style = "success", block = TRUE)
 
+=======
+
+run_guide <- bsButton("run_guide", 'create guides', type = "action", style = "success", block = TRUE)
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 #run_guide <- actionButton("run_guide", 'create guides', width='100%')
 next_step <- uiOutput("next_step")
 
@@ -46,8 +51,12 @@ modal_ref <- .bsModal(
     fluidRow(
         column(width = 6, 
              fluidRow(
+<<<<<<< HEAD
        column(width=6, 
        g.chr ),
+=======
+       column(width=6, g.chr ),
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
        column(width=6, g.strand )
        )),
         column(width = 6,
@@ -74,7 +83,12 @@ modal_ref <- .bsModal(
   ),
   footer = fluidRow(
     column(width = 3),
+<<<<<<< HEAD
     column(width = 3, run_guide ),
     column(width = 3, run_plot_guide  ),
+=======
+    column(width = 3),
+    column(width = 3, run_guide ),
+>>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
     column(width = 3, next_step)), 
     close.button = FALSE)
