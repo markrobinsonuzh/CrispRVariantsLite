@@ -59,7 +59,6 @@ output$ab1 <- renderUI({
         createHTable(d$id)    
        } 
        
-       
      }
    }else{
       createAlert(session, "alertAB1", "prepAlertAB1", title = "WARNING",

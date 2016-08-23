@@ -6,7 +6,6 @@
 
 start_btn <- bsButton("start_btn", "Start", style = "info", block = TRUE)
 
-
 bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow using BAM files", 
     bsCollapsePanel("Overall workflow using BAM files",
     #helpText(paste("To create CrispRVariants plot you need to create a guide.",
@@ -24,7 +23,6 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
     style = "warning")
 )
 
-        
 
 modal_1 <- .bsModal(
   "modal_1", "CrispRVariantsLite",

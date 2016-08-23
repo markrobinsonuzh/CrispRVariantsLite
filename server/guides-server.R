@@ -94,13 +94,10 @@ observeEvent(input$run_guide,{
     stopApp()
   }
   
-  
   progress <- shiny::Progress$new()
   # Make sure it closes when we exit this reactive, even if there's an error
   on.exit(progress$close())
   progress$set(message = "Creating  Reference ", value = 0)
-  
-  
   
   n <- 20
   
@@ -208,7 +205,6 @@ observeEvent(input$run_guide,{
             return()
         }  
         })
-        
         
         chr <- result[1]
         sq.start <- as.numeric(result[2])
@@ -333,4 +329,3 @@ annotation_plot <- reactive({
  output$plot_anot <- renderPlot({
    annotation_plot()
  })
- 

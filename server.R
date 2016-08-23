@@ -104,8 +104,6 @@ ID_ = NULL
   }
 
 
-
-  source("server/preprocessing-server.R", local = T)
   source("server/convert-ab1-server.R", local = T)
   source("server/convert-fastq-server.R", local = T)
   source("server/table-server.R", local = T)
@@ -164,7 +162,6 @@ ID_ = NULL
   # open metadata pannel
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_table", toggle = "open")
-    })
-
+  })
 
 })

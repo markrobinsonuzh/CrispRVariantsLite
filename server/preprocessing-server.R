@@ -5,8 +5,8 @@ convertAb1toFasq <- function(){
   data_dir <- input[[v$ab1_input]]
    if(!is.null(data_dir)){
      # list AB1 files
-     temp <- unzip(data_dir$datapath, exdir = v$ab1_dir)
      
+     temp <- unzip(data_dir$datapath, exdir = v$ab1_dir)
      v$ab1_fnames <- dir(v$ab1_dir, "ab1$", recursive = TRUE, full.names = TRUE)
      
      # get the sequence names
@@ -17,6 +17,7 @@ convertAb1toFasq <- function(){
      v$fq_fnames  <- paste0(gsub("[\\/]", "__", dirname(v$fq_fnames)), ".fastq")
      v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
+     
      dummy <- mapply( function(u,v,w) {
        abifToFastq(u,v,w)
      }, v$sq_nms, v$ab1_fnames, v$fq_fnames)

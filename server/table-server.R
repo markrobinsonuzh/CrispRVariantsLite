@@ -104,8 +104,6 @@ observe({
 
 #downland the bams files on the server
 observeEvent( input$upload_bams, {
-   #print(state$bam)
-   #print(v$inFile)
    v$inFile <- input$upload_bams
   
   # if the file doesn't exist
@@ -140,7 +138,9 @@ observeEvent( input$upload_bams, {
     
     state$reset <- F
     createHTable(d$id)
+  
   }
+  
   
 })
 

@@ -28,4 +28,3 @@ d.length <- NULL
 d.chr <- NULL
 d.strand <-  "-"
 g.seq <- NULL
-

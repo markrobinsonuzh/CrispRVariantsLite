@@ -3,11 +3,8 @@
 
 data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon("list-alt"), style = "primary", block = TRUE)
 save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
-
-reset <- bsButton("reset", 'Reset', type='action', style = "warning", block = TRUE)
-
-replot <- bsButton("replot", 'Update plot', type='action', icon =  icon("area-chart"),
-            style = "primary", block = TRUE)
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
 
 
 #----------------
@@ -29,6 +26,55 @@ row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
 # Column width ratio
 col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
     selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
+
+reset <- bsButton("reset", 'Reset', type='action', style = "info", block = TRUE)
+update <- bsButton("update", 'Update', type='action', style = "primary", block = TRUE)
+
+replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
+            style = "info", block = TRUE)
+
+#----------------
+# Select boxes
+#----------------
+
+# Row height ratio
+row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
+
+# Column width ratio
+col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
+
+# Plot margins
+plot.margins <- selectInput("plot.margins", "Space beneath plot",
+    selected = "Normal", choices = c("Less", "Normal", "More"), width = 100)
+
+
+reset <- bsButton("reset", 'Reset', type='action', style = "warning", block = TRUE)
+
+replot <- bsButton("replot", 'Update plot', type='action', icon =  icon("area-chart"),
+            style = "primary", block = TRUE)
+
+
+#----------------
+# Filter buttons
+#----------------
+
+top.n = numericInput("top.n", "Top ranked variants", value = 50, min = 0)
+min.freq = numericInput("min.freq", "Frequency cutoff", value = 0, min = 0)
+min.count = numericInput("min.count", "Count cutoff", value = 0, min = 0)
+
+#----------------
+# Select boxes
+#----------------
+
+## Row height ratio
+#row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
+#    choices = c("1:6","1:5","1:4","1:3","1:2","1:1.5", "1:1", "2:1"), width = 75)
+
+## Column width ratio
+#col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
+#    selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
 
 
 #----------------
