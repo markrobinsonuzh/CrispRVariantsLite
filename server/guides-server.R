@@ -126,9 +126,12 @@ observeEvent(input$run_guide,{
             cmd <- paste0("samtools faidx ", genome_index)
             cmd <- paste0(cmd, " %s:%s-%s")
             
-            err <- try(
-               ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), intern = T )[[2]]  
-      , silent = TRUE)
+            err <- try({
+               ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), 
+                             intern = T)
+               # ref is returned in fasta format, may be multi-line
+               ref <- paste0(ref[2:length(ref)], collapse = "")
+            }, silent = TRUE)
             
           
             isolate({
