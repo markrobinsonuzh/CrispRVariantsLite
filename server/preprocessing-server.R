@@ -13,11 +13,7 @@ convertAb1toFasq <- function(){
      v$sq_nms <- gsub(".ab1","",basename(v$ab1_fnames))
      
      # replace spaces and slashes in filename with underscores
-<<<<<<< HEAD
      v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")
-=======
-     v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")    
->>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
      v$fq_fnames  <- paste0(gsub("[\\/]", "__", dirname(v$fq_fnames)), ".fastq")
      v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
@@ -38,19 +34,11 @@ convertAb1toFasq <- function(){
 # ---------------
 # run mapping
 # ---------------
-<<<<<<< HEAD
 mapFastQ <- function(){
   
   # If bwa cannot be run, stop the app
   if (system("bwa", ignore.stderr = TRUE) == 127){
     createAlert(session, "alertAB1", "alertAB1_1", title = "WARNING",
-=======
-mapFastQ <- reactive({
-  
-  # If bwa cannot be run, stop the app
-  if (system("bwa", ignore.stderr = TRUE) == 127){
-    createAlert(session, "alertAB1", title = "WARNING",
->>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
        content = "Please make sure BWA is available", 
        style = "warning",
        append = FALSE, dismiss = FALSE)

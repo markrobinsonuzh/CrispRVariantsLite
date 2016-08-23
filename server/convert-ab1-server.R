@@ -53,15 +53,11 @@ output$ab1 <- renderUI({
        
        toggleModal(session, "modal_AB1", toggle = "close")
        #toggleModal(session, "modal_2", toggle = "open")
-<<<<<<< HEAD
        state$reset <- F
        print(sprintf("d$id %s #1", d$id))
        if(!is.null(d$id)){
         createHTable(d$id)    
        } 
-=======
->>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
-       
        
      }
    }else{

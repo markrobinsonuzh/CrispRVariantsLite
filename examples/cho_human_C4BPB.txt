@@ -1,7 +1,3 @@
-<<<<<<< HEAD
 # double check this
-=======
-
->>>>>>> 629f251f2facd2f7fa86cb82d084cf72571c6ca5
 AATGACCACTACATCCTCAAGGG
 chr1	207265077	+
