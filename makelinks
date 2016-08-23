@@ -46,6 +46,13 @@ ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_mus
 ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.ann mm10.fa.ann
 ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.75/bwa_mem/Mus_musculus.GRCm38.75.dna.toplevel.fa.pac mm10.fa.pac
 
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/genome/Musca-domestica-aabys_SCAFFOLDS_MdomA1.fa MdomA1.fa
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/genome/Musca-domestica-aabys_SCAFFOLDS_MdomA1.fa.fai MdomA1.fa.fai
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/bwa_mem/MdomA1.fa.sa MdomA1.fa.sa
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/bwa_mem/MdomA1.fa.amb MdomA1.fa.amb
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/bwa_mem/MdomA1.fa.ann MdomA1.fa.ann
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/bwa_mem/MdomA1.fa.pac MdomA1.fa.pac
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/bwa_mem/MdomA1.fa.bwt MdomA1.fa.bwt
 
 # in R
 library(GenomicFeatures)
@@ -62,10 +69,13 @@ saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/G
 txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/Homo_sapiens.GRCh37.71.gtf", format = "gtf")
 saveDb(txdb, file= "/home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite")
 
+txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.gtf")
+saveDb(txdb, file = "/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.sqlite")
+
 # goto ./data/txdb and add links to the FASTA files and BWA MEM indices
 ln -s /home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite human_hg19_Ensembl71
 ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite mouse_mm10_Ensembl82
 ln -s /home/Shared_taupo/data/annotation/Danio_rerio/zebrafish_GRCz10_Ensembl81_txdb.sqlite zebrafish_GRCz10_Ensembl81
 ln -s /home/Shared_taupo/data/annotation/Danio_rerio/gtf_Ensembl75/zebrafish_danRer7_Ensembl75_txdb.sqlite zebrafish_danRer7_Ensembl75
-
+ln -s /home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.sqlite MdomA1.sqlite
 
