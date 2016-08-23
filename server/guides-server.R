@@ -195,10 +195,12 @@ observeEvent(input$run_guide,{
         result <- NULL
         
         err <- try({
-            result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
-            print(result)
-        })
-        
+                ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), 
+                              intern = T)
+                # ref is returned in fasta format, may be multi-line
+                ref <- paste0(ref[2:length(ref)], collapse = "")
+             }, silent = TRUE)       
+ 
         isolate({
           if(is.error(err)){
             createAlert(session, "alertRef", alertId = "alertRef2", title = "INFO",
