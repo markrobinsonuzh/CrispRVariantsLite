@@ -57,7 +57,6 @@ ID_ = NULL
     fasta_temp = NULL,
     inFile = NULL,
     ab1_input = NULL
-    inFile = NULL
   )
   
   #Reactive values for producing the plots
