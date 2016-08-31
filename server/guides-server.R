@@ -137,7 +137,7 @@ observeEvent(input$run_guide,{
             isolate({
                 if(is.error(err)){
                 createAlert(session, "alertRef", alertId = "alertRef3", title = "INFO",
-                content = paste0("the sequence starting at the coordonate : ", input$g.start, " in ", input$select_Refgenome," at ", input$g.chr, " not found " ) ,style = "info", 
+                content = paste0("the sequence starting at the coordinate : ", input$g.start, " in ", input$select_Refgenome," at ", input$g.chr, " not found " ) ,style = "info", 
                 dismiss = TRUE, append = FALSE)
                 
                 return()
@@ -198,7 +198,7 @@ observeEvent(input$run_guide,{
             result <- strsplit(system(sprintf(cmd, idx, fa, idx, fa, fa), intern = TRUE), " ")[[1]]
             print(result)
         })
-        
+ 
         isolate({
           if(is.error(err)){
             createAlert(session, "alertRef", alertId = "alertRef2", title = "INFO",

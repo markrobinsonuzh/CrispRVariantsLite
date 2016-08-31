@@ -102,6 +102,9 @@ ln -s /home/Shared_taupo/data/annotation/Danio_rerio/danRer7.sqlite
 txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.gtf")
 saveDb(txdb, file = "/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.sqlite")
 
+txdb <- makeTxDbFromGFF("/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.gtf")
+saveDb(txdb, file = "/home/Shared_taupo/data/annotation/Musca/aabys_reference/gtf/Musca-domestica-aabys_BASEFEATURES_MdomA1.1.sqlite")
+
 # goto ./data/txdb and add links to the FASTA files and BWA MEM indices
 ln -s /home/Shared_taupo/data/annotation/Human/Ensembl_GRCh37.71/gtf/human_hg19_Ensembl71_txdb.sqlite human_hg19_Ensembl71
 ln -s /home/Shared_taupo/data/annotation/Mouse/Ensembl_GRCm38.82/GTF/mouse_mm10_Ensembl82_txdb.sqlite mouse_mm10_Ensembl82
