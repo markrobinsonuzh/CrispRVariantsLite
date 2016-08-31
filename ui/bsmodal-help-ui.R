@@ -10,4 +10,4 @@ modal_help <- bsModal(
     column(width = 6),
     column(width = 6)
   )))
-  
+

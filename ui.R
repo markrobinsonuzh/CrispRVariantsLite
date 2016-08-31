@@ -18,7 +18,7 @@ source("ui/bsmodal-step2-ui.R", local = T)
 source("ui/bsmodal-table-ui.R", local = T)
 source("ui/plotoptions-ui.R", local = T)
 source("ui/bsmodal-guide-ui.R", local = T)
-source("ui/bsmodal-help-ui.R", local = T)
+#source("ui/bsmodal-help-ui.R", local = T)
 source("ui/bsmodal-save-ui.R", local = T)
 source("ui/bsmodal-reset-ui.R", local = T)
 
@@ -37,7 +37,7 @@ body <- dashboardBody(
     modal_FASTQ,
     modal_table,
     modal_ref,
-    modal_help,
+    #modal_help,
     modal_save,
     modal_reset
   )
