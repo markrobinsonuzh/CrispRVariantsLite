@@ -32,32 +32,19 @@ observe({
 # FUNCTIONS
 ################################################################################
 
-createCripSet <- reactive({
+createCrisprSet <- reactive({
   if(!is.null(t$DF)){
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
     progress$set(message = "Creating  CrisprSet object ", value = 0)
-    
-    n <- 20
-    
-    for (i in 1:10){
-      # Increment the progress bar, and update the detail text.
-      progress$inc(1/n, detail = "A")
-      Sys.sleep(0.005)
-    }
-    
     md <- t$DF
-    
-    for (i in 1:10){
-      # Increment the progress bar, and update the detail text.
-      progress$inc(1/n, detail = "B")
-      Sys.sleep(0.005)
-    }
+    increment_prog(progress, 10, "")
     
     d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
-                 reference = d$ref, names = md$label, 
-                 target.loc = input$target_loc, verbose = FALSE)    
+                 reference = d$ref, names = md$label,
+                 target.loc = d$t.loc, verbose = FALSE)
+    
     return(d$cset)
   }
 })
@@ -157,7 +144,7 @@ createCrispPlot <- reactive({
 
  observeEvent(input$run_plot,{    
 
-    d$cset <- createCripSet()
+    d$cset <- createCrisprSet()
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()

@@ -15,10 +15,10 @@ convertAb1toFasq <- function(){
      # replace spaces and slashes in filename with underscores
      temp <- iconv(dirname(v$ab1_fnames), to = "ASCII//TRANSLIT")
      v$fq_fnames <- paste0(gsub("[[:punct:]]|\\s", "_", temp), ".fastq")
-     v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
+     v$fq_fnames <- file.path(v$fq_dir, v$fq_fnames)
 
      #v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")
-     #v$fq_fnames  <- paste0(gsub("[\\/]", "__", dirname(v$fq_fnames)), ".fastq")
+     #v$fq_fnames  <- paste0(gsub("[\\/]", "__", v$fq_fnames), ".fastq")
      #v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      #v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
      

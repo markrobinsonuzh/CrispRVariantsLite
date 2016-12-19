@@ -1,6 +1,7 @@
+print("starting server")
+
 library(shiny)
 library(shinydashboard)
-
 
 ################################################################################
 # Options, default settings, and load packages
@@ -9,7 +10,7 @@ library(shinydashboard)
 # setting this option. Here we'll raise limit to 30MB.
 options(shiny.maxRequestSize = 10000*1024^2)
 # Set Shiny Reaction Log to TRUE
-options(shiny.reactlog=TRUE)
+#options(shiny.reactlog=TRUE)
 #options(shiny.error = browser)
 # Run the auto-installer/updater code:
 # source("install.R", local = TRUE)
@@ -77,9 +78,6 @@ ID_ = NULL
   setDir <- function(){
     d$id <- MHmakeRandomString()
     v$ab1_input <- paste0("ab1_files_",d$id)    
-
-    print(sprintf("d$id %s #0", d$id))
-
     
     temp.dir <- file.path(tempdir(), paste0(MHmakeRandomString(),gsub("[- :]", "", Sys.time())))
     ifelse(!dir.exists(temp.dir), dir.create(temp.dir, showWarnings = FALSE), FALSE)
@@ -113,7 +111,6 @@ ID_ = NULL
   source("server/help-tooltip-server.R", local = T)
   source("server/save-data-server.R", local = T)
   source("server/reset-server.R", local =T)
-  
   # open the modal options
   
   observe(
@@ -166,3 +163,15 @@ ID_ = NULL
   })
 
 })
+
+################################################################################
+# UTILITY FUNCTIONS
+################################################################################
+
+increment_prog <- function(prog, n, message, time.int = 0.05){
+   for (i in 1:n){
+    #Increment the progress bar, and update the detail text.
+    prog$inc(1/n, detail=message)
+    Sys.sleep(time.int)
+  } 
+}
