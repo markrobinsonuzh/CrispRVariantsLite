@@ -22,8 +22,8 @@ convertAb1toFasq <- function(){
      #v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
      #v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
      
-     dummy <- mapply( function(u,v,w) {
-       abifToFastq(u,v,w)
+     dummy <- mapply(function(u,v,w) {
+       CrispRVariants::abifToFastq(u,v,w)
      }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
      
      v$fq_fnames <- unique(v$fq_fnames)
@@ -72,7 +72,7 @@ mapFastQ <- function(){
           cmd <- paste0("bwa mem -t 2 ", bwa_index, " ", 
                     v$fq_fnames[i]," | samtools view -Sb - > ", bm_fnames[i])
           cat(cmd, "\n"); system(cmd)
-          indexBam(sortBam(bm_fnames[i],v$srt_bm_names[i]))
+          Rsamtools::indexBam(Rsamtools::sortBam(bm_fnames[i],v$srt_bm_names[i]))
           unlink(bm_fnames[i])
         }
         

@@ -1,17 +1,14 @@
 # genomic database
-# danRer <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
-# genome <- "/home/Shared_taupo/data/annotation/Danio_rerio/genome_danRer7"
 genome <- "./data/genome"
 
+# List available genomes, ending in .fa
 gendb <- dir(genome, ".fa$", recursive = TRUE, full.names = TRUE)
 
-# name of sequence
+# Genome names are the basename of the gendb files
 genlist.gz <- genlist <- basename(gendb)
 
-# transcript database library
-# this is inferred from genome name now
-#txDB.dir <- dir("./data/txdb/", recursive = TRUE, full.names = TRUE)
-#txDBl <- basename(txDB.dir)
+# The transcript database is inferred from the genome name, these must match
+
 
 ################################################################################
 # DEFAULT SETTING GUIDE

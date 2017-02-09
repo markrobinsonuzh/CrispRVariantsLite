@@ -41,7 +41,7 @@ createCrisprSet <- reactive({
     md <- t$DF
     increment_prog(progress, 10, "")
     
-    d$cset <- readsToTarget(v$bm_fnames, target = d$guide,
+    d$cset <- CrispRVariants::readsToTarget(v$bm_fnames, target = d$guide,
                  reference = d$ref, names = md$label,
                  target.loc = d$t.loc, verbose = FALSE)
     
@@ -58,7 +58,7 @@ frequency_heatmap <- reactive({
   
   group <- as.factor(t$DF$group)
   
-    plotFreqHeatmap(d$cset,
+    CrispRVariants::plotFreqHeatmap(d$cset,
       top.n = input$top.n,
       min.freq = input$min.freq,
       min.count = input$min.count,
@@ -73,7 +73,7 @@ frequency_heatmap <- reactive({
 
 
 allele_plot <- reactive({
-    plotAlignments(d$cset,
+    CrispRVariants::plotAlignments(d$cset,
       top.n = input$top.n,
       min.freq = input$min.freq,
       min.count = input$min.count,

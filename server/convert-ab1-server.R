@@ -4,7 +4,8 @@
 
 
 output$ab1 <- renderUI({
-    fileInput(v$ab1_input, 'Upload ZIP file with .AB1 files in directories', multiple = F, width = "100%")
+    fileInput(v$ab1_input, 'Upload ZIP file with .AB1 files in directories',
+              multiple = F, width = "100%")
 })
 
  #---------------------

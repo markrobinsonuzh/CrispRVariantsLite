@@ -60,9 +60,9 @@ setGuideCoords <- function(guide = NULL, window = NULL){
   seq.end <-  seq.start + target.loc + 5
   
   if (is.null(guide)){
-  guide <- GRanges(
+  guide <- GenomicRanges::GRanges(
       seqnames = input$g.chr, 
-      ranges = IRanges(start =  seq.start, end = seq.end),
+      ranges = IRanges::IRanges(start = seq.start, end = seq.end),
       strand = input$g.strand
     )
   }   
@@ -79,22 +79,22 @@ setGuideCoords <- function(guide = NULL, window = NULL){
 setTxdb <- reactive({
   # Note: requires that the file names of the txdb match those of ref genome and
   # this can be achieved by symbolic links
-  f <- paste0("./data/txdb/", gsub(".fa",".sqlite",input$select_Refgenome))
+  f <- paste0("./data/txdb/", gsub(".fa",".sqlite", input$select_Refgenome))
   d$txdb <- AnnotationDbi::loadDb(f)
   return(d$txdb)
 })
 
 
 setGuidesFromCoords <- function(genome_index, progress){
-    # Set the guide and fetch the guide sequence directly from the reference    
+    # Set the guide and fetch the guide sequence directly from the reference
  
     gd <- setGuideCoords()
     cmd <- paste0("samtools faidx ", genome_index)
     cmd <- paste0(cmd, " %s:%s-%s")
     
-    # Try to extract the sequence matching this location from the reference    
+    # Try to extract the sequence matching this location from the reference
     err <- try({
-        ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]), 
+        ref <- system(sprintf(cmd, seqnames(gd)[1], start(gd)[1], end(gd)[1]),
                       intern = T)
         # ref is returned in fasta format, may be multi-line
         ref <- paste0(ref[2:length(ref)], collapse = "")
@@ -220,7 +220,7 @@ observeEvent(input$run_guide,{
       
       # Store the guide coordinates
       guide <- GenomicRanges::GRanges(chr,
-             IRanges(sq.start , width = sq.length), strand = strd)
+             IRanges::IRanges(sq.start , width = sq.length), strand = strd)
 
       setGuideCoords(guide, 0)
       ref <- Biostrings::DNAString(ref)
@@ -261,7 +261,7 @@ observeEvent(input$run_plot_guide,{
      
     box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
    
-    plotAlignments(
+    CrispRVariants::plotAlignments(
        d$ref,
        alns = NULL,
        target.loc = d$t.loc,
