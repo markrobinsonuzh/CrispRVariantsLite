@@ -1,39 +1,35 @@
-################################################################################
-# UI
-################################################################################
-
-output$plots <- renderUI({
-    if(is.null(d$cset)) return()
-    plotOutput("crispplots", width="auto", height ="600px")
-})
+#####################################################################################
+# Render the final allele summary plot
+#####################################################################################
 
 
-################################################################################
-# BEHAVIOUR
-################################################################################
-
+#________________________________________________________________
 # Disable running of the plots until Reference and Bams defined
 observe({
    if(is.null(d$guide)){
-      updateButton(session, "run_plot", style ="default", icon = icon("ban"), disable = TRUE )
-      updateButton(session, "run_plot_guide", style ="default", icon = icon("ban"), disable = TRUE )
-      updateButton(session, "run_guide", 'Create guides', style = "primary", block = TRUE, disable = FALSE)
+      updateButton(session, "run_plot", style ="default", icon = icon("ban"),
+                   disable = TRUE )
+      updateButton(session, "run_plot_guide", style ="default", icon = icon("ban"),
+                   disable = TRUE )
+      updateButton(session, "run_guide", 'Create guides', style = "primary",
+                   block = TRUE, disable = FALSE)
     }else{
-      updateButton(session,"run_plot", 'Plot', icon =  icon("area-chart"), style = "success", block = TRUE, disable = FALSE )
-      updateButton(session,"run_plot_guide", 'Plot', icon =  icon("area-chart"), style = "success", block = TRUE, disable = FALSE )
-
-      updateButton(session, "run_guide", "Update guide", style ="info", block = TRUE, disable = FALSE  )
- 
+      updateButton(session,"run_plot", 'Plot', icon =  icon("area-chart"),
+                   style = "success", block = TRUE, disable = FALSE)
+      updateButton(session,"run_plot_guide", 'Plot', icon =  icon("area-chart"),
+                  style = "success", block = TRUE, disable = FALSE)
+      updateButton(session, "run_guide", "Update guide", style ="info",
+                   block = TRUE, disable = FALSE)
     }
 })
 
 
-################################################################################
-# FUNCTIONS
-################################################################################
+#________________________________________________________________
+# Initialise CrisprSet object
 
 createCrisprSet <- reactive({
   if(!is.null(t$DF)){
+    # t$DF is the metadata table
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -50,10 +46,10 @@ createCrisprSet <- reactive({
 })
 
 
-################################################################################
-# PLOT FUNCTION
-################################################################################
+#________________________________________________________________
+# Creation and arrangement of main plot
 
+# Create heatmap
 frequency_heatmap <- reactive({
   
   group <- as.factor(t$DF$group)
@@ -72,6 +68,7 @@ frequency_heatmap <- reactive({
 })
 
 
+# Create allele plot
 allele_plot <- reactive({
     CrispRVariants::plotAlignments(d$cset,
       top.n = input$top.n,
@@ -90,6 +87,7 @@ allele_plot <- reactive({
 })
 
 
+# Create plots, arrange
 createCrispPlot <- reactive({
   
   output$crispplots <- renderPlot({
@@ -101,20 +99,14 @@ createCrispPlot <- reactive({
            paste(c("CrisprSet could not be created.", 
                    "No on-target reads?"), sep = "\n"))
     )
-            
+
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
     progress$set(message = "Creating  the plot ", value = 0)
   
     # Number of times we'll go through the loop
-    n <- 20
-  
-    for (i in 1:20){
-      #Increment the progress bar, and update the detail text.
-      progress$inc(1/n, detail = "plotting")
-      Sys.sleep(0.005)
-    }
+    increment_prog(progress, 20, "plotting")
   
     input$replot
   
@@ -140,13 +132,21 @@ createCrispPlot <- reactive({
   })
 })
 
-# create the plot
+#______________________________________________________________
+# Observe button click "run plot", generate and display main plots
 
- observeEvent(input$run_plot,{    
+# Create the box in which the plot is displayed
+output$plots <- renderUI({
+    if(is.null(d$cset)) return()
+    plotOutput("crispplots", width="auto", height ="600px")
+})
 
+# Render plot
+ observeEvent(input$run_plot,{
     d$cset <- createCrisprSet()
     print(d$cset)
     d$txdb <- setTxdb()
     createCrispPlot()
     toggleModal(session, "modal_2", toggle = "close")
   })
+

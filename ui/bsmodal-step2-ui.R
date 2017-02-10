@@ -32,46 +32,32 @@ edit_xls <- bsButton("edit_xls", "metadata", type="action", icon =  icon("table"
 # Panel for selecting data input type
 ################################################################################
 
-modal_2 <- bsModal(
+modal_2 <- .bsModal(
   "modal_2", "Figures setting : ",
-  "data_setting", size = "large",
+  "data_setting", size = "large", close.button = FALSE,
   fluidRow(column(width = 12,
     bsAlert("alert2"),
-    helpText("CrispRVariants narrows the alignments to the target region and renumbers variants with respect to a zero point, typically the Cas9 cut site three bases upstream of the protospacer adjacent motif (PAM). The target region and zero point can be flexibly specified, and the variants may be shown with respect to either DNA strand.")
+    helpText(paste("CrispRVariants narrows the alignments to the target region",
+                   "and renumbers variants with respect to a zero point, typically",
+                   "the Cas9 cut site three bases upstream of the protospacer",
+                   "adjacent motif (PAM). The target region and zero point can be",
+                   "flexibly specified, and the variants may be shown with respect",
+                   "to either DNA strand."))
     )),
   hr(),
   fluidRow(
-    column(width = 3,
-      h3("Load data : "),
-      fluidRow(
-        column(width = 12,
-          upload_bams,
-          create_guides,
-          p(),
-          edit_xls
-        ))
-    ),
-      column(width = 9,
-        h3("Guide Plot"),
-        wellPanel(ref_plot)
-      
-      )
+    column(width = 3, h3("Load data : "),
+      fluidRow(column(width = 12, upload_bams, create_guides, p(), edit_xls))),
+    column(width = 9, h3("Guide Plot"), wellPanel(ref_plot))
+  ),
+  
+  footer = fluidRow(
+    column(width = 6,
+      fluidRow(column(width = 6), column(width = 6, info))),
+    column(width = 6,
+      fluidRow(column(width = 6, select_data),
+               column(width = 6, run_plot)))
   )
-    , footer =   fluidRow(
-    column(width = 6,
-      fluidRow(
-        column(width = 6),
-        column(width = 6,
-          info)
-      )),
-    column(width = 6,
-      fluidRow(
-        column(width = 6,
-          select_data),
-        column(width = 6, 
-          run_plot)
-        )
-      )
-    )
 )
-#, close.button = F)
+
+
