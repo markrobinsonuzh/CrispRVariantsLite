@@ -9,9 +9,9 @@ select_genome <- selectInput("select_genome", "Select genome", choices = genlist
 run_prep <- bsButton("run_prep", 'Run',  style = "success", block = TRUE)
 back_ab1 <- bsButton("back_ab1", 'Back',  style = "default", block = TRUE)
 
-modal_AB1 <- bsModal(
+modal_AB1 <- .bsModal(
   "modal_AB1", "PREPROCESSING DATA | ZIP of directories with AB1 FILES: ",
-  "setting_btn", size = "small",
+  "setting_btn", size = "small", close.button = FALSE,
   bsAlert("alertAB1"),
   fluidRow(
     column(width = 12,

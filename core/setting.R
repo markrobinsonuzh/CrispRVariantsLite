@@ -18,10 +18,10 @@ genlist.gz <- genlist <- basename(gendb)
 #d.length <- "5"
 #d.chr <- "chr17"
 #d.strand <-  "-"
-g.seq <- "GGAGATCGCCACAAGATGTGAGG"
+#g.seq <- "GGAGATCGCCACAAGATGTGAGG"
 
-d.start <- NULL
-d.length <- NULL
-d.chr <- NULL
-d.strand <-  "-"
-g.seq <- NULL
+#d.start <- NULL
+#d.length <- NULL
+#d.chr <- NULL
+#d.strand <-  "-"
+#g.seq <- NULL

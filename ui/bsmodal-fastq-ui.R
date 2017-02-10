@@ -12,9 +12,9 @@ select_genome <- selectInput("select_genome", "Select the genome", choices = gen
 back_fastq <- bsButton("back_fastq", 'Back', type="action" , style = "default", block = TRUE)
 run_fastq <- bsButton("run_fastq", 'Run', type="action",style = "success", block = TRUE)
 
-modal_FASTQ <- bsModal(
+modal_FASTQ <- .bsModal(
   "modal_FASTQ", "PREPROCESSING DATA | FASTQ FILES : ",
-  "setting_btn", size = "small",
+  "setting_btn", size = "small", close.button = FALSE,
   bsAlert("alertFASTQ"),
   fluidRow(
     column(width = 12,

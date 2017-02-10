@@ -24,9 +24,9 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
 )
 
 
-modal_1 <- bsModal(
+modal_1 <- .bsModal(
   "modal_1", "CrispRVariantsLite",
-  "setting_btn", 
+  "setting_btn", close.button = FALSE,
   fluidRow(column(width = 12,
     tabBox( width = 12,
       tabPanel("QUICK GUIDE",

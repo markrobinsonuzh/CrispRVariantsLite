@@ -1,3 +1,7 @@
+# This code is taken from the shinyBS Github repo for shinyBS_0.62
+# Cran currently supports v0.61.  We are including this code to allow
+# installation of CrispRVariantsLite requirements from CRAN/Bioconductor.
+# https://github.com/ebailey78/shinyBS/blob/shinyBS3/R/bsModal.R
 addAttribs <- function(tag, ...) {
   a <- list(...)
   for(i in seq(length(a))) {
@@ -7,26 +11,8 @@ addAttribs <- function(tag, ...) {
 }
 
 
-
-# https://github.com/ebailey78/shinyBS/blob/shinyBS3/R/bsModal.R
-#'bsModal
-#'
-#'\code{bsModal} is used within the UI to create a modal window.
-#'
-#'@param id A unique identifier for the modal window
-#'@param title The title to appear at the top of the modal
-#'@param trigger The id of a button or link that will open the modal.
-#'@param \dots UI elements to include within the modal
-#'@param size \bold{Optional} What size should the modal be? (\code{small} or \code{large})
-#'@param footer A \code{list} of shiny UI elements to be added to the footer of the modal.
-#'@param close.button Should a close button be added to the footer of the modal?
-#'@param width An optional width argument for the modal. Must include units. Only applied if \code{size} is missing. 
-#'@templateVar item_name bsModal
-#'@templateVar family_name Modals
-#'@template item_details
-#'@template footer
-#'@export
-.bsModal <- function(id, title, trigger, ..., size, footer = NULL, close.button = TRUE, width = NULL) {
+.bsModal <- function(id, title, trigger, ..., size, footer = NULL,
+                     close.button = TRUE, width = NULL) {
   if(!missing(size)) {
     if(size == "large") {
       size = "modal-lg"
