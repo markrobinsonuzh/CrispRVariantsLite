@@ -1,3 +1,13 @@
+addAttribs <- function(tag, ...) {
+  a <- list(...)
+  for(i in seq(length(a))) {
+    tag$attribs[names(a)[i]] = a[[i]]
+  }
+  return(tag)
+}
+
+
+
 # https://github.com/ebailey78/shinyBS/blob/shinyBS3/R/bsModal.R
 #'bsModal
 #'

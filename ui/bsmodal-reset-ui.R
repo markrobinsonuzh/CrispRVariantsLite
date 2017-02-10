@@ -1,11 +1,10 @@
 ################################################################################
-# Define  options modal get AB1 files, sequence names, FASTQ files, 
+# Reset button on the plot panel to restart analysis
 ################################################################################
-
 
 confirm <- bsButton("confirm", 'confirm',  style = "danger", block = TRUE)
 cancel <- bsButton("cancel", 'cancel',  style = "primary", block = TRUE)
-modal_reset <- .bsModal(
+modal_reset <- bsModal(
   "modal_reset", "INFORMATION",
   "reset", size = "small",
   fluidRow(
@@ -17,4 +16,5 @@ modal_reset <- .bsModal(
     confirm),
     column(width = 6,
     cancel)
-  ), close.button = F)
+  )
+)

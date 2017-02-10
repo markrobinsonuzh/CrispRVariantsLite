@@ -17,14 +17,6 @@ options(shiny.maxRequestSize = 10000*1024^2)
 
 shinyServer(function(input, output, session) {
 
-# uncomment lines below if action button is used to commit changes
-# values = list()
-# setHot = function(x) values[["hot"]] <<- x
-
-# comment lines below if action button is used to commit changes
-#values = reactiveValues()
-#setHot = function(x) values[["htable"]] = x
-
 t <- reactiveValues(
     DF = NULL,
     inFile = NULL
@@ -168,8 +160,8 @@ ID_ = NULL
 # UTILITY FUNCTIONS
 ################################################################################
 
-increment_prog <- function(prog, n, message, time.int = 0.05){
-   for (i in 1:n){
+increment_prog <- function(prog, n, message, time.int = 0.05, n.inc = n){
+   for (i in 1:n.inc){
     #Increment the progress bar, and update the detail text.
     prog$inc(1/n, detail=message)
     Sys.sleep(time.int)

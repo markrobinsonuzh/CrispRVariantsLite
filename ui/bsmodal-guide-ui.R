@@ -1,22 +1,22 @@
 ################################################################################
-# Define  options modal get AB1 files, sequence names, FASTQ files, 
+# Panel for entering and plotting the guide sequence
 ################################################################################
 
 
-ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%", value=g.seq, placeholder = "ATGCTGCTGGTTATTAGATTAGT")
+ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%",
+                      value=g.seq, placeholder = "ATGCTGCTGGTTATTAGATTAGT")
 
-select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome", choices = genlist.gz, width = "100%")
+select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome",
+                                 choices = genlist.gz, width = "100%")
 
-#txDb <- selectInput("txDb", "Transcript Database", choices = txDBl, selected = txDBl[1], width = "100%")
+run_guide <- bsButton("run_guide", 'create guides', type = "action",
+                      style = "success", block = TRUE)
+run_plot_guide <- bsButton("run_plot_guide", 'create plot', type = "action",
+                      style = "success", block = TRUE)
 
-run_guide <- bsButton("run_guide", 'create guides', type = "action", style = "success", block = TRUE)
-run_plot_guide <- bsButton("run_plot_guide", 'create plot', type = "action", style = "success", block = TRUE)
-
-#run_guide <- actionButton("run_guide", 'create guides', width='100%')
 next_step <- uiOutput("next_step")
 
-g.start <- textInput("g.start", "START", value = d.start ) #, placeholder = "20")
-#g.length <- textInput("g.length", "WIDTH", value = d.length)
+g.start <- textInput("g.start", "START", value = d.start )
 g.chr <- textInput("g.chr", "CHR", value = d.chr , placeholder = "chr12")
 g.strand <- radioButtons("g.strand", "Strand", choices = c("+","-"), selected = d.strand, inline = T, width = NULL)
 
@@ -76,5 +76,5 @@ modal_ref <- .bsModal(
     column(width = 3),
     column(width = 3, run_guide ),
     column(width = 3, run_plot_guide  ),
-    column(width = 3, next_step)), 
-    close.button = FALSE)
+    column(width = 3, next_step))
+)

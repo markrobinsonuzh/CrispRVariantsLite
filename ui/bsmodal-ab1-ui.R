@@ -8,7 +8,8 @@ select_genome <- selectInput("select_genome", "Select genome", choices = genlist
 
 run_prep <- bsButton("run_prep", 'Run',  style = "success", block = TRUE)
 back_ab1 <- bsButton("back_ab1", 'Back',  style = "default", block = TRUE)
-modal_AB1 <- .bsModal(
+
+modal_AB1 <- bsModal(
   "modal_AB1", "PREPROCESSING DATA | ZIP of directories with AB1 FILES: ",
   "setting_btn", size = "small",
   bsAlert("alertAB1"),
@@ -19,10 +20,9 @@ modal_AB1 <- .bsModal(
       p("Step 2: chose genome for mapping FASTQ files"),
       select_genome
       )
-  ),
+  ),  
   footer = fluidRow(
-    column(width = 6,
-    run_prep),
-    column(width = 6,
-    back_ab1  )
-  ), close.button = F)
+    column(width = 6, run_prep),
+    column(width = 6, back_ab1)
+  )
+)

@@ -1,19 +1,9 @@
-################################################################################
-# Define  options modal get AB1 files, sequence names, FASTQ files, 
-################################################################################
-
 #--------------
 # fileInput
 #--------------
 upload_bams <- htmlOutput("bams")
-#reference <- fileInput('reference', 'Upload reference', multiple = F, width = "100%")
-
 
 targert_seq <- selectInput("target_seq", "Target sequence", choices = list(), width = "100%")
-
-
-
-
 
 info <- checkboxInput("info", "Show help box", value=FALSE, width=NULL)
 #--------------
@@ -34,11 +24,15 @@ min.count = numericInput("min.count", "No count cutoff", value = 0 )
 
 ref_plot = plotOutput("ref_plot", width="100%", height="200")
 
-#sample_names <- textInput("sample_names", "Sample Names")
 create_guides <- bsButton("create_guides", "Create guides", icon =  icon("fa fa-list"), style = "info", block = TRUE)
 edit_xls <- bsButton("edit_xls", "metadata", type="action", icon =  icon("table"), style = "success", block = TRUE) 
 
-modal_2 <- .bsModal(
+
+################################################################################
+# Panel for selecting data input type
+################################################################################
+
+modal_2 <- bsModal(
   "modal_2", "Figures setting : ",
   "data_setting", size = "large",
   fluidRow(column(width = 12,
@@ -57,21 +51,12 @@ modal_2 <- .bsModal(
           edit_xls
         ))
     ),
-    #column(width = 3,
-    #h3("Filters: "),
-    #  fluidRow(
-    #      column(width = 12, helpText("Table of counts options"))),
-    #      top.n,
-    #      min.freq,
-    #      min.count
-    #  ),
       column(width = 9,
-      h3("Guide Plot"),
-      wellPanel(
-        ref_plot
-      )
+        h3("Guide Plot"),
+        wellPanel(ref_plot)
       
-  ))
+      )
+  )
     , footer =   fluidRow(
     column(width = 6,
       fluidRow(
@@ -87,4 +72,6 @@ modal_2 <- .bsModal(
           run_plot)
         )
       )
-    ), close.button = F)
+    )
+)
+#, close.button = F)

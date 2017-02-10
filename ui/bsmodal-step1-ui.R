@@ -1,5 +1,5 @@
 ################################################################################
-# Define  options modal get AB1 files, sequence names, FASTQ files, 
+# Welcome screen and instructions
 ################################################################################
 
 
@@ -24,7 +24,7 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
 )
 
 
-modal_1 <- .bsModal(
+modal_1 <- bsModal(
   "modal_1", "CrispRVariantsLite",
   "setting_btn", 
   fluidRow(column(width = 12,
@@ -51,4 +51,5 @@ modal_1 <- .bsModal(
     column(width = 4, 
            start_btn),
     column(width = 4)
-    )), close.button = F)
+    ))
+)
