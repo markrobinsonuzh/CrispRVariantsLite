@@ -2,9 +2,13 @@
 # UI
 ################################################################################
 
+# Box between plots showing coordinates
 output$error1 <- renderUI({
     tags$div(
-        p(paste0("coordinates : " , input$g.start, " strand : ", input$g.strand, " chr : ", input$g.chr))
+        p(sprintf("chr: %s  start coordinate: %s  strand: %s",
+                  input$g.chr, input$g.start, input$g.strand))
+        #paste0("coordinates : " , input$g.start, " strand : ",
+        #         input$g.strand, " chr : ", input$g.chr)))
     )
 })
 
@@ -28,24 +32,25 @@ output$next_step <- renderUI({
 # Disable creating the guides until Reference and Bams defined
 observe({
    if(is.null(v$bm_fnames)){
-      updateButton(session,"create_guides", style ="default", icon = icon("ban"), disable = TRUE )
+      updateButton(session,"create_guides", style ="default", icon = icon("ban"),
+                   disable = TRUE )
     }else{
-      updateButton(session,"create_guides", style = "success",  icon = icon("area-chart"),
-                   block = TRUE, disable = FALSE ) 
+      updateButton(session,"create_guides", style = "success", icon = icon("area-chart"),
+                   block = TRUE, disable = FALSE)
     }
 })
 
-# open reference modal
-  observeEvent(input$create_guides, {
-   #toggleModal(session, "modal_2", toggle = "close")
+# Open reference modal
+observeEvent(input$create_guides, {
     toggleModal(session, "modal_ref", toggle = "open")
-  })
+})
 
- observeEvent(input$next_step,{
+# Close reference modal when finished creating guide
+observeEvent(input$next_step,{
       toggleModal(session, "modal_ref", toggle = "close")
-     #toggleModal(session, "modal_2", toggle = "open")
- })
- 
+})
+
+
 ################################################################################
 # FUNCTIONS
 ################################################################################
@@ -158,8 +163,6 @@ mapGuide <- function(ref, idx){
 }
 
 
-
-
 observeEvent(input$run_guide,{
   
     # If bwa cannot be run, stop the app
@@ -176,15 +179,13 @@ observeEvent(input$run_guide,{
     on.exit(progress$close())
     progress$set(message = "Creating  Reference ", value = 0)
   
-    n <- 20
- 
-    increment_prog(progress, 3, "Prepare for mapping sequence")    
+    increment_prog(progress, 3, "Prepare for mapping sequence")
  
     ref <- NULL
     genome_index <- paste0("./data/genome/", input$select_Refgenome)
     
     # If text was entered into the coordinates list, prioritise over
-    # a sequence entered   
+    # a sequence entered
     if(nchar(input$g.start) > 0 ){
     
       ref <- setGuidesFromCoords(genome_index, progress)
@@ -244,7 +245,8 @@ observeEvent(input$run_guide,{
 # PLOTS
 ################################################################################
 
-observeEvent(input$run_plot_guide,{    
+
+observeEvent(input$run_plot_guide,{
 
     d$cset <- createCrisprSet()
     d$txdb <- setTxdb()
@@ -255,12 +257,13 @@ observeEvent(input$run_plot_guide,{
   })
 
 
-  reference_plot <- reactive({
-   
+# Plot the reference sequence
+reference_plot <- reactive({
+
     if(is.null(d$ref)) return(NULL)
-     
+
     box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
-   
+
     CrispRVariants::plotAlignments(
        d$ref,
        alns = NULL,
@@ -272,8 +275,9 @@ observeEvent(input$run_plot_guide,{
        axis.text.size = 14,
        plot.text.size = 3,
     )
-  })
+})
  
+# Plot the transcripts
 annotation_plot <- reactive({
     progress <- shiny::Progress$new()
     on.exit(progress$close())
@@ -289,16 +293,19 @@ annotation_plot <- reactive({
      
     CrispRVariants:::annotateGenePlot(txdb = d$txdb, target = d$guide, 
                           gene.text.size = 8)      
-  })
- 
-  output$guide_plot <- renderPlot({
+})
+
+
+output$guide_plot <- renderPlot({
     reference_plot()
-  })
-  
-  output$ref_plot <- renderPlot({
+})
+
+
+output$ref_plot <- renderPlot({
     reference_plot()
-  })
- 
- output$plot_anot <- renderPlot({
-   annotation_plot()
- })
+})
+
+
+output$plot_anot <- renderPlot({
+    annotation_plot()
+})

@@ -3,7 +3,7 @@
 header <- dashboardHeader(title = "CrispRVariantsLite")
 
 header$children[[3]]$children <-  tags$a(href='http://www.imls.uzh.ch/index.html',
-                                           img(src='http://www.imls.uzh.ch/research/klemm/uzh_logo.jpg',height='60', align="right", style="padding-right:20px; padding-top:10px; padding-bottom:10px"))
+    img(src='uzh_logo_d_pos_web_main_zone.jpg', height='60', align="right"))
 
 # Institute of Molecular Life Sciences
 sidebar <- dashboardSidebar(disable = T)
@@ -11,6 +11,7 @@ sidebar <- dashboardSidebar(disable = T)
 #---------------------
 # Source body
 #---------------------
+
 source("ui/bsmodal-step1-ui.R", local = T)
 source("ui/bsmodal-fastq-ui.R", local = T)
 source("ui/bsmodal-ab1-ui.R", local = T)

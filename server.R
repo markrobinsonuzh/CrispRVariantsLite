@@ -30,8 +30,8 @@ ID_ = NULL
   #Reactive values to monitor the state of the app
   state <- reactiveValues(
     ini = FALSE,
-    bam = F,
-    err = F,
+    bam = FALSE,
+    err = FALSE,
     info = 1,
     reset = FALSE
   )
@@ -160,10 +160,13 @@ ID_ = NULL
 # UTILITY FUNCTIONS
 ################################################################################
 
-increment_prog <- function(prog, n, message, time.int = 0.05, n.inc = n){
+increment_prog <- function(prog, n, message = NULL, time.int = 0.05,
+                           n.inc = n, detail = NULL){
    for (i in 1:n.inc){
     #Increment the progress bar, and update the detail text.
-    prog$inc(1/n, detail=message)
+    prog$inc(1/n, message = message, detail = detail)
     Sys.sleep(time.int)
   } 
 }
+
+

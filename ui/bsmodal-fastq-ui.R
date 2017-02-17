@@ -7,7 +7,8 @@ upload_FastQ <- fileInput('fastq_files',
   accept = ".zip",
   multiple = TRUE,
   width = "100%")
-select_genome <- selectInput("select_genome", "Select the genome", choices = genlist, width = "100%")
+select_genome <- selectInput("select_genome", "Select the genome",
+                             choices = genlist_base, width = "100%")
 
 back_fastq <- bsButton("back_fastq", 'Back', type="action" , style = "default", block = TRUE)
 run_fastq <- bsButton("run_fastq", 'Run', type="action",style = "success", block = TRUE)

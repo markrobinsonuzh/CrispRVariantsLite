@@ -1,19 +1,19 @@
-   # open metadata pannel
-  observeEvent(input$confirm, {
+# open metadata pannel
+observeEvent(input$confirm, {
     
     # Create a Progress object
-  progress <- shiny::Progress$new()
-  # Make sure it closes when we exit this reactive, even if there's an error
-  on.exit(progress$close())
-  progress$set(message = "Reseting The Session", value = 0)
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+    progress$set(message = "Reseting The Session", value = 0)
   
-  # Number of times we'll go through the loop
-  n <- 15
-  for (i in 1:5){
-    #Increment the progress bar, and update the detail text.
-    progress$inc(1/n, detail = "deleting data")
-    Sys.sleep(0.005)
-  }
+    increment_prog(progress, 15, n.inc = 5, detail = "deleting data")
+  
+    #for (i in 1:5){
+    #  #Increment the progress bar, and update the detail text.
+    #  progress$inc(1/n, detail = "deleting data")
+    #  Sys.sleep(0.005)
+    #}
   
     toggleModal(session,"modal_reset", toggle = "close")
   
@@ -44,32 +44,33 @@
     
     state$reset <- TRUE
     
-    
-    updateTextInput(session, "g.chr", value = NULL)
-    updateTextInput(session, "g.start", value = NULL)
-    updateTextInput(session, "g.strand", value = NULL)
-    
-    
-    
-  for (i in 1:5){
-    #Increment the progress bar, and update the detail text.
-    progress$inc(1/n, detail = "Compiling data")
-    Sys.sleep(0.005)
-  }
-  
-  setDir()
-  toggleModal(session,"modal_2", toggle = "open")  
- 
-  for (i in 1:5){
-    #Increment the progress bar, and update the detail text.
-    progress$inc(1/n)
-    Sys.sleep(0.005)
-  }
-    
-      
+    # Note that nulls in updateTextInput are ignored, so values must be set
+    updateTextInput(session, "g.chr", value = "")
+    updateTextInput(session, "g.start", value = "")
+    updateTextInput(session, "ref_seqs", value = "")
 
-  })
-   
-  observeEvent(input$cancel, {
+    increment_prog(progress, 15, n.inc = 5, detail = "Compiling data")
+
+    #for (i in 1:5){
+    #    #Increment the progress bar, and update the detail text.
+    #    progress$inc(1/n, detail = "Compiling data")
+    #    Sys.sleep(0.005)
+    #}
+  
+    setDir()
+    toggleModal(session,"modal_2", toggle = "open")
+ 
+    increment_prog(progress, 15, n.inc = 5)
+
+    #for (i in 1:5){
+    #  #Increment the progress bar, and update the detail text.
+    #  progress$inc(1/n)
+    #  Sys.sleep(0.005)
+    #}
+
+})
+
+
+observeEvent(input$cancel, {
           toggleModal(session,"modal_reset", toggle = "close")
-  })
+})

@@ -1,5 +1,6 @@
 ################################################################################
-# FUNCTIONS
+# Upload AB1, convert and map
+# Functions for conversion are defined in preprocessing-server.R
 ################################################################################
 
 
@@ -8,10 +9,8 @@ output$ab1 <- renderUI({
               multiple = F, width = "100%")
 })
 
- #---------------------
- # Converting AB1 file to FastQ
- #---------------------
-   
+ #___________________________________________________________________
+ # Converting AB1 file to FastQ then bam
  observeEvent(input$run_prep,{
    #check if file is compressed
    if(!is.null(input[[v$ab1_input]])){
@@ -22,22 +21,17 @@ output$ab1 <- renderUI({
        createAlert(session, "alertAB1", "prepAlertZIP", title = "WARNING",
          content = "Wrong  Format / upload a zip file", style = "warning", append = FALSE)
      }else{
-      # closeAlert(session, "prepAlertAB1")
-      
        # Create a Progress object
        progress <- shiny::Progress$new()
        # Make sure it closes when we exit this reactive, even if there's an error
        on.exit(progress$close())
-       progress$set(message = "Preprocessing  AB1 ", value = 0)
-       
+       progress$set(message = "Preprocessing  AB1 ", value = 0) 
        increment_prog(progress, 15, "Convert .ab1 to FastQ", n.inc = 5)
        
-       convertAb1toFasq()
-       
-       increment_prog(progress, 15, "Map FASTQ reads", n.inc = 5)       
+       convertAb1toFastq()
+       increment_prog(progress, 15, "Map FASTQ reads", n.inc = 5)
        
        mapFastQ()
-       
        increment_prog(progress, 15, "Compiling data", n.inc = 5) 
 
        # Close the upload panel and create the metadata table

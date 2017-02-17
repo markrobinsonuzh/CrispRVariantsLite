@@ -1,10 +1,10 @@
 ################################################################################
-# Define  options modal get AB1 files, sequence names, FASTQ files, 
+# AB1 upload panel
 ################################################################################
 
-#upload_AB1 <- fileInput('ab1_files', 'Upload ZIP file with .AB1 files in directories', multiple = F, width = "100%")
 upload_AB1 <- uiOutput("ab1")
-select_genome <- selectInput("select_genome", "Select genome", choices = genlist, width = "100%")
+select_genome <- selectInput("select_genome", "Select genome",
+                            choices = genlist_base, width = "100%")
 
 run_prep <- bsButton("run_prep", 'Run',  style = "success", block = TRUE)
 back_ab1 <- bsButton("back_ab1", 'Back',  style = "default", block = TRUE)

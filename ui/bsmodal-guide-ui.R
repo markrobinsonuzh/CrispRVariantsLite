@@ -3,8 +3,10 @@
 ################################################################################
 
 # List of available genomes
+
+
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome",
-                                 choices = genlist.gz, width = "100%")
+                                 choices = genlist, width = "100%")
 
 # Option 1 for guide input: enter the sequence
 ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%",

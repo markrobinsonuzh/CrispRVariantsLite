@@ -1,7 +1,7 @@
 # ---------------
 # convert AB1 to FASTQ
 # ---------------
-convertAb1toFasq <- function(){
+convertAb1toFastq <- function(){
   data_dir <- input[[v$ab1_input]]
    if(!is.null(data_dir)){
      # list AB1 files
@@ -48,10 +48,15 @@ mapFastQ <- function(){
        append = FALSE, dismiss = FALSE)
     stopApp()
   }
+ 
+  # Update the selected genome in the guide panel to match the mapping genome
+  slct <- input$select_genome
+  updateSelectInput(session, "select_Refgenome", selected = slct, choices = genlist)
   
   #BWA indices were generated using bwa version 0.7.10
-  ind <- paste0(genome,"/", input$select_genome)
-    if(file.exists(ind) && !is.null(v$fq_fnames))
+  ind <- paste0(genome,"/", genlist[input$select_genome])
+
+  if(file.exists(ind) && !is.null(v$fq_fnames))
     {
         bwa_index <- ind
         bm_fnames <- gsub(".fastq$",".bam",basename(v$fq_fnames))
