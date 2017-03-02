@@ -1,38 +1,34 @@
 # ---------------
-# convert AB1 to FASTQ
+# Convert AB1 to FASTQ
 # ---------------
 convertAb1toFastq <- function(){
-  data_dir <- input[[v$ab1_input]]
-   if(!is.null(data_dir)){
-     # list AB1 files
-     
-     temp <- unzip(data_dir$datapath, exdir = v$ab1_dir)
-     v$ab1_fnames <- dir(v$ab1_dir, "ab1$", recursive = TRUE, full.names = TRUE)
-     
-     # get the sequence names
-     v$sq_nms <- gsub(".ab1","",basename(v$ab1_fnames))
-     
-     # replace spaces and slashes in filename with underscores
-     temp <- iconv(dirname(v$ab1_fnames), to = "ASCII//TRANSLIT")
-     v$fq_fnames <- paste0(gsub("[[:punct:]]|\\s", "_", temp), ".fastq")
-     v$fq_fnames <- file.path(v$fq_dir, v$fq_fnames)
 
-     #v$fq_fnames  <- paste0(gsub(" ", "_", dirname(v$ab1_fnames)), ".fastq")
-     #v$fq_fnames  <- paste0(gsub("[\\/]", "__", v$fq_fnames), ".fastq")
-     #v$fq_fnames  <- gsub("ab1_","",v$fq_fnames)
-     #v$fq_fnames <- file.path(v$fq_dir,v$fq_fnames)
-     
-     dummy <- mapply(function(u,v,w) {
-       CrispRVariants::abifToFastq(u,v,w)
-     }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
-     
-     v$fq_fnames <- unique(v$fq_fnames)
-     
-   } else {
-     createAlert(session, "alertAB1", "alertAB101", title = "WARNING",
-      content = "Test Warning", style = "warning", append = FALSE)
-  }
+    temp <- unzip(input$ab1_input$datapath, exdir = v$ab1_dir)
+    v$ab1_fnames <- dir(v$ab1_dir, "ab1$", recursive = TRUE)
    
+    # Warn if no files found
+    if (length(v$ab1_fnames) == 0){
+        createAlert(session, "alertAB1", "prepAlertAB1",
+        title = "WARNING", style = "warning", append = FALSE,
+        content = "No files ending in '.ab1' found")
+        return()
+    }
+
+    # get the sequence names
+    v$sq_nms <- gsub(".ab1","", basename(v$ab1_fnames))
+    # replace spaces and slashes in filename with underscores
+    temp <- iconv(v$sq_nms, to = "ASCII//TRANSLIT")
+
+    v$fq_fnames <- paste0(gsub("[[:punct:]]|\\s", "_", temp), ".fastq")
+    v$fq_fnames <- file.path(v$fq_dir, v$fq_fnames)
+    v$ab1_fnames <- file.path(v$ab1_dir, v$ab1_fnames)
+
+    dummy <- mapply(function(u,v,w) {
+       CrispRVariants::abifToFastq(u,v,w)
+    }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
+     
+    v$fq_fnames <- unique(v$fq_fnames)
+
 }
 
 # ---------------
@@ -40,24 +36,22 @@ convertAb1toFastq <- function(){
 # ---------------
 mapFastQ <- function(){
   
-  # If bwa cannot be run, stop the app
-  if (system("bwa", ignore.stderr = TRUE) == 127){
-    createAlert(session, "alertAB1", "alertAB1_1", title = "WARNING",
-       content = "Please make sure BWA is available", 
-       style = "warning",
-       append = FALSE, dismiss = FALSE)
-    stopApp()
-  }
+    # If bwa cannot be run, stop the app
+    if (system("bwa", ignore.stderr = TRUE) == 127){
+        createAlert(session, "alertAB1", "alertAB1_1", title = "WARNING",
+           content = "Please make sure BWA is available", 
+           style = "warning", append = FALSE, dismiss = FALSE)
+        stopApp()
+    }
  
-  # Update the selected genome in the guide panel to match the mapping genome
-  slct <- input$select_genome
-  updateSelectInput(session, "select_Refgenome", selected = slct, choices = genlist)
+    # Update the selected genome in the guide panel to match the mapping genome
+    slct <- input$select_genome
+    updateSelectInput(session, "select_Refgenome", selected = slct, choices = genlist)
   
-  #BWA indices were generated using bwa version 0.7.10
-  ind <- paste0(genome,"/", genlist[input$select_genome])
+    #BWA indices were generated using bwa version 0.7.10
+    ind <- paste0(genome,"/", genlist[input$select_genome])
 
-  if(file.exists(ind) && !is.null(v$fq_fnames))
-    {
+    if (file.exists(ind) && !is.null(v$fq_fnames)) {
         bwa_index <- ind
         bm_fnames <- gsub(".fastq$",".bam",basename(v$fq_fnames))
         v$srt_bm_names <- file.path(v$bam_dir, gsub(".bam","_s",bm_fnames))
@@ -81,12 +75,12 @@ mapFastQ <- function(){
           unlink(bm_fnames[i])
         }
         
-        v$bm_fnames <- dir(file.path(v$bam_dir), ".bam$", full.names = TRUE, recursive = T)
-           
-    }
-    else
-    {
-    createAlert(session, "alertAB1", "prepAlertFasQ", title = "WARNING",
-      content = "BWA index doesn't exist", style = "warning", append = FALSE)
+        v$bm_fnames <- dir(v$bam_dir, ".bam$", full.names = TRUE, recursive = T)
+        
+        cat(sprintf("bam fnames %s \n", v$bm_fnames))
+               
+    } else {
+        createAlert(session, "alertAB1", "prepAlertFasQ", title = "WARNING",
+          content = "BWA index doesn't exist", style = "warning", append = FALSE)
     }
 }

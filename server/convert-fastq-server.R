@@ -1,72 +1,44 @@
 observeEvent(input$run_fastq,{
-    if(!is.null(input$fastq_files)){
-      File <- input$fastq_files
-      rfiles <- (tools::file_ext(File$name) == c("zip"))
-      
-      if(!rfiles){
-        createAlert(session, "alertFASTQ", "prepAlertZIP", title = "WARNING",
-          content = "Wrong  Format / upload a zip file", style = "warning", append = FALSE)
-      }else{
-        
-        # Create a Progress object
-        progress <- shiny::Progress$new()
-        # Make sure it closes when we exit this reactive, even if there's an error
-        on.exit(progress$close())
-        progress$set(message = "Preprocessing  AB1 ", value = 0)
-        
-        # Number of times we'll go through the loop
-        n <- 15
-        
-        for (i in 1:5){
-          #Increment the progress bar, and update the detail text.
-          progress$inc(1/n, detail = "unzip Fast FASTQs files")
-          Sys.sleep(0.05)
-        }
+    # File type zip is enforced by input button
+    req(input$fq_input)
 
-        #data_dir <- v$inFile 
-        #data_dir <- input[[v$fq_input]]
-        #temp <- unzip(data_dir$datapath, exdir = v$fq_dir)     
-        #v$fq_fnames <- dir(v$fq_dir, "fastq|fq$", recursive = TRUE, full.names = TRUE) 
-        #uploadFastq()
-        
-        for (i in 1:3){
-          progress$inc(1/n, detail = "Map FastQs reads")
-          Sys.sleep(0.05)
-        }
-        
-        mapFastQ()
-        
-        for (i in 1:3){
-          progress$inc(1/n, detail = "Map FastQs reads")
-          Sys.sleep(0.05)
-        }
-        
-        state$ini = TRUE
-        
-        toggleModal(session, "modal_FASTQ", toggle = "close")
-        #toggleModal(session, "modal_2", toggle = "open")
-        
-        for (i in 1:4){
-          progress$inc(1/n, detail = "Create Metadata")
-          Sys.sleep(0.05)
-        }
-        
-        toggleModal(session, "modal_FASTQ", toggle = "close")
+    closeAlert(session, "alertFASTQ")
 
-        state$reset <- F
-        print(sprintf("d$id %s #1", d$id))
-        if(!is.null(d$id)){
-            createHTable(d$id)    
-        } 
-        
-      }
-      
-      closeAlert(session, "prepAlertFASTQ")
-     
-    }else{
-      createAlert(session, "alertFASTQ", "prepAlertFASTQ", title = "WARNING",
-        content = "FASTQ files (.zip) not loaded", style = "warning", append = FALSE)
+    # Create a Progress object
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+    progress$set(message = "Preprocessing  FASTQ ", value = 0)
+    increment_prog(progress, 15, detail = "unzip FASTQ files", n.inc = 5)
+
+    # Unzip uploaded file, check that fastq files are found
+    temp <- unzip(input$fq_input$datapath, exdir = v$fq_dir)
+    v$fq_fnames <- dir(v$fq_dir, "fastq$|fq$|fq.gz$|fastq.gz$", recursive = TRUE,
+                      full.names = TRUE)
+    
+    # Warn if no files found
+    if (length(v$fq_fnames) == 0){
+        createAlert(session, "alertFASTQ", "prepAlertFASTQ",
+        title = "WARNING", style = "warning", append = FALSE,
+        content = "No files ending in '.fastq' or '.fq' found")
+        return(NULL)
     }
+
+    # Map the fastq files to the selected genome
+    increment_prog(progress, 15, detail = "Map FastQ reads", n.inc = 6)
+    mapFastQ()
+
+    toggleModal(session, "modal_FASTQ", toggle = "close")
+    
+
+    createHTable("metadata")
+    
+    #closeAlert(session, "prepAlertFASTQ")
+     
+   # }else{
+   #   createAlert(session, "alertFASTQ", "prepAlertFASTQ", title = "WARNING",
+   #     content = "FASTQ files (.zip) not loaded", style = "warning", append = FALSE)
+   # }
     
     
   })

@@ -1,5 +1,3 @@
-print("starting server")
-
 library(shiny)
 library(shinydashboard)
 
@@ -17,83 +15,55 @@ options(shiny.maxRequestSize = 10000*1024^2)
 
 shinyServer(function(input, output, session) {
 
-t <- reactiveValues(
-    DF = NULL,
-    inFile = NULL
-)
-
-ID_ = NULL
-  
-  # This code will be run once per user
-  users_data <- data.frame(START = Sys.time())
- 
-  #Reactive values to monitor the state of the app
-  state <- reactiveValues(
-    ini = FALSE,
-    bam = FALSE,
-    err = FALSE,
-    info = 1,
-    reset = FALSE
+  t <- reactiveValues(
+      DF = NULL # The metadata table
   )
   
   #Reactive values for preprocessing
   v <- reactiveValues(
-    sq_nms = NULL, # name of the sequence
-    ab1_fnames = NULL, # ab1 files name
-    fq_fnames = NULL, #fastq files name
-    fq_dir = NULL, # fastq directories
-    bam_dir = NULL, # bam directoiry
-    ab1_dir = NULL,
-    seqs = NULL, # data frame of the data
-    bm_fnames = NULL, #bam file
-    srt_bm_names = NULL,  #bam directories
-    fasta_temp = NULL,
-    inFile = NULL,
-    ab1_input = NULL
+      ab1_fnames = NULL, # ab1 files name
+      ab1_dir = NULL,
+      fq_fnames = NULL, #fastq file names
+      fq_dir = NULL, # fastq directories
+      bm_fnames = NULL, #bam file
+      bam_dir = NULL, # bam directoiry
+      srt_bm_names = NULL,  # sorted bam files
+      sq_nms = NULL, # name of the sequence
+      fasta_temp = NULL,
+      inFile = NULL,
+      temp.dir = NULL
   )
   
   #Reactive values for producing the plots
- d <- reactiveValues(
-   cset = NULL,
-   ref = NULL,
-   mds = NULL,
-   txdb = NULL,
-   bm_fnames = NULL,
-   guide = NULL,
-   seq.width = NULL,
-   t.loc = NULL,
-   plot = NULL,
-   id = NULL
- )
+  d <- reactiveValues(
+     cset = NULL,
+     ref = NULL,
+     mds = NULL,
+     txdb = NULL,
+     bm_fnames = NULL,
+     guide = NULL,
+     seq.width = NULL,
+     t.loc = NULL,
+     id = NULL,
+     use.coords = NULL
+  )
 
-   # create the temp dir for the files
+  # Create the temp directories for the files
   setDir <- function(){
-    d$id <- MHmakeRandomString()
-    v$ab1_input <- paste0("ab1_files_",d$id)    
-    
-    temp.dir <- file.path(tempdir(), paste0(MHmakeRandomString(),gsub("[- :]", "", Sys.time())))
-    ifelse(!dir.exists(temp.dir), dir.create(temp.dir, showWarnings = FALSE), FALSE)
-    
-    bam_dir <- file.path(temp.dir, "bam")
-    ifelse(!dir.exists(bam_dir), dir.create(bam_dir,  showWarnings = FALSE), FALSE)
-    v$bam_dir <- bam_dir
-    
-    fasta_temp <- file.path(temp.dir, "fasta_temp")
-    ifelse(!dir.exists(fasta_temp), dir.create(fasta_temp,  showWarnings = FALSE), FALSE)
-    v$fasta_temp <- fasta_temp
-    
-    
-    fq_dir <- file.path(temp.dir, "fastq")
-    ifelse(!dir.exists(fq_dir), dir.create(fq_dir,  showWarnings = FALSE), FALSE)
-    v$fq_dir <- fq_dir
-    
-    ab1_dir <- file.path(temp.dir, "ab1")
-    ifelse(!dir.exists(ab1_dir), dir.create(ab1_dir,  showWarnings = FALSE), FALSE)
-    v$ab1_dir <- ab1_dir
-    
+      v$temp.dir <- file.path(tempdir(), paste0(MHmakeRandomString(),
+                              gsub("[- :]", "", Sys.time())))
+      
+      v$bam_dir <- file.path(v$temp.dir, "bam")
+      v$fasta_temp <- file.path(v$temp.dir, "fasta_temp")
+      v$fq_dir <- file.path(v$temp.dir, "fastq")
+      v$ab1_dir <- file.path(v$temp.dir, "ab1")
+      
+      dummy <- lapply(c(v$temp.dir, v$bam_dir, v$fasta_temp,
+                         v$fq_dir, v$ab1_dir), create_dir)
+
   }
 
-#  source("server/warning-server.R", local = T)
+  #  source("server/warning-server.R", local = T)
   source("server/preprocessing-server.R", local = T)
   source("server/convert-ab1-server.R", local = T)
   source("server/convert-fastq-server.R", local = T)
@@ -103,53 +73,44 @@ ID_ = NULL
   source("server/help-tooltip-server.R", local = T)
   source("server/save-data-server.R", local = T)
   source("server/reset-server.R", local =T)
-  # open the modal options
   
-  observe(
-    if(!state$ini){
+  # Open the modal options.  modal_1 is the data selection modal
+  observe({
       setDir()
-      #file.remove(dir(tempdir(), full.names=TRUE))
       toggleModal(session,"modal_1", toggle = "open")
-    }
-  )
+  })
   
-  # open the AB1 modal
+  # Open/close the AB1 modal
   observeEvent(input$select_AB1,{
-      #toggleModal(session, "modal_2", toggle = "close")
       toggleModal(session, "modal_AB1", toggle = "open")
-      state$ini = TRUE
   })
   
   observeEvent(input$back_ab1,{
-    #toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_AB1", toggle = "close")
   })
   
-  # open the FASTQ modal
+  # Open/close the FASTQ modal
   observeEvent(input$select_FastQ,{
-    #toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_FASTQ", toggle = "open")
   })
   
   observeEvent(input$back_fastq,{
-    #toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_FASTQ", toggle = "close")
   })
   
-  # open start modal 
+  # Open data input screen, close welcome screen
   observeEvent(input$start_btn,{
     toggleModal(session, "modal_1", toggle = "close")
     toggleModal(session, "modal_2", toggle = "open")
-    state$ini = TRUE
   })
   
-  # open instructions modal
+  # Open instructions modal
   observeEvent(input$select_data, {
     toggleModal(session, "modal_2", toggle = "close")
     toggleModal(session, "modal_1", toggle = "open")
   })
 
-  # open metadata pannel
+  # Open metadata pannel
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_table", toggle = "open")
   })
@@ -159,6 +120,11 @@ ID_ = NULL
 ################################################################################
 # UTILITY FUNCTIONS
 ################################################################################
+
+
+create_dir <- function(dir.name){
+    if (!dir.exists(dir.name)) { dir.create(dir.name, showWarnings = FALSE) }
+}
 
 increment_prog <- function(prog, n, message = NULL, time.int = 0.05,
                            n.inc = n, detail = NULL){

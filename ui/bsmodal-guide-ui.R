@@ -3,10 +3,11 @@
 ################################################################################
 
 # List of available genomes
-
-
 select_Refgenome  <- selectInput("select_Refgenome", "Reference Genome",
                                  choices = genlist, width = "100%")
+
+# Matching chromosome names
+g.chr <- selectInput("g.chr", "CHR", choices = NULL)
 
 # Option 1 for guide input: enter the sequence
 ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%",
@@ -14,7 +15,7 @@ ref_seqs <- textInput("ref_seqs", "Guide Sequence (inc PAM)", width = "100%",
 
 # Option 2 for guide input: enter the location
 g.start <- textInput("g.start", "START", value = NULL)
-g.chr <- textInput("g.chr", "CHR", value = NULL, placeholder = "chr12")
+#g.chr <- textInput("g.chr", "CHR", value = NULL, placeholder = "chr12")
 g.strand <- radioButtons("g.strand", "Strand", choices = c("+","-"),
                           selected = "-", inline = T, width = NULL)
 
@@ -34,11 +35,12 @@ run_plot_guide <- bsButton("run_plot_guide", 'create plot', type = "action",
 next_step <- uiOutput("next_step")
 
 # Windows for plotting the guide and the transcripts
-guide <- uiOutput("guide")
+guide <- uiOutput("guide") # uiOutput as it also contains the coordinates
 plot_anot <- plotOutput("plot_anot", width="100%", height="200px")
 
 #___________________________________
-# Panel arranging the above elements
+
+## Panel arranging the above elements
 modal_ref <- .bsModal(
   "modal_ref", "Specify the guide: ",
   "setting_btn", width = "800px", close.button = FALSE,

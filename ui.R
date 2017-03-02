@@ -12,16 +12,16 @@ sidebar <- dashboardSidebar(disable = T)
 # Source body
 #---------------------
 
-source("ui/bsmodal-step1-ui.R", local = T)
-source("ui/bsmodal-fastq-ui.R", local = T)
-source("ui/bsmodal-ab1-ui.R", local = T)
-source("ui/bsmodal-step2-ui.R", local = T)
-source("ui/bsmodal-table-ui.R", local = T)
-source("ui/plotoptions-ui.R", local = T)
-source("ui/bsmodal-guide-ui.R", local = T)
-#source("ui/bsmodal-help-ui.R", local = T)
-source("ui/bsmodal-save-ui.R", local = T)
-source("ui/bsmodal-reset-ui.R", local = T)
+source("ui/bsmodal-step1-ui.R", local = TRUE)
+source("ui/bsmodal-fastq-ui.R", local = TRUE)
+source("ui/bsmodal-ab1-ui.R", local = TRUE)
+source("ui/bsmodal-step2-ui.R", local = TRUE)
+source("ui/bsmodal-table-ui.R", local = TRUE)
+source("ui/plotoptions-ui.R", local = TRUE)
+source("ui/bsmodal-guide-ui.R", local = TRUE)
+#source("ui/bsmodal-help-ui.R", local = TRUE)
+source("ui/bsmodal-save-ui.R", local = TRUE)
+source("ui/bsmodal-reset-ui.R", local = TRUE)
 
 body <- dashboardBody(
   fluidRow(

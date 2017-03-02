@@ -37,7 +37,7 @@ createCrisprSet <- reactive({
     increment_prog(progress, 10, "")
     
     d$cset <- CrispRVariants::readsToTarget(v$bm_fnames, target = d$guide,
-                 reference = d$ref, names = md$label,
+                 reference = Biostrings::DNAString(d$ref), names = md$label,
                  target.loc = d$t.loc, verbose = FALSE)
     
     return(d$cset)
@@ -59,7 +59,7 @@ frequency_heatmap <- reactive({
       min.count = input$min.count,
       type =  input$plot.type,
       x.size = input$x.size, 
-      plot.text.size = input$plot.text.size, 
+      plot.text.size = input$plot.text.size,
       legend.text.size = input$legend.text.size,
       x.angle = input$x.angle,
       group = group

@@ -24,20 +24,14 @@ table <- function(name){
     t$DF <- values[[y]]
     rhandsontable(t$DF) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE) 
-  
-    
 })
     
 }
 
 output$table <- renderUI({
-   if(!state$reset) {
-     rHandsontableOutput(d$id)
-   }else{
-        t$DF = NULL
-        return()
-    }
+     rHandsontableOutput("metadata")
 })
+
 
 createHTable <- function(id){
   
@@ -48,9 +42,7 @@ createHTable <- function(id){
   progress$set(message = "Creating Table ", value = 0)
   
   increment_prog(progress, 15, "", n.inc = 5)
-
-  print(sprintf("d$id %s #1", d$id))
-  table(id)  
+  table(id)
 
   increment_prog(progress, 15, "Compiling data", n.inc = 10)
 
@@ -65,9 +57,11 @@ createHTable <- function(id){
 # Disable creating the guides until Reference and Bams defined
 observe({
    if(is.null(v$bm_fnames)){
-      updateButton(session,"edit_xls", style ="default", icon = icon("ban"), disable = TRUE )
-    }else{
-      updateButton(session,"edit_xls", style = "success",  icon = icon("table"), block = TRUE, disable = FALSE ) 
+      updateButton(session,"edit_xls", style = "default", icon = icon("ban"),
+                   disable = TRUE)
+    } else {
+      updateButton(session,"edit_xls", style = "success",  icon = icon("table"),
+                  block = TRUE, disable = FALSE ) 
     }
 })
 
@@ -78,7 +72,7 @@ observe({
   })
 
 #downland the bams files on the server
-observeEvent( input$upload_bams, {
+observeEvent(input$upload_bams, {
    v$inFile <- input$upload_bams
   
   # if the file doesn't exist
@@ -99,12 +93,9 @@ observeEvent( input$upload_bams, {
     
     increment_prog(progress, 20, "Storing files on the server", n.inc = 10)
     
-    state$reset <- FALSE
-    createHTable(d$id)
+    createHTable("metadata")
   
   }
-  
-  
 })
 
 
@@ -151,6 +142,3 @@ getMetadata <- function(){
   
   return(t.DF)
 }
-
-
-

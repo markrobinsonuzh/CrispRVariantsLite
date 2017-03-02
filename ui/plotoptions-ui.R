@@ -104,7 +104,7 @@ x.size <- sliderInput("x.size", "X-axis label text size:", min=0, max=20,
 
 # Decimal interval with step value
 plot.text.size <- sliderInput("plot.text.size", "Text size of sequence letters / numbers in plots: ", 
-    min = 0, max = 10, value = 3, step = 1)
+    min = 0, max = 10, value = 4, step = 1)
 
 # Specification of range within an interval
 legend.text.size <- sliderInput("legend.text.size", "Legend text Size :", min = 1, max = 20, value = 8)
