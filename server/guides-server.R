@@ -186,7 +186,8 @@ writeGuideFasta <- function(ref){
     fa <- paste0(MHmakeRandomString(), 
                  gsub("[- :]", "", Sys.time()), "_reference.fasta")
     fa <- file.path(v$fasta_temp, fa)
-    write.fasta(sequences = ref, names = "reference", file.out = fa )
+    cat(sprintf(">reference\n%s\n", ref), file = fa)
+    #write.fasta(sequences = ref, names = "reference", file.out = fa )
     return(fa)
 }
 
@@ -367,7 +368,7 @@ reference_plot <- reactive({
        Biostrings::DNAString(d$ref),
        alns = NULL,
        target.loc = d$t.loc,
-       guide.loc = IRanges(
+       guide.loc = IRanges::IRanges(
          start = d$seq.width + 1,
          end = box_end),
        ins.sites = data.frame(),

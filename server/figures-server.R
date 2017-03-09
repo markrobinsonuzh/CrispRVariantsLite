@@ -74,7 +74,7 @@ allele_plot <- reactive({
       min.freq = input$min.freq,
       min.count = input$min.count,
       target.loc = d$t.loc,
-      guide.loc = IRanges(
+      guide.loc = IRanges::IRanges(
       start = d$seq.width + 1,
       end = end(d$guide) - start(d$guide) - d$seq.width + 1),
       axis.text.size = input$axis.text.size, 

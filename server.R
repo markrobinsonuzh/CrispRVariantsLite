@@ -63,6 +63,8 @@ shinyServer(function(input, output, session) {
 
   }
 
+  cat(sprintf("start sourcing %s \n", simpletime()), file = "crv_scratch.txt", append = TRUE)
+
   #  source("server/warning-server.R", local = T)
   source("server/preprocessing-server.R", local = T)
   source("server/convert-ab1-server.R", local = T)
@@ -73,6 +75,8 @@ shinyServer(function(input, output, session) {
   source("server/help-tooltip-server.R", local = T)
   source("server/save-data-server.R", local = T)
   source("server/reset-server.R", local =T)
+  cat(sprintf("finished sourcing %s \n", simpletime()), file = "crv_scratch.txt", append = TRUE)
+
   
   # Open the modal options.  modal_1 is the data selection modal
   observe({
