@@ -1,29 +1,13 @@
 # load packages
-cat("library imports started", file = "crv_scratch.txt", append = TRUE)
-cat(system("date", intern = TRUE), file = "crv_scratch.txt", append = TRUE)
 library("shiny"); packageVersion("shiny")
 library("shinydashboard"); packageVersion("shinydashboard")
 library("shinyBS"); packageVersion("shinyBS")
 library("ggplot2"); packageVersion("ggplot2")
 library("CrispRVariants"); packageVersion("CrispRVariants")
-#library("Rsamtools"); packageVersion("Rsamtools")
 library("rhandsontable") ; packageVersion("rhandsontable")
-#library("ShortRead"); packageVersion("ShortRead")
-#library("rtracklayer"); packageVersion("rtracklayer")
-#library("gdata"); packageVersion("gdata")
-#library("gridExtra"); packageVersion("gridExtra")
-#library("GenomicFeatures"); packageVersion("GenomicFeatures")
-#library("AnnotationDbi"); packageVersion("AnnotationDbi")
-#library("GenomicRanges"); packageVersion("GenomicRanges")
-#library("IRanges"); packageVersion("IRanges")
-#library("seqinr");packageVersion("seqinr")
-cat("library imports finished", file = "crv_scratch.txt", append = TRUE)
-cat(system("date", intern = TRUE), file = "crv_scratch.txt", append = TRUE)
-
 
 source("./core/setting.R", local = TRUE)
 source("./core/bsModal.R", local = TRUE)
-#source("./core/misc.R", local = TRUE)
 
 #_________________________________________________________________
 

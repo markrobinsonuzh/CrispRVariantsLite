@@ -71,13 +71,11 @@ observeEvent({
 
 # Set genome and transcription data base
 setTxdb <- reactive({
-  cat(sprintf("Setting txdb to %s \n", input$select_Refgenome),
-      file = "crv_scratch.txt", append = TRUE)
-
-  # Note: requires that the file names of the txdb match those of ref genome and
-  # this can be achieved by symbolic links
-  f <- paste0("./data/txdb/", gsub(".fa",".sqlite", input$select_Refgenome))
-  AnnotationDbi::loadDb(f)
+    # Note: requires that the file names of the txdb match those of ref genome and
+    # this can be achieved by symbolic links
+    f <- paste0("./data/txdb/", gsub(".fa",".sqlite", input$select_Refgenome))
+    result <- AnnotationDbi::loadDb(f)
+    result
 })
 
 
@@ -92,36 +90,18 @@ observeEvent(input$select_Refgenome, {
     
     updateSelectInput(session, "g.chr", choices = chrs, selected = chrs[1])
     
-    cat("New chromosome options:\n")
-    cat(chrs)
-    cat("\n")
-
 })
 
 
 setGuideCoords <- function(window = NULL, seq.start = NULL, target.loc = NULL,
                            strand = NULL, chromosome = NULL){
   # Store guide coordinates including window around guide
-
-  cat("Setting guide coordinates \n", file = "crv_scratch.txt", append = TRUE)
   
   seq.start <- ifelse(is.null(seq.start), as.numeric(input$g.start), seq.start)
   target.loc <- ifelse(is.null(target.loc), as.numeric(input$target_loc), target.loc)
   chromosome <- ifelse(is.null(chromosome), input$g.chr, chromosome)
   strand <- ifelse(is.null(strand), input$g.strand, strand)
-  
   seq.end <-  seq.start + target.loc + 5
-  
-  ncat <- function(x){
-    cat(sprintf("%s\n", x))
-  }
-  
-  ncat(seq.start)
-  ncat(target.loc)
-  ncat(seq.end)
-  ncat(input$g.chr)
-  ncat(input$g.strand)
-  ncat(input$g.length)
   
   guide <- GenomicRanges::GRanges(
       seqnames = chromosome,
@@ -134,10 +114,6 @@ setGuideCoords <- function(window = NULL, seq.start = NULL, target.loc = NULL,
   d$guide <- guide + d$seq.width
   d$t.loc <- target.loc + d$seq.width
   
-  ncat(d$seq.width)
-  ncat(d$guide)
-  ncat(d$t.loc)
-  
   return(d$guide)
 }
 
@@ -145,22 +121,17 @@ setGuideCoords <- function(window = NULL, seq.start = NULL, target.loc = NULL,
 setGuidesFromCoords <- function(genome_idx, progress){
     # This function gets the sequence matching the specified coordinates
     
-    cat("Setting guide from coords \n", file = "crv_scratch.txt", append = TRUE)
- 
-    # Set the guide and fetch the guide sequence directly from the reference
- 
     increment_prog(progress, 5, "Fetching sequence")
     
     gd <- setGuideCoords()
     cmd <- "samtools faidx %s %s:%s-%s"
     
     # Try to extract the sequence matching this location from the reference
-    ref <- system(sprintf(cmd, genome_idx, seqnames(gd)[1], start(gd)[1], end(gd)[1]),
+    ref <- system(sprintf(cmd, genome_idx, GenomicRanges::seqnames(gd)[1], 
+                          GenomicRanges::start(gd)[1], GenomicRanges::end(gd)[1]),
                   intern = TRUE)
  
     if(length(ref) < 2){
-        cat("Faidx error \n", file = "crv_scratch.txt", append = TRUE)
-
         createAlert(session, "alertRef", alertId = "alertRef3", title = "INFO",
             content = sprintf("No sequence found at %s:%s in genome %s",
                               input$g.chr, input$g.start, input$select_Refgenome),
@@ -181,13 +152,10 @@ setGuidesFromCoords <- function(genome_idx, progress){
 
 
 writeGuideFasta <- function(ref){
-    cat("Writing guide fasta \n", file = "crv_scratch.txt", append = TRUE)
-
     fa <- paste0(MHmakeRandomString(), 
                  gsub("[- :]", "", Sys.time()), "_reference.fasta")
     fa <- file.path(v$fasta_temp, fa)
     cat(sprintf(">reference\n%s\n", ref), file = fa)
-    #write.fasta(sequences = ref, names = "reference", file.out = fa )
     return(fa)
 }
 
@@ -220,9 +188,6 @@ mapGuide <- function(ref, idx){
 
 
 observeEvent(input$run_guide,{
-    
-    cat("Run guide clicked \n", file = "crv_scratch.txt", append = TRUE)
-
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
@@ -284,14 +249,7 @@ observeEvent(input$run_guide,{
     }
     
     d$use.coords <- NULL
-    #increment_prog(progress, 7, "")
-  
-    cat(sprintf("Setting reference from %s \n", isolate(as.character(d$ref))),
-        file = "crv_scratch.txt", append = TRUE)
-  
     d$ref <- as.character(ref)
-
-    cat(sprintf("Reference set to %s\n", ref ) , file = "crv_scratch.txt", append = TRUE)
   
     reference_plot()
   
@@ -304,10 +262,6 @@ observeEvent(input$run_guide,{
 
 
 observeEvent(input$run_plot_guide,{
-    #if (input$run_guide == 0) return(NULL)
-
-    cat("Making allele plot \n", file = "crv_scratch.txt", append = TRUE)
-
     d$cset <- createCrisprSet()
     setTxdb()
     createCrispPlot()
@@ -322,9 +276,6 @@ observeEvent(input$run_plot_guide,{
 #_________________________________________________________________________________ 
 # Plot the transcripts
 output$plot_anot <- renderPlot({
-
-    cat("rendering annotation plot \n", file = "crv_scratch.txt", append = TRUE)
-
     annotation_plot()
 
 })
@@ -333,12 +284,6 @@ output$plot_anot <- renderPlot({
 annotation_plot <- reactive({
     req(input$run_guide, d$guide)
     
-    cat("making annotation plot \n", file = "crv_scratch.txt", append = TRUE)
-
-    cat(sprintf("Txdb guide loc: %s - %s, width %s\n",
-        start(d$guide), end(d$guide), d$seq.width),
-        file = "crv_scratch.txt", append = TRUE)
-
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(message = "Annotating transcript location ", value = 0)
@@ -354,16 +299,9 @@ annotation_plot <- reactive({
 reference_plot <- reactive({
     req(input$run_guide, d$ref, d$guide, d$seq.width, d$t.loc)
 
-    cat("making reference plot \n", file = "crv_scratch.txt", append = TRUE)
-
-    cat(sprintf("Guide loc: %s - %s, width %s\n",
-        start(d$guide), end(d$guide), d$seq.width),
-        file = "crv_scratch.txt", append = TRUE)
-    box_end <- end(d$guide) - start(d$guide) - d$seq.width + 1
+    box_end <- GenomicRanges::end(d$guide) - GenomicRanges::start(d$guide)
+                  - d$seq.width + 1
     
-    cat(sprintf("Ref: %s\n", as.character(d$ref)),
-        file = "crv_scratch.txt", append = TRUE)
-
     p <- CrispRVariants::plotAlignments(
        Biostrings::DNAString(d$ref),
        alns = NULL,
@@ -375,19 +313,15 @@ reference_plot <- reactive({
        axis.text.size = 14,
        plot.text.size = 3,
     )
+
     return(p)
 })
 
 
 output$guide_plot <- renderPlot({
-      cat("rendering guide plot \n", file = "crv_scratch.txt", append = TRUE)
       reference_plot()
 })
 
 output$ref_plot <- renderPlot({
-      cat("rendering reference plot \n", file = "crv_scratch.txt", append = TRUE)
       reference_plot()
 })
-
-
-
