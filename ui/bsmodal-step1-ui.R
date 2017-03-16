@@ -25,7 +25,7 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
 
 
 modal_1 <- .bsModal(
-  "modal_1", "CrispRVariantsLite",
+  "modal_1", "CrispRVariantsLite v1.1",
   "setting_btn", close.button = FALSE,
   fluidRow(column(width = 12,
     tabBox( width = 12,
@@ -50,7 +50,7 @@ modal_1 <- .bsModal(
                "guide RNA, the target location is base 17, where the double-strand",
                "cut occurs."))
         ))),
-      tabPanel("QUICK INSTRUCTION",
+      tabPanel("VIDEO INSTRUCTION",
         bscollapse_video),
       tabPanel("EXAMPLE ZIP FILES",
         includeMarkdown("examples/README.md")
