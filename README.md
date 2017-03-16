@@ -19,20 +19,15 @@ The following packages will be needed by the web app:
 
     source("https://bioconductor.org/biocLite.R")
     library(BiocInstaller)
-    biocLite( c("ShortRead","rtracklayer",
-                "GenomicFeatures","AnnotationDbi",
-                "GenomicRanges","IRanges",
-                "Rsamtools") )
+    biocLite( c("CrispRVariants", "GenomicFeatures",
+                "AnnotationDbi", "GenomicRanges",
+                "IRanges", "Rsamtools", "Biostrings") )
 
     install.packages("ggplot2",quiet=TRUE)
-    install.packages("gdata",quiet=TRUE)
-    install.packages("gridExtra",quiet=TRUE)
     install.packages("shiny",quiet=TRUE)
     install.packages("shinydashboard",quiet=TRUE)
     install.packages("shinyBS",quiet=TRUE)
     install.packages("rhandsontable",quiet=TRUE)
-    install.packages("markdown",quiet=TRUE)
-    install.packages("seqinr",quiet=TRUE)
 
 
 ## Other important details
