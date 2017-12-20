@@ -11,15 +11,20 @@ convertAb1toFastq <- function(){
         createAlert(session, "alertAB1", "prepAlertAB1",
         title = "WARNING", style = "warning", append = FALSE,
         content = "No files ending in '.ab1' found")
-        return()
+        return(FALSE)
     }
 
     # get the sequence names
     v$sq_nms <- gsub(".ab1","", basename(v$ab1_fnames))
     # replace spaces and slashes in filename with underscores
-    temp <- iconv(v$sq_nms, to = "ASCII//TRANSLIT")
-
-    v$fq_fnames <- paste0(gsub("[[:punct:]]|\\s", "_", temp), ".fastq")
+    v$sq_nms <- iconv(v$sq_nms, to = "ASCII//TRANSLIT")
+    
+    fname_temp <- gsub(".*\\/", "", dirname(v$ab1_fnames))
+    fname_temp[fname_temp == "."] <- v$sq_nms[fname_temp == "."]
+    
+    #v$fq_fnames <- paste0(gsub("[[:punct:]]|\\s", "_", fname_temp), ".fastq")
+    v$fq_fnames <- paste0(iconv(fname_temp, to = "ASCII//TRANSLIT"), ".fastq")
+    
     v$fq_fnames <- file.path(v$fq_dir, v$fq_fnames)
     v$ab1_fnames <- file.path(v$ab1_dir, v$ab1_fnames)
 
@@ -28,8 +33,9 @@ convertAb1toFastq <- function(){
     }, v$sq_nms, v$ab1_fnames, v$fq_fnames)
      
     v$fq_fnames <- unique(v$fq_fnames)
-
+    return(TRUE)
 }
+
 
 # ---------------
 # run mapping
@@ -45,8 +51,8 @@ mapFastQ <- function(){
     }
  
     # Update the selected genome in the guide panel to match the mapping genome
-    slct <- input$select_genome
-    updateSelectInput(session, "select_Refgenome", selected = slct, choices = genlist)
+    slct <- input$select_genome_fq
+    updateSelectizeInput(session, "select_Refgenome", selected = slct, choices = genlist)
   
     #BWA indices were generated using bwa version 0.7.10
     ind <- paste0(genome,"/", genlist[input$select_genome])

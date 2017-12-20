@@ -2,10 +2,15 @@
 # Dialogue for uploading fastq files 
 ################################################################################
 
+# List of available genomes
+#select_genome  <- selectInput("select_Refgenome", "Reference Genome",
+#                                 choices = genlist, width = "100%")
+
+
 upload_FastQ <- fileInput("fq_input", 'Upload .fastq files in a zip file',
                           accept = ".zip", multiple = FALSE, width = "100%")
 
-select_genome <- selectInput("select_genome", "Select the genome",
+select_genome_fq <- selectInput("select_genome", "Select the genome",
                              choices = genlist_base, width = "100%")
 
 back_fastq <- bsButton("back_fastq", 'Back', type = "action",
@@ -25,7 +30,7 @@ modal_FASTQ <- .bsModal(
         upload_FastQ,
         h6("Step 2"),
         p("Chose the genome for mapping the FastQ files"),
-        select_genome
+        select_genome_fq
       )
     ),
     footer = fluidRow(

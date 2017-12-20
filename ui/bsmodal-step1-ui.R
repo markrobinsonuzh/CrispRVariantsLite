@@ -25,7 +25,7 @@ bscollapse_video <- bsCollapse(id = "bscollapse_video", open = "Overall workflow
 
 
 modal_1 <- .bsModal(
-  "modal_1", "CrispRVariantsLite v1.1",
+  "modal_1", "CrispRVariantsLite v1.2",
   "setting_btn", close.button = FALSE,
   fluidRow(column(width = 12,
     tabBox( width = 12,
@@ -34,7 +34,7 @@ modal_1 <- .bsModal(
         p(paste("CrispRVariantsLite is an interactive web application that provides",
             "a graphical user interface to the R/Bioconductor CrispRVariants package. ")),
        # p("We are currently upgrading CrispRVariantsLite.  Please check back in an hour")
-       p(strong("News - Chicken genome galgal5 added\n")),
+       p(strong("News 20th Dec 2017 - version 1.3\n")),
        p(paste("The starting point is a ZIP file that contains one of three",
                "possibilities: i) a set of already-mapped sequences in BAM format",
                "(one BAM file for each sample);  ii) a set of FASTQ files to be mapped",

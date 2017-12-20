@@ -50,10 +50,9 @@ createCrisprSet <- reactive({
 
 # Create heatmap
 frequency_heatmap <- reactive({
-  
-  group <- as.factor(t$DF$group)
-  
-    CrispRVariants::plotFreqHeatmap(d$cset,
+
+    group <- as.factor(t$DF$group)  
+    heat_p <-  CrispRVariants::plotFreqHeatmap(d$cset,
       top.n = input$top.n,
       min.freq = input$min.freq,
       min.count = input$min.count,
@@ -64,12 +63,16 @@ frequency_heatmap <- reactive({
       x.angle = input$x.angle,
       group = group
   )
+    
+  return(heat_p)
+  
 })
 
 
 # Create allele plot
 allele_plot <- reactive({
-    CrispRVariants::plotAlignments(d$cset,
+
+    allele_plot <- CrispRVariants::plotAlignments(d$cset,
       top.n = input$top.n,
       min.freq = input$min.freq,
       min.count = input$min.count,
@@ -81,20 +84,19 @@ allele_plot <- reactive({
       ins.size = input$ins.size,
       plot.text.size = input$plot.text.size, 
       legend.symbol.size = input$legend.symbol.size,
-      legend.text.size = input$legend.text.size
+      legend.text.size = input$legend.text.size,
+      legend.cols = input$legend.ncol
     )
+    return(allele_plot)
 })
 
 
 # Create plots, arrange
-createCrispPlot <- reactive({
-  
-  output$crispplots <- renderPlot({
-
+createCrispPlot <- function(){
+    
     ## Warn if the CrisprSet is NULL
     validate(
       need(!is.null(d$cset),
-       
            paste(c("CrisprSet could not be created.", 
                    "No on-target reads?"), sep = "\n"))
     )
@@ -106,11 +108,8 @@ createCrispPlot <- reactive({
   
     # Number of times we'll go through the loop
     increment_prog(progress, 20, "plotting")
-  
-    input$replot
-  
+    
     isolate({
-  
       r_ht <- as.numeric(strsplit(input$row.ht.ratio, ":")[[1]])
       c_wd <- as.numeric(strsplit(input$col.wdth.ratio, ":")[[1]])
   
@@ -118,21 +117,23 @@ createCrispPlot <- reactive({
                        "Less" = ggplot2::unit(c(1,0,2,2), "lines"),
                        "Normal" = ggplot2::unit(c(1,0,5,2), "lines"),
                        "More" = ggplot2::unit(c(1,0,10,2), "lines"))
-  
-      try({
+
+     try({  
       CrispRVariants:::arrangePlots(
         annotation_plot(), allele_plot(), frequency_heatmap(),
         col.wdth.ratio = c_wd, row.ht.ratio = r_ht,
         left.plot.margin = plot_margin)
-      }, silent = TRUE) 
-    
+     
+      }, silent = TRUE)
     })
-  
-  })
-})
+}
+
 
 #______________________________________________________________
-# Observe button click "run plot", generate and display main plots
+# Generate and display main plots
+
+output$crispplots <- renderPlot({ print(createCrispPlot()) })
+
 
 # Create the box in which the plot is displayed
 output$plots <- renderUI({
@@ -140,12 +141,8 @@ output$plots <- renderUI({
     plotOutput("crispplots", width="auto", height ="600px")
 })
 
-# Render plot
- observeEvent(input$run_plot,{
-    d$cset <- createCrisprSet()
-    print(d$cset)
-    d$txdb <- setTxdb()
-    createCrispPlot()
-    toggleModal(session, "modal_2", toggle = "close")
-  })
 
+observeEvent(input$replot, {
+    output$crispplots <- renderPlot({ print(createCrispPlot())  })
+})
+ 

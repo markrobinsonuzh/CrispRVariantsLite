@@ -1,60 +1,19 @@
+#----------------
+# Action buttons
+#----------------
 
+data_setting <- bsButton("data_setting", 'Settings', type='action',
+                         icon =  icon("list-alt"), style = "primary",
+                         block = TRUE)
+save_data <- bsButton("save_data", 'Save Data', type='action',
+                      icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
 
-
-data_setting <- bsButton("data_setting", 'Settings', type='action', icon =  icon("list-alt"), style = "primary", block = TRUE)
-save_data <- bsButton("save_data", 'Save Data', type='action', icon =  icon("fa fa-pencil"), style = "info", block = TRUE)
 replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
             style = "info", block = TRUE)
-
-
-#----------------
-# Filter buttons
-#----------------
-
-top.n = numericInput("top.n", "Top ranked variants", value = 50, min = 0)
-min.freq = numericInput("min.freq", "Frequency cutoff", value = 0, min = 0)
-min.count = numericInput("min.count", "Count cutoff", value = 0, min = 0)
-
-#----------------
-# Select boxes
-#----------------
-
-# Row height ratio
-row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
-    choices = c("1:6","1:5","1:4","1:3","1:2","1:1.5", "1:1", "2:1"), width = 75)
-
-# Column width ratio
-col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
-    selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
-
+            
 reset <- bsButton("reset", 'Reset', type='action', style = "info", block = TRUE)
 update <- bsButton("update", 'Update', type='action', style = "primary", block = TRUE)
 
-replot <- bsButton("replot", 'Plot', type='action', icon =  icon("area-chart"),
-            style = "info", block = TRUE)
-
-#----------------
-# Select boxes
-#----------------
-
-# Row height ratio
-row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
-    choices = c("1:6","1:5","1:4","1:3","1:2","1:1","2:1"), width = 75)
-
-# Column width ratio
-col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
-    selected = "2:1", choices = c("4:1","3:1","2:1","1:1", "1:2"), width = 75)
-
-# Plot margins
-plot.margins <- selectInput("plot.margins", "Space beneath plot",
-    selected = "Normal", choices = c("Less", "Normal", "More"), width = 100)
-
-
-reset <- bsButton("reset", 'Reset', type='action', style = "warning", block = TRUE)
-
-replot <- bsButton("replot", 'Update plot', type='action', icon =  icon("area-chart"),
-            style = "primary", block = TRUE)
-
 
 #----------------
 # Filter buttons
@@ -64,21 +23,9 @@ top.n = numericInput("top.n", "Top ranked variants", value = 50, min = 0)
 min.freq = numericInput("min.freq", "Frequency cutoff", value = 0, min = 0)
 min.count = numericInput("min.count", "Count cutoff", value = 0, min = 0)
 
-#----------------
-# Select boxes
-#----------------
-
-## Row height ratio
-#row.ht.ratio <- selectInput("row.ht.ratio","Row height ratio", selected = "1:6",
-#    choices = c("1:6","1:5","1:4","1:3","1:2","1:1.5", "1:1", "2:1"), width = 75)
-
-## Column width ratio
-#col.wdth.ratio <- selectInput("col.wdth.ratio", "Column width ratio",
-#    selected = "2:1", choices = c("4:1","3:1","2:1", "1.5:1", "1:1", "1:2"), width = 75)
-
 
 #----------------
-# Select boxes
+# Plot arrangement
 #----------------
 
 # Row height ratio
@@ -98,28 +45,44 @@ plot.margins <- selectInput("plot.margins", "Space beneath plot",
 # Slider
 #----------------
 
+axis.text.size  <- sliderInput("axis.text.size",
+                               "Text size of variant labels (e.g., 3:3D):",
+                               min = 1, max = 20, value = 10)
+
+# Decimal interval with step value
+plot.text.size <- sliderInput("plot.text.size",
+                             "Text size of sequence letters / numbers in plots: ", 
+                              min = 0, max = 10, value = 4, step = 1)
+
+# Specification of range within an interval
+legend.text.size <- sliderInput("legend.text.size", "Legend text size :",
+                                min = 1, max = 20, value = 8)
+
+ins.size <- sliderInput("ins.size", "Size of insertion symbols: ",
+                        min = 1, max = 10, value = 3)
+
+
+
 # Simple integer interval
 x.size <- sliderInput("x.size", "X-axis label text size:", min=0, max=20,
       value=10, step = 1)
 
-# Decimal interval with step value
-plot.text.size <- sliderInput("plot.text.size", "Text size of sequence letters / numbers in plots: ", 
-    min = 0, max = 10, value = 4, step = 1)
-
-# Specification of range within an interval
-legend.text.size <- sliderInput("legend.text.size", "Legend text Size :", min = 1, max = 20, value = 8)
-
 # Provide a custom currency format for value display, 
 # with basic animation
-x.angle <- sliderInput("x.angle", "Angle of sample label:", min = 0, max = 90, value = 90, step = 5, animate=TRUE)
+x.angle <- sliderInput("x.angle", "Angle of sample label:", min = 0, max = 90,
+                       value = 90, step = 5, animate=TRUE)
+                       
+plot.type <- radioButtons("plot.type", "Plot type",
+                          choices = c("proportions","counts"),
+                          selected = "counts", inline = TRUE) 
 
-axis.text.size  <- sliderInput("axis.text.size", "Text size of variant labels (e.g., 3:3D):", min = 1, max = 20, value = 10)
 
-ins.size <- sliderInput("ins.size", "Size of insertion symbols: ", min = 1, max = 10, value = 3)
-legend.symbol.size <- sliderInput("legend.symbol.size", "legendsymbol size :", min = 1, max = 20, value = 5)
-legend.text.size <- sliderInput("legend.text.size", "Text size of insertion legend:", min = 1, max = 20, value = 8)
+legend.symbol.size <- sliderInput("legend.symbol.size", "legend symbol size :",
+                                  min = 1, max = 20, value = 5)
 
-plot.type <- radioButtons("plot.type", "Plot type", choices = c("proportions","counts"), selected = "counts", inline = TRUE) 
+legend.ncol <- sliderInput("legend.ncol", "Number of legend columns:",
+                            min = 1, max = 20, value = 4)
+
 
 
 #----------------
@@ -133,9 +96,9 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
                    "Click 'Replot' to replot the data with the new options.")),
     hr(),
     fluidRow(
-        column(width = 4,  row.ht.ratio),
-        column(width = 4,  col.wdth.ratio),
-        column(width = 4,plot.margins)
+        column(width = 4, row.ht.ratio),
+        column(width = 4, col.wdth.ratio),
+        column(width = 4, plot.margins)
         ),
     style = "info"),
   
@@ -157,6 +120,8 @@ bscollapse_1 <- bsCollapse(id = "bscollapse_1", open = "Plot Alignments Options"
     axis.text.size,
     plot.text.size,
     legend.text.size,
+    legend.symbol.size,
+    legend.ncol,
     hr(),
     ins.size,
     style = "warning"),
@@ -180,11 +145,11 @@ plotOptions <- box(width = 4,
   solidHeader = T,
   bscollapse_1,
   fluidRow(
-    column(width=6,data_setting),
-    column(width=6,replot)
+    column(width=6, data_setting),
+    column(width=6, replot)
   ),
   hr(),
   fluidRow(
-    column(width=6,save_data ),
-    column(width=6,reset)
+    column(width=6, save_data ),
+    column(width=6, reset)
 ))

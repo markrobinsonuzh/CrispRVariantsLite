@@ -73,7 +73,7 @@ shinyServer(function(input, output, session) {
   source("server/save-data-server.R", local = T)
   source("server/reset-server.R", local =T)
 
-  
+
   # Open the modal options.  modal_1 is the data selection modal
   observe({
       setDir()
@@ -114,6 +114,15 @@ shinyServer(function(input, output, session) {
   observeEvent(input$edit_xls, {
     toggleModal(session, "modal_table", toggle = "open")
   })
+
+  # Update guide genome when ab1 or fastq genome chosen
+  observeEvent(input$select_genome_ab, {
+    updateSelectInput(session, "select_Refgenome", selected = input$select_genome_ab())
+  })
+  observeEvent(input$select_genome_fq, {
+    updateSelectInput(session, "select_Refgenome", selected = input$select_genome_fq())
+  })
+
 
 })
 

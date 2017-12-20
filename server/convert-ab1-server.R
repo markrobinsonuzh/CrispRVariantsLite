@@ -18,7 +18,9 @@ observeEvent(input$run_prep,{
     progress$set(message = "Preprocessing  AB1 ", value = 0) 
     increment_prog(progress, 15, "Convert .ab1 to FastQ", n.inc = 5)
     
-    convertAb1toFastq()
+    found_ab1 <- convertAb1toFastq()
+    if (! isTRUE(found_ab1)) return()
+    
     increment_prog(progress, 15, "Map FASTQ reads", n.inc = 5)
     
     mapFastQ()
@@ -28,5 +30,5 @@ observeEvent(input$run_prep,{
     closeAlert(session, "alertFASTQ")
     toggleModal(session, "modal_AB1", toggle = "close")
     createHTable("metadata")
-       
+
  })

@@ -8,8 +8,8 @@ upload_AB1 <- fileInput("ab1_input", 'Upload ZIP file with .AB1 files in directo
 
 
 #upload_AB1 <- uiOutput("ab1")
-select_genome <- selectInput("select_genome", "Select genome",
-                            choices = genlist_base, width = "100%")
+select_genome_ab <- selectInput("select_genome", "Select genome",
+                                 choices = genlist_base, width = "100%")
 
 # Argument "block" refers to the width of the button, not whether it is clickable
 run_prep <- bsButton("run_prep", 'Run',  style = "success", block = TRUE)
@@ -25,7 +25,7 @@ modal_AB1 <- .bsModal(
               "to FASTQ format for mapping")),
       upload_AB1,
       p("Step 2: chose genome for mapping FASTQ files"),
-      select_genome
+      select_genome_ab
       )
   ),  
   footer = fluidRow(

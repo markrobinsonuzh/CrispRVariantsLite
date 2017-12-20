@@ -1,3 +1,2 @@
-# double check this
 AATGACCACTACATCCTCAAGGG
 chr1	207265077	+

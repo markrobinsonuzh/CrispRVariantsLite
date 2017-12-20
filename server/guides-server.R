@@ -84,6 +84,19 @@ genome_index <- reactive({
 })
 
 
+observeEvent(input$select_genome_ab, {
+    slct <- input$select_genome_ab()
+    updateSelectInput(session, "select_Refgenome", choices = genlist, selected = slct)
+    
+})
+
+observeEvent(input$select_genome_fq, {
+    slct <- input$select_genome_fq()
+    updateSelectInput(session, "select_Refgenome", choices = genlist, selected = slct)
+    
+})
+
+
 observeEvent(input$select_Refgenome, {
     chrs <- read.table(paste0(genome_index(), ".fai"),
                    stringsAsFactors = FALSE)[,1]
@@ -217,6 +230,7 @@ observeEvent(input$run_guide,{
         increment_prog(progress, 2, "getting coordinates")
 
         # Map input sequence and parse the results
+        print("calling genome index in run_guide")
         idx <- genome_index()
         ref <- input$ref_seqs
         print(ref)
@@ -277,7 +291,6 @@ observeEvent(input$run_plot_guide,{
 # Plot the transcripts
 output$plot_anot <- renderPlot({
     annotation_plot()
-
 })
 
 
@@ -291,7 +304,7 @@ annotation_plot <- reactive({
     increment_prog(progress, 5, "")
      
     CrispRVariants:::annotateGenePlot(txdb = setTxdb(), target = d$guide,
-                          gene.text.size = 8)
+                         gene.text.size = 8) 
 })
 
 #_________________________________________________________________________________ 
@@ -308,7 +321,7 @@ reference_plot <- reactive({
        target.loc = d$t.loc,
        guide.loc = IRanges::IRanges(
          start = d$seq.width + 1,
-         end = box_end),
+         end = box_end+1),
        ins.sites = data.frame(),
        axis.text.size = 14,
        plot.text.size = 3,
